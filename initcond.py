@@ -37,4 +37,4 @@ class InitCond:
         elif self.pert == InitCond.PERT_PATCH:
             return 1*(x>=0.6)*(x<=0.7)
         else:
-            return np.zeros(size(x))
+            return np.zeros(np.size(x))
