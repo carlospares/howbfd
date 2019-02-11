@@ -35,4 +35,4 @@ class BoundaryCond:
                 uNew[N+gw+j] = uOld[-1] + (j+1)*(uOld[-1]-uOld[-2])
         elif self.bc==BoundaryCond.FORCE_STEADY:
             uNew[:gw] = np.exp(xGhost[:gw])
-            uNew[-gw:] = np.exp(xGhost[:gw])
+            uNew[-gw:] = np.exp(xGhost[-gw:])

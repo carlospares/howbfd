@@ -11,6 +11,7 @@ class InitCond:
     PERT_POLY = 1
     PERT_PATCH = 2
     PERT_SIN = 3
+    PERT_GAUSS = 4
 
     C = 0 # average of sine perturbation
 
@@ -36,5 +37,7 @@ class InitCond:
             return 0.01*x*(1-x)
         elif self.pert == InitCond.PERT_PATCH:
             return 1*(x>=0.6)*(x<=0.7)
+        elif self.pert == InitCond.PERT_GAUSS:
+            return 0.3*np.exp(-200*(x+0.5)*(x+0.5))
         else:
             return np.zeros(np.size(x))

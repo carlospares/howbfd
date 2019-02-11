@@ -36,7 +36,7 @@ class Equation:
     def dF(self, U):
         """ Derivative of flux function """
         if self.eq==Equation.LINEAR:
-            return self.alpha
+            return self.alpha*np.ones(np.size(U))
         elif self.eq==Equation.BURGERS:
             return U
 
@@ -46,14 +46,16 @@ class Equation:
         elif self.eq==Equation.BURGERS:
             return U*U
 
-    def upw_criterion(self, uLeft, uRight):
-        """ Returns the velocity for upwind criterion at intercell
-            between values uLefr and uRight
+    def upw_criterion(self, uStencil):
+        """ Returns a pair (l,r) with the velocity for upwind criterion at
+            left and right intercells, for cell at center of uStencil
         """
         if self.eq==Equation.LINEAR:
-            return np.sign(self.alpha)
+            return (np.sign(self.alpha),np.sign(self.alpha))
         elif self.eq==Equation.BURGERS:
-            return 0.5*(uLeft + uRight)
+            mid = int((len(uStencil)-1)/2) # approx. u at intercell
+            return ((uStencil[mid]+uStencil[mid-1])/2, 
+                    (uStencil[mid]+uStencil[mid+1])/2)
 
     def max_vel(self, u):
         """ Returns maximum velocity for CFL computation """
