@@ -1,0 +1,9 @@
+# Ignore figs
+figs/
+
+# compiled files
+*.pyc
+
+# editor stuff
+*.sublime-project
+*.sublime-workspace
