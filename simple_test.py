@@ -1,4 +1,3 @@
-from __future__ import division
 import numpy as np
 import wenorec as wr
 from initcond import InitCond
@@ -29,7 +28,7 @@ initCond = InitCond(init, perturb)
 eqn = Equation(equation)
 bdry = BoundaryCond(bdry)
 xBdry = BoundaryCond(BoundaryCond.PERIODIC if bdry.bc==BoundaryCond.PERIODIC else BoundaryCond.LIN_EXTRAP)
-dt = T/M  # always float division (imported from __future__)
+dt = (T*1.0)/M  # force float division
 interfaces = np.linspace(a,b,N+1) # we won't really use them
 x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (for periodic BCs)
 u = initCond.u0(x)
