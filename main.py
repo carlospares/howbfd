@@ -15,8 +15,8 @@ boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
 numflux = Flux.UPWIND                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
 well_balanced = True                   # is it well balanced? or basic WENO?
-N = 200                                # number of spatial points
-cfl = 0.9                              # cfl number to use for dt
+N = 100                                # number of spatial points
+cfl = 0.2                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
@@ -63,9 +63,8 @@ while t < T:
         u_st = uGhost[iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
         x_st = xGhost[iOff-gw:iOff+gw+1] # x at the stencil for ui
         (Gl, Gr) = flux.flux(u_st, x_st, eqn)
-
         tend[i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(u[i]);
     t += dt
     u = u + dt*tend
-    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots,
-                                 tag=tag, save_plot=False, save_npy=True)
+    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots, tag=tag,
+                                 save_plot=save_plots, save_npy=save_npys)
