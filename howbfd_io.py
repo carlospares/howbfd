@@ -13,7 +13,8 @@ class IoManager:
         return self.plot_times[self.plot_counter]
 
 
-    def io_if_appropriate(self, x, u, t, show_plot=False, save_npy=True, tag=""):
+    def io_if_appropriate(self, x, u, t, show_plot=False, save_npy=True,
+                          save_plot=True, tag=""):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
@@ -23,8 +24,8 @@ class IoManager:
             plt.plot(x,u)
             # plt.ylim([1,4])
             plt.title(t)
-            # plt.plot(x, np.exp(x) + perturbation(x,perturb)*np.exp(t))
-            plt.savefig("figs/{}{}.png".format(tag,t))
+            if save_plot:
+                plt.savefig("figs/{}{}.png".format(tag,t))
             if show_plot:
                 plt.show()
             if save_npy:

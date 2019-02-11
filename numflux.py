@@ -26,6 +26,7 @@ class Flux:
     #       return self.rusanov(fluxL, fluxR, uL, uR, eq)
 
     def upwind(self, u, x, eqn):
+        i = (len(u)-1)/2
         if self.wb:
             phi = eqn.g(u[i], u, x[i], x) # g evaluated at the stencil
         else:
@@ -34,7 +35,7 @@ class Flux:
         Grp = wr.wenorec(self.order, phi[-1:1:-1]) # at i+1/2^+
         Glm = wr.wenorec(self.order, phi[0:-2]) # at i-1/2^-
         Glp = wr.wenorec(self.order, phi[-2:0:-1]) # at i-1/2^+
-        (critL, critR) = eq.upw_criterion(u)
+        (critL, critR) = eqn.upw_criterion(u)
         Gr = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr)

@@ -12,16 +12,18 @@ init = InitCond.STEADY                 # see initcond.py
 perturb = InitCond.PERT_GAUSS          # see initcond.py, PERT_NONE to omit
 equation = Equation.BURGERS            # see equation.py
 boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
-numflux = Flux.RUSANOV                 # see numflux.py
-order = 3                              # only 3 and 5 for now
-N = 100                                # number of spatial points
-cfl = 0.4                              # cfl number to use for dt
+numflux = Flux.UPWIND                  # see numflux.py
+order = 3                              # 3, 5, 7, 9, 11
+well_balanced = True                   # is it well balanced? or basic WENO?
+N = 200                                # number of spatial points
+cfl = 0.9                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
-plot_every = 0.1                       # call io every (this many) seconds
-show_plots = False                     # show plots or save only?
-well_balanced = True                   # is it well balanced? or basic WENO?
+plot_every = 0.5                       # call io every (this many) seconds
+show_plots = False                     # show plots?
+save_plots = False                     # save plot images?
+save_npys = True                       # save npy with solution snapshot?
 ########################################
 
 initCond = InitCond(init, perturb)
@@ -48,8 +50,8 @@ tend = np.zeros(N) # tend[i] = (d/dt)u_i
 io_manager = IoManager(plot_every, T)
 
 # identifies options used to run
-tag = "i{}-{}e{}f{}b{}w{}_".format(init, perturb, equation, numflux,
-                                   boundary, int(well_balanced))
+tag = "i{}-{}e{}f{}b{}w{}n{}o{}_".format(init, perturb, equation, numflux,
+                                   boundary, int(well_balanced), N, order)
 
 t = 0
 while t < T:
@@ -65,4 +67,5 @@ while t < T:
         tend[i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(u[i]);
     t += dt
     u = u + dt*tend
-    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots, tag=tag)
+    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots,
+                                 tag=tag, save_plot=False, save_npy=True)
