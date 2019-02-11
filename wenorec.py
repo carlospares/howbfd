@@ -1,7 +1,7 @@
 eps = 1e-10
 
 def wenorec(order, args):
-    """ Wrapper for WENO reconstructions in module wenorec
+    """ Wrapper for WENO reconstructions
         Input:
             order: order of reconstruction
             args: values at stencil, left to right (in array of length = order)
@@ -78,7 +78,9 @@ def weno5_rec(phim2, phim1, phi0, phip1, phip2):
     return phi_half
 
 def weno7_rec(phim3, phim2, phim1, phi, phip1, phip2, phip3):
-
+    """ Performs left-biased 7th order reconstruction
+        Cf. weno3_rec
+    """
     # eps = 1e-10
     p0 = (-1.0/4.0)*phim3 + (13.0/12.0) * phim2 + (-23.0/12.0) * phim1 + (25.0/12.0)*phi;
     p1 = (1.0/12.0)*phim2 + (-5.0/12.0)*phim1 + (13.0/12.0)*phi + (1.0/4.0)*phip1;
@@ -108,6 +110,9 @@ def weno7_rec(phim3, phim2, phim1, phi, phip1, phip2, phip3):
     
     
 def weno9_rec(phim4, phim3, phim2, phim1, phi, phip1, phip2, phip3, phip4):
+    """ Performs left-biased 9th order reconstruction
+    Cf. weno3_rec
+    """
     p0 = (1.0/5.0) * phim4 + (-21.0/20.0)*phim3 +  (137.0/60.0)*phim2 +  (-163.0/60.0)*phim1 +  (137.0/60.0)*phi;
     p1 = (-1.0/20.0)*phim3 + (17.0/60.0)*phim2 + (-43.0/60.0)*phim1 + (77.0/60.0)*phi + (1.0/5.0)*phip1;
     p2 = (1.0/30.0)*phim2 + (-13.0/60.0)*phim1 + (47.0/60.0)*phi +  (9.0/20.0)*phip1 + (-1.0/20.0)*phip2;
@@ -153,7 +158,9 @@ def weno9_rec(phim4, phim3, phim2, phim1, phi, phip1, phip2, phip3, phip4):
     
 
 def weno11_rec(phim5, phim4, phim3, phim2, phim1, phi, phip1, phip2, phip3, phip4, phip5):
-                                                       
+    """ Performs left-biased 11th order reconstruction
+    Cf. weno3_rec
+    """                                          
     p0 = ((-1.0/6.0) * phim5 + (31.0/30.0)*phim4 +  (-163.0/60.0)*phim3 +  (79.0/20.0)*phim2
                      +  (-71.0/20.0)*phim1 +  (49.0/20.0)*phi);
     p1 = ((1.0/30.0)*phim4 + (-13.0/60.0)*phim3 + (37.0/60.0)*phim2 + (-21.0/20.0)*phim1
