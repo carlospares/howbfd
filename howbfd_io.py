@@ -31,3 +31,12 @@ class IoManager:
             if save_npy:
                 np.save("npys/{}{}.npy".format(tag,t), u)
             self.plot_counter += 1
+
+    def get_tag(self, init, perturb, equation, numflux, boundary, 
+                well_balanced, N, order):
+        """
+        Returns a tag that summarises options used to get a simulation
+        """
+        return "i{}-{}e{}f{}b{}w{}n{}o{}_"\
+            .format(init, perturb, equation, numflux, boundary, well_balanced,
+                    N, order)

@@ -50,8 +50,8 @@ tend = np.zeros(N) # tend[i] = (d/dt)u_i
 io_manager = IoManager(plot_every, T)
 
 # identifies options used to run
-tag = "i{}-{}e{}f{}b{}w{}n{}o{}_".format(init, perturb, equation, numflux,
-                                   boundary, int(well_balanced), N, order)
+tag = io_manager.get_tag(init, perturb, equation, numflux,
+                         boundary, int(well_balanced), N, order)
 
 t = 0
 while t < T:
