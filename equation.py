@@ -8,6 +8,7 @@ class Equation:
     SWE_REST = 2 # 1D shallow water equation, vars [h,q=hu]
 
     SWE_H_FLAT = 0
+    SWE_H_NOISE = 1
 
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
@@ -116,7 +117,8 @@ class Equation:
         elif self.eq==Equation.BURGERS:
             return np.amax(np.abs(u))
         elif self.eq==Equation.SWE_REST:
-            return np.amax(np.abs(u[1,:]/u[0,:])) # assume h != 0
+            # TO DO 
+            return 0.1 #np.amax(np.abs(u[1,:]/u[0,:])) # assume h != 0
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
@@ -139,19 +141,23 @@ class Equation:
             U0[0] = np.exp(x)
         elif self.eq == Equation.SWE_REST:
             U0 = np.zeros((2, len(x)))
-            h = (0.1 + 0.1*x)*(x < 0)  + (1+x)*(x >= 0)
-            u = np.exp(0.1*x)*(x < 0) + (np.exp(0.9+x))*(x>=0)
-            U0[0,:] = h
-            U0[1,:] = h*u
+            U0[1,:] = self.swe_eta + self.swe_H_eval(x)
         return U0
 
     def swe_H_eval(self, x):
         if self.swe_H == Equation.SWE_H_FLAT:
             return self.const(0.1, x)
+        elif self.swe_H == Equation.SWE_H_NOISE:
+            np.random.seed(len(x)) # so we get consistent results
+            return np.random.rand(len(x))
+
 
     def swe_Hx_eval(self, x):
         if self.swe_H == Equation.SWE_H_FLAT:
             return self.const(0, x)
+        if self.swe_H == Equation.SWE_H_NOISE:
+            print "Derivative of noise? Not happening, sorry"
+            sys.exit() # if done, remove sys import
 
     def const(self, alpha, x):
         """ Hacky implementation of f(x) = alpha.
