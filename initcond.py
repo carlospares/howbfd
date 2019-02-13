@@ -1,10 +1,11 @@
 import numpy as np
+from equation import Equation
 
 class InitCond:
     # Identifiers for initial condition
     SIN = 0
     SHOCK = 1
-    STEADY = 2
+    STEADY = 2 # use eqn-dependent steady state
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 0
@@ -16,9 +17,10 @@ class InitCond:
     C = 0 # average of sine perturbation
 
 
-    def __init__(self, ic, pert=PERT_NONE):
+    def __init__(self, ic, eqn, pert=PERT_NONE):
         self.initCond = ic
         self.pert = pert
+        self.eqn = eqn
 
     def u0(self, x):
         """ Initial condition """
@@ -29,8 +31,7 @@ class InitCond:
             U0 = np.zeros((1, len(x)))
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
-            U0 = np.zeros((1, len(x)))
-            U0[0] = np.exp(x)
+            U0 = self.eqn.steady(x)
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

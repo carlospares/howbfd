@@ -12,12 +12,12 @@ class Flux:
         self.wb = is_wb
 
     def flux(self, u, x, eqn):
-      """ Computes the numerical flux
+        """ Computes the numerical flux
           Input:
               u: values of u in stencil of 2gw-1 cells centered in u_i
               x: spatial values corresponding to cells u
               eqn: object of clas Equation
-      """
+        """
         if self.numflux == self.UPWIND:
             return self.upwind(u, x, eqn)
         elif self.numflux == self.RUSANOV:

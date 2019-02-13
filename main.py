@@ -14,7 +14,7 @@ equation = Equation.BURGERS            # see equation.py
 boundary = BoundaryCond.IN_OUT         # see boundary.py
 numflux = Flux.UPWIND                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
-well_balanced = False                  # is it well balanced? or basic WENO?
+well_balanced = True                   # is it well balanced? or basic WENO?
 N = 100                                # number of spatial points
 cfl = 0.5                              # cfl number to use for dt
 a = -1                                 # left interval limit
@@ -26,14 +26,14 @@ save_plots = False                     # save plot images?
 save_npys = False                      # save npy with solution snapshot?
 ########################################
 
-initCond = InitCond(init, perturb)
 eqn = Equation(equation)
+initCond = InitCond(init, eqn, perturb)
 bdry = BoundaryCond(boundary)
 flux = Flux(numflux, order, well_balanced)
 
 interfaces = np.linspace(a,b,N+1) # we won't really use them
 x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (for periodic BCs)
-u = initCond.u0(x)
+u = initCond.u0(x) # value of u0 at midpoint of cells
 nvars = eqn.dim()
 gw = int((order-1)/2)+1 # number of ghost cells
 dx = x[1]-x[0]
