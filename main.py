@@ -11,19 +11,19 @@ from howbfd_io import IoManager
 init = InitCond.STEADY                 # see initcond.py
 perturb = InitCond.PERT_GAUSS          # see initcond.py, PERT_NONE to omit
 equation = Equation.BURGERS            # see equation.py
-boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
+boundary = BoundaryCond.IN_OUT         # see boundary.py
 numflux = Flux.UPWIND                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
-well_balanced = True                   # is it well balanced? or basic WENO?
-N = 100                                # number of spatial points
-cfl = 0.2                              # cfl number to use for dt
+well_balanced = False                  # is it well balanced? or basic WENO?
+N = 200                                # number of spatial points
+cfl = 0.9                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
-plot_every = 0.5                       # call io every (this many) seconds
-show_plots = False                     # show plots?
-save_plots = True                      # save plot images?
-save_npys = True                       # save npy with solution snapshot?
+plot_every = 0.1                       # call io every (this many) seconds
+show_plots = True                     # show plots?
+save_plots = False                      # save plot images?
+save_npys = False                       # save npy with solution snapshot?
 ########################################
 
 initCond = InitCond(init, perturb)
