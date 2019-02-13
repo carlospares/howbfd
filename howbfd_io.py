@@ -20,9 +20,12 @@ class IoManager:
         """
         if t >= self.get_next_plot_time():
             print t
+            (nvars, N) = u.shape
             plt.clf()
-            plt.plot(x,u)
-            # plt.ylim([1,4])
+            for n in range(nvars):
+                plt.plot(x,u[n,:], label="u[{}]".format(n))
+            if nvars > 1:
+                plt.legend()
             plt.title(t)
             if save_plot:
                 plt.savefig("figs/{}{}.png".format(tag,t))

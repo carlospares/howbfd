@@ -4,6 +4,8 @@ class Equation:
     # Identifiers for equation
     LINEAR = 0
     BURGERS = 1
+    SWE_REST = 2 # 1D shallow water equation
+
     alpha = 0.05 # advection velocity for linear
 
     def __init__(self, eqn):
@@ -54,12 +56,19 @@ class Equation:
             return (np.sign(self.alpha),np.sign(self.alpha))
         elif self.eq==Equation.BURGERS:
             mid = int((len(uStencil)-1)/2) # approx. u at intercell
-            return ((uStencil[mid]+uStencil[mid-1])/2, 
-                    (uStencil[mid]+uStencil[mid+1])/2)
+            return ((uStencil[0,mid]+uStencil[0,mid-1])/2, 
+                    (uStencil[0,mid]+uStencil[0,mid+1])/2)
 
     def max_vel(self, u):
         """ Returns maximum velocity for CFL computation """
         if self.eq==Equation.LINEAR:
             return abs(self.alpha)
         elif self.eq==Equation.BURGERS:
-            return abs(max(u))
+            return abs(np.amax(u))
+
+    def dim(self):
+        """ Returns dimension of the problem: 1 for scalars """
+        if self.eq != Equation.SWE_REST:
+            return 1
+        else:
+            return 2

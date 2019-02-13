@@ -23,21 +23,29 @@ class InitCond:
     def u0(self, x):
         """ Initial condition """
         if self.initCond==InitCond.SHOCK:
-            U0 = 1.0*(x <= 0.5) + 2.0 * (x>0.5)
+            U0 = np.zeros((1, len(x)))
+            U0[0] = 1.0*(x <= 0.5) + 2.0 * (x>0.5)
         elif self.initCond==InitCond.SIN:
-            U0 = 1 + np.sin(2*np.pi*x)
+            U0 = np.zeros((1, len(x)))
+            U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
-            U0 = np.exp(x)
+            U0 = np.zeros((1, len(x)))
+            U0[0] = np.exp(x)
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):
         if self.pert == InitCond.PERT_SIN:
-            return 0.01*(self.C+np.sin(2*np.pi*x))
+            pert = np.zeros((1, len(x)))
+            pert[0] = 0.01*(self.C+np.sin(2*np.pi*x))
         elif self.pert == InitCond.PERT_POLY:
-            return 0.01*x*(1-x)
+            pert = np.zeros((1, len(x)))
+            pert[0] = 0.01*x*(1-x)
         elif self.pert == InitCond.PERT_PATCH:
-            return 1*(x>=0.6)*(x<=0.7)
+            pert = np.zeros((1, len(x)))
+            pert[0] = 1*(x>=0.6)*(x<=0.7)
         elif self.pert == InitCond.PERT_GAUSS:
-            return 0.3*np.exp(-200*(x+0.5)*(x+0.5))
+            pert = np.zeros((1, len(x)))
+            pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))
         else:
-            return np.zeros(np.size(x))
+            pert = np.zeros((1, len(x)))
+        return pert
