@@ -9,8 +9,9 @@ from howbfd_io import IoManager
 # Options                              #
 ########################################
 init = InitCond.STEADY                 # see initcond.py
-perturb = InitCond.PERT_GAUSS          # see initcond.py, PERT_NONE to omit
-equation = Equation.BURGERS            # see equation.py
+perturb = InitCond.PERT_NONE          # see initcond.py, PERT_NONE to omit
+equation = Equation.SWE_REST           # see equation.py
+sw_h = Equation.SWE_H_FLAT             # see equation.py
 boundary = BoundaryCond.IN_OUT         # see boundary.py
 numflux = Flux.UPWIND                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
@@ -20,7 +21,7 @@ cfl = 0.5                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
-plot_every = 0.5                       # call io every (this many) seconds
+plot_every = 0.0005                       # call io every (this many) seconds
 show_plots = True                      # show plots?
 save_plots = False                     # save plot images?
 save_npys = False                      # save npy with solution snapshot?
@@ -50,7 +51,7 @@ tag = io_manager.get_tag(init, perturb, equation, numflux,
 
 t = 0
 while t < T:
-    # print t
+    print t
     dt = min(cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
     bdry.expand_with_bcs(uGhost, u, gw, initCond, xGhost=xGhost)  # apply BC to u
@@ -59,8 +60,8 @@ while t < T:
         u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
         x_st = xGhost[iOff-gw:iOff+gw+1] # x at the stencil for ui
         (Gl, Gr) = flux.flux(u_st, x_st, eqn)
-        tend[:,i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(u[:,i])
+        tend[:,i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(x[i], u[:,i])
     t += dt
     u = u + dt*tend
-    io_manager.io_if_appropriate(x, u, t, show_plot=show_plots, tag=tag,
+    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots, tag=tag,
                                  save_plot=save_plots, save_npy=save_npys)

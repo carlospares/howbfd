@@ -7,12 +7,15 @@ class Equation:
     BURGERS = 1
     SWE_REST = 2 # 1D shallow water equation, vars [h,q=hu]
 
+    SWE_H_FLAT = 0
+
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
     swe_eta = 1
 
-    def __init__(self, eqn):
+    def __init__(self, eqn, swe_H=SWE_H_FLAT):
         self.eq = eqn
+        self.swe_H = swe_H
 
     def g(self,ui,uj,xi,xj):
         """ Input:
@@ -31,7 +34,7 @@ class Equation:
             return uj*uj*0.5 - 0.5*ui*ui*np.exp(2*(xj-xi))
         elif self.eq==Equation.SWE_REST:
             G = np.zeros(uj.shape)
-            G[1,:] = swe_g*0.5*(uj[0,:] )
+            G[1,:] = self.swe_g*0.5*(self.swe_eta + self.swe_H_eval(xj))**2
             return self.F(uj) - G
 
 
@@ -46,7 +49,7 @@ class Equation:
             q = U[0,:]
             h = U[1,:]
             ret[0,:] = q
-            ret[1,:] = q*q/h + 0.5*g*h*h
+            ret[1,:] = q*q/h + 0.5*self.swe_g*h*h
             return ret
 
     def dF(self, U):
@@ -56,17 +59,37 @@ class Equation:
         elif self.eq==Equation.BURGERS:
             return U
         elif self.eq==Equation.SWE_REST:
+            # TO DO
             print "Rusanov for SWE at rest not implemented yet. Bye!"
             sys.exit() # remove import sys once done
 
-    def SHx(self, U):
-        if self.eq==Equation.LINEAR:
-            return self.linear_alpha*U
-        elif self.eq==Equation.BURGERS:
+    def SHx(self, x, U):
+        return self.S(U)*self.Hx(x)
+
+    def H(self, x):
+        if self.eq == Equation.LINEAR:
+            return self.linear_alpha*x
+        elif self. eq == Equation.BURGERS:
+            return x
+        elif self.eq == Equation.SWE_REST:
+            return self.swe_H_eval(x)
+
+    def Hx(self, x):
+        if self.eq == Equation.LINEAR:
+            return self.const(self.linear_alpha, x)
+        elif self. eq == Equation.BURGERS:
+            return self.const(1, x)
+        elif self.eq == Equation.SWE_REST:
+            if self.swe_H == Equation.SWE_H_FLAT:
+                return self.swe_H_eval(x)
+
+    def S(self, U):
+        if self.eq == Equation.LINEAR:
+            return U
+        elif self.eq == Equation.BURGERS:
             return U*U
-        elif self.eq==Equation.SWE_REST:
-            print "no-wb for SWE at rest not implemented yet. Bye!"
-            sys.exit() # remove import sys once done
+        elif self.eq == Equation.SWE_REST:
+            return np.array([ 0, self.swe_g*U[0] ])
 
     def upw_criterion(self, uStencil):
         """ Returns a pair (l,r) with the velocity for upwind criterion at
@@ -121,3 +144,24 @@ class Equation:
             U0[0,:] = h
             U0[1,:] = h*u
         return U0
+
+    def swe_H_eval(self, x):
+        if self.swe_H == Equation.SWE_H_FLAT:
+            return self.const(0.1, x)
+
+    def swe_Hx_eval(self, x):
+        if self.swe_H == Equation.SWE_H_FLAT:
+            return self.const(0, x)
+
+    def const(self, alpha, x):
+        """ Hacky implementation of f(x) = alpha.
+            "return alpha" gives always a scalar
+            "return alpha*ones(len(x))" breaks if x is a scalar
+            This way all our functions can be overloaded for scalar
+            and vector input.
+            Input:
+                x number, or numpy array
+            Output:
+                alpha (number, or numpy array of len(x) elements)
+        """
+        return x*0 + alpha*1.0
