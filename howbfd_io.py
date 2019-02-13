@@ -25,11 +25,11 @@ class IoManager:
             # plt.ylim([1,4])
             plt.title(t)
             if save_plot:
-                plt.savefig("figs/{}{}.png".format(tag,t))
+                plt.savefig("{}{}.png".format(tag,t))
             if show_plot:
                 plt.show()
             if save_npy:
-                np.save("npys/{}{}.npy".format(tag,t), u)
+                np.save("{}{}.npy".format(tag,t), u)
             self.plot_counter += 1
 
     def get_tag(self, init, perturb, equation, numflux, boundary, 

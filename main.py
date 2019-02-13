@@ -21,9 +21,9 @@ a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
 plot_every = 0.5                       # call io every (this many) seconds
-show_plots = True                      # show plots?
-save_plots = False                     # save plot images?
-save_npys = False                      # save npy with solution snapshot?
+show_plots = False                      # show plots?
+save_plots = True                     # save plot images?
+save_npys = True                      # save npy with solution snapshot?
 ########################################
 
 initCond = InitCond(init, perturb)
