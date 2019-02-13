@@ -1,8 +1,6 @@
 from math import ceil
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import platform
 
 class IoManager:
 
@@ -20,8 +18,6 @@ class IoManager:
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
-        print (os.getcwd(), platform.system())
-
         if t >= self.get_next_plot_time():
             print t
             plt.clf()
@@ -29,11 +25,11 @@ class IoManager:
             # plt.ylim([1,4])
             plt.title(t)
             if save_plot:
-                plt.savefig("{}{}.png".format(tag,t))
+                plt.savefig("figs/{}{}.png".format(tag,t))
             if show_plot:
                 plt.show()
             if save_npy:
-                np.save("{}{}.npy".format(tag,t), u)
+                np.save("npys/{}{}.npy".format(tag,t), u)
             self.plot_counter += 1
 
     def get_tag(self, init, perturb, equation, numflux, boundary, 
