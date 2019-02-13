@@ -1,6 +1,8 @@
 from math import ceil
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import platform
 
 class IoManager:
 
@@ -18,6 +20,8 @@ class IoManager:
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
+        print (os.getcwd(), platform.system())
+
         if t >= self.get_next_plot_time():
             print t
             plt.clf()
