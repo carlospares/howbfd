@@ -21,9 +21,9 @@ a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
 plot_every = 0.5                       # call io every (this many) seconds
-show_plots = False                     # show plots?
+show_plots = True                      # show plots?
 save_plots = False                     # save plot images?
-save_npys = True                       # save npy with solution snapshot?
+save_npys = False                      # save npy with solution snapshot?
 ########################################
 
 initCond = InitCond(init, perturb)
@@ -55,6 +55,7 @@ tag = io_manager.get_tag(init, perturb, equation, numflux,
 
 t = 0
 while t < T:
+    print t
     dt = min(cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
     bdry.expand_with_bcs(uGhost, u, gw, inflow=inflow_left, xGhost=xGhost)  # apply BC to u
@@ -66,5 +67,5 @@ while t < T:
         tend[i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(u[i]);
     t += dt
     u = u + dt*tend
-    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots, tag=tag,
+    io_manager.io_if_appropriate(x, u, t, show_plot=show_plots, tag=tag,
                                  save_plot=save_plots, save_npy=save_npys)
