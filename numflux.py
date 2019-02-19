@@ -6,7 +6,6 @@ import sys
 class Flux:
     UPWIND = 0
     RUSANOV = 1
-    LAXFRIEDRICHS = 2
 
     def __init__(self, flux, order, is_wb):
         self.numflux = flux
@@ -24,8 +23,6 @@ class Flux:
             return self.upwind(u, x, eqn)
         elif self.numflux == self.RUSANOV:
             return self.rusanov(u, x, eqn)
-        elif self.numflux == self.LAXFRIEDRICHS:
-            return self.laxfriedrichs(u,x,dt,eqn)
 
     def upwind(self, u, x, eqn):
         nvars = eqn.dim()

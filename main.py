@@ -23,7 +23,7 @@ b = 1                                  # right interval limit
 T = 8                                  # end time
 plot_every = 1.0                       # call io every (this many) seconds
 show_plots = True                      # show plots?
-save_plots = False                      # save plot images?
+save_plots = False                     # save plot images?
 save_npys = False                      # save npy with solution snapshot?
 ########################################
 
