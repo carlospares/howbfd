@@ -10,20 +10,20 @@ from howbfd_io import IoManager
 ########################################
 init = InitCond.STEADY                 # see initcond.py
 perturb = InitCond.PERT_NONE           # see initcond.py, PERT_NONE to omit
-equation = Equation.SWE_REST           # see equation.py
+equation = Equation.BURGERS            # see equation.py
 sw_h = Equation.SWE_H_FLAT             # see equation.py
 boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
-numflux = Flux.RUSANOV                 # see numflux.py
+numflux = Flux.UPWIND                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
-well_balanced = False                  # is it well balanced? or basic WENO?
+well_balanced = True                   # is it well balanced? or basic WENO?
 N = 100                                # number of spatial points
 cfl = 0.5                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
 T = 8                                  # end time
-plot_every = 0.1                       # call io every (this many) seconds
+plot_every = 1.0                       # call io every (this many) seconds
 show_plots = True                      # show plots?
-save_plots = False                     # save plot images?
+save_plots = False                      # save plot images?
 save_npys = False                      # save npy with solution snapshot?
 ########################################
 
@@ -33,7 +33,7 @@ bdry = BoundaryCond(boundary)
 flux = Flux(numflux, order, well_balanced)
 
 interfaces = np.linspace(a,b,N+1) # we won't really use them
-x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (for periodic BCs)
+x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (periodic BCs are well-def)
 u = initCond.u0(x) # value of u0 at midpoint of cells
 nvars = eqn.dim()
 gw = int((order-1)/2)+1 # number of ghost cells
@@ -62,5 +62,5 @@ while t < T:
         tend[:,i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(x[i], u[:,i])
     t += dt
     u = u + dt*tend
-    io_manager.io_if_appropriate(xGhost, uGhost, t, show_plot=show_plots, tag=tag,
+    io_manager.io_if_appropriate(x, u, t, show_plot=show_plots, tag=tag,
                                  save_plot=save_plots, save_npy=save_npys)

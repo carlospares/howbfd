@@ -37,7 +37,9 @@ class Flux:
         i = (len(u)-1)/2
         (critL, critR) = eqn.upw_criterion(u)
         if self.wb:
-            phi = eqn.g(u[:,i], u, x[i], x) # g evaluated at the stencil
+            ustar = eqn.steady_constraint(x[i], u[:,i], x)
+            phi = eqn.F(u) - eqn.F(ustar)
+            # phi = eqn.g(u[:,i], u, x[i], x) # g evaluated at the stencil
         else:
             phi = phi = eqn.F(u)
 
@@ -56,8 +58,9 @@ class Flux:
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
         if self.wb:
-            phip = eqn.g(u[:,i], u, x[i], x) + alpha*u  # phi plus
-            phim = eqn.g(u[:,i], u, x[i], x) - alpha*u  # phi minus
+            ustar = eqn.steady_constraint(x[i], u[:,i], x)
+            phip = eqn.F(u) - eqn.F(ustar) + alpha*(u - ustar)
+            phim = eqn.F(u) - eqn.F(ustar) - alpha*(u - ustar)
         else:
             phip = eqn.F(u) + alpha*u  # phi plus
             phim = eqn.F(u) - alpha*u  # phi minus
@@ -70,6 +73,7 @@ class Flux:
             Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
             Gl[var] = 0.5*(Glm + Glp)
             Gr[var] = 0.5*(Grm + Grp)
+        # print (Gl, Gr)
         return (Gl, Gr)
 
 

@@ -20,25 +20,25 @@ class Equation:
         self.eq = eqn
         self.swe_H = swe_H
 
-    def g(self,ui,uj,xi,xj):
-        """ Input:
-                ui: u[i] for i the center point of the stencil
-                uj: u[j] for a single j, or array of values for all j in the stencil
-                xi: x[i] for the center point of the stencil
-                xj: x[j] (like uj). If array, it must be length(xj)==length(uj)
-            Output:
-                If uj is a number, returns g_i(x_j) 
-                If uj is an array, returns [g_i(x_j) for every j in the stencil],
-                                            which can be unpacked with * 
-        """
-        if self.eq==Equation.LINEAR:
-            return self.linear_alpha*(uj - ui*np.exp(xj-xi))
-        elif self.eq==Equation.BURGERS:
-            return uj*uj*0.5 - 0.5*ui*ui*np.exp(2*(xj-xi))
-        elif self.eq==Equation.SWE_REST:
-            G = np.zeros(uj.shape)
-            G[1,:] = self.swe_g*0.5*(self.swe_eta + self.swe_H_eval(xj))**2
-            return self.F(uj) - G
+    # def g(self,ui,uj,xi,xj):
+    #     """ Input:
+    #             ui: u[i] for i the center point of the stencil
+    #             uj: u[j] for a single j, or array of values for all j in the stencil
+    #             xi: x[i] for the center point of the stencil
+    #             xj: x[j] (like uj). If array, it must be length(xj)==length(uj)
+    #         Output:
+    #             If uj is a number, returns g_i(x_j) 
+    #             If uj is an array, returns [g_i(x_j) for every j in the stencil],
+    #                                         which can be unpacked with * 
+    #     """
+    #     if self.eq==Equation.LINEAR:
+    #         return self.linear_alpha*(uj - ui*np.exp(xj-xi))
+    #     elif self.eq==Equation.BURGERS:
+    #         return uj*uj*0.5 - 0.5*ui*ui*np.exp(2*(xj-xi))
+    #     elif self.eq==Equation.SWE_REST:
+    #         G = np.zeros(uj.shape)
+    #         G[1,:] = self.swe_g*0.5*(self.swe_eta + self.swe_H_eval(xj))**2
+    #         return self.F(uj) - G
 
 
     def F(self, U):
@@ -93,9 +93,11 @@ class Equation:
             return eig
 
     def SHx(self, x, U):
+        """ Return S(U) H_x(x) """
         return self.S(U)*self.Hx(x)
 
     def H(self, x):
+        """ Return H(x) """
         if self.eq == Equation.LINEAR:
             return self.linear_alpha*x
         elif self. eq == Equation.BURGERS:
@@ -104,6 +106,7 @@ class Equation:
             return self.swe_H_eval(x)
 
     def Hx(self, x):
+        """ Return H_x(x) """
         if self.eq == Equation.LINEAR:
             return self.linear_alpha*np.ones_like(x)
         elif self. eq == Equation.BURGERS:
@@ -113,6 +116,7 @@ class Equation:
                 return self.swe_Hx_eval(x)
 
     def S(self, U):
+        """ Return S(U) """
         if self.eq == Equation.LINEAR:
             return U
         elif self.eq == Equation.BURGERS:
@@ -134,9 +138,9 @@ class Equation:
             print "[ERROR] Upwind only implemented for scalar equations!"
             sys.exit()
 
-    def max_vel(self, u):
+    def max_vel(self, U):
         """ Returns maximum velocity for CFL computation """
-        return np.amax(np.abs(self.eig_of_dF(u)))
+        return np.amax(np.abs(self.eig_of_dF(U)))
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
@@ -146,7 +150,7 @@ class Equation:
             return 2
 
     def steady(self, x):
-        """ Returns a steady state for the equation.
+        """ Returns an arbitrary steady state for the equation.
             Input: 
                 x: spatial coordinates
             Output:
@@ -161,6 +165,28 @@ class Equation:
             U0 = np.zeros((2, len(x)))
             U0[0,:] = self.swe_eta + self.swe_H_eval(x)
         return U0
+
+    def steady_constraint(self, xConstr, uConstr, x):
+        """ Returns a steady state solution of the equation u*, constrained
+            to u*(xConstr) = uConstr
+            Input:
+                xConstr: x to fix the constraint
+                uConstr: u*(x) = uConstr for u* we look for
+                x: values of x at which to evaluate u*
+            Output:
+                (nvars, len(x)) numpy array with the values
+                If nvars = 1, this must still be a (1,len(x)) matrix;
+                a len(x) array will not work! """
+        Ustar = np.zeros((self.dim(), len(x)))
+        if self.eq in [Equation.LINEAR, Equation.BURGERS]:
+            Ustar[0] = uConstr*np.exp(x - xConstr)
+        elif self.eq == Equation.SWE_REST:
+            if uConstr[1] != 0:
+                print "[TO DO] Not yet implemented. Bye!"
+                sys.exit()
+            else:
+                Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
+        return Ustar
 
     def swe_H_eval(self, x):
         if self.swe_H == Equation.SWE_H_FLAT:
