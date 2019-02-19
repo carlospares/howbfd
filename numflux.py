@@ -5,13 +5,14 @@ import numpy as np
 class Flux:
     UPWIND = 0
     RUSANOV = 1
+    LAXFRIEDRICHS = 2
 
     def __init__(self, flux, order, is_wb):
         self.numflux = flux
         self.order = order
         self.wb = is_wb
 
-    def flux(self, u, x, eqn):
+    def flux(self, u, x, eqn, dt=0.1):
         """ Computes the numerical flux
           Input:
               u: values of u in stencil of 2gw-1 cells centered in u_i
@@ -22,6 +23,8 @@ class Flux:
             return self.upwind(u, x, eqn)
         elif self.numflux == self.RUSANOV:
             return self.rusanov(u, x, eqn)
+        elif self.numflux == self.LAXFRIEDRICHS:
+            return self.laxfriedrichs(u,x,dt,eqn)
 
     def upwind(self, u, x, eqn):
         nvars = eqn.dim()
@@ -65,3 +68,24 @@ class Flux:
             Gl[var] = 0.5*(Glm + Glp)
             Gr[var] = 0.5*(Grm + Grp)
         return (Gl, Gr)
+
+
+    # def laxfriedrichs(self, u, x, dt, eqn):
+    #     nvars = eqn.dim()
+    #     i = (len(u)-1)/2
+    #     alpha = max(abs(eqn.dF(u)))
+    #     Gl = np.zeros(nvars)
+    #     Gr = np.zeros(nvars)
+    #     dx = x[i]-x[i-1]
+    #     if self.wb:
+    #         # phip = eqn.g(u[:,i], u, x[i], x) + alpha*u  # phi plus
+    #         # phim = eqn.g(u[:,i], u, x[i], x) - alpha*u  # phi minus
+    #         pass
+    #     else:
+    #         phi = eqn.F(u)
+
+    #     for var in range(nvars):
+    #         Gr = wr.wenorec(self.order, )
+    #         Gr[var] = 
+    #         Gl[var] = 
+    #     return (Gl, Gr)

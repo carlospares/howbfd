@@ -47,8 +47,8 @@ class Equation:
             return U*U/2
         elif self.eq==Equation.SWE_REST:
             ret = np.empty(U.shape)
-            q = U[0,:]
-            h = U[1,:]
+            h = U[0,:]
+            q = U[1,:]
             ret[0,:] = q
             ret[1,:] = q*q/h + 0.5*self.swe_g*h*h
             return ret
@@ -59,10 +59,37 @@ class Equation:
             return self.linear_alpha*np.ones(np.size(U))
         elif self.eq==Equation.BURGERS:
             return U
+        elif self.eq==Equation.SWE_REST or True:
+            print U.shape
+            DF = np.zeros((U.shape[1], self.dim(), self.dim()))
+            for i in range(U.shape[1]):
+                h = U[0,i]
+                q = U[1,i]
+                DF[i] = np.array([[0,1],[-q*q/h*h + self.swe_g*h,2*q/h]])
+            return DF
+
+    def eig_of_dF(self, U):
+        """ Returns eigenvalues of dF(U), as
+            numpy array shaped like U, with
+            eig[0,i] < eig[1,i] < ... for all i """
+        if self.eq==Equation.LINEAR:
+            return self.linear_alpha*np.ones(np.size(U))
+        elif self.eq==Equation.BURGERS:
+            return U
         elif self.eq==Equation.SWE_REST:
-            # TO DO
-            print "Rusanov for SWE at rest not implemented yet. Bye!"
-            sys.exit() # remove import sys once done
+            eig = np.zeros(U.shape)
+            eig[0,:] = U[1,:]/U[0,:] - np.sqrt(self.swe_g*U[0,:])
+            eig[1,:] = U[1,:]/U[0,:] + np.sqrt(self.swe_g*U[0,:])
+            return eig
+        else: # default: slow, should be avoided!
+            print "Using default (very slow) eigenvalue computation"
+            eig = np.zeros(U.shape)
+            for i in range(U.shape[1]):
+                # np.newaxis forces a shape (2,) numpy array to (2,1):
+                X = np.linalg.eig(self.dF(U[:,i, np.newaxis]))[0]
+                X.sort() # force eigenvalue order
+                eig[:,i] = X
+            return eig
 
     def SHx(self, x, U):
         return self.S(U)*self.Hx(x)
@@ -77,9 +104,9 @@ class Equation:
 
     def Hx(self, x):
         if self.eq == Equation.LINEAR:
-            return self.const(self.linear_alpha, x)
+            return self.linear_alpha*np.ones_like(x)
         elif self. eq == Equation.BURGERS:
-            return self.const(1, x)
+            return np.ones_like(x)
         elif self.eq == Equation.SWE_REST:
             if self.swe_H == Equation.SWE_H_FLAT:
                 return self.swe_H_eval(x)
@@ -112,13 +139,14 @@ class Equation:
 
     def max_vel(self, u):
         """ Returns maximum velocity for CFL computation """
-        if self.eq==Equation.LINEAR:
-            return abs(self.linear_alpha)
-        elif self.eq==Equation.BURGERS:
-            return np.amax(np.abs(u))
-        elif self.eq==Equation.SWE_REST:
-            # TO DO 
-            return 0.1 #np.amax(np.abs(u[1,:]/u[0,:])) # assume h != 0
+        return np.amax(np.abs(self.eig_of_dF(U)))
+        # if self.eq==Equation.LINEAR:
+        #     return abs(self.linear_alpha)
+        # elif self.eq==Equation.BURGERS:
+        #     return np.amax(np.abs(u))
+        # elif self.eq==Equation.SWE_REST:
+        #     # TO DO 
+        #     return 0.1 #np.amax(np.abs(u[1,:]/u[0,:])) # assume h != 0
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
@@ -141,12 +169,12 @@ class Equation:
             U0[0] = np.exp(x)
         elif self.eq == Equation.SWE_REST:
             U0 = np.zeros((2, len(x)))
-            U0[1,:] = self.swe_eta + self.swe_H_eval(x)
+            U0[0,:] = self.swe_eta + self.swe_H_eval(x)
         return U0
 
     def swe_H_eval(self, x):
         if self.swe_H == Equation.SWE_H_FLAT:
-            return self.const(0.1, x)
+            return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
             np.random.seed(len(x)) # so we get consistent results
             return np.random.rand(len(x))
@@ -154,20 +182,7 @@ class Equation:
 
     def swe_Hx_eval(self, x):
         if self.swe_H == Equation.SWE_H_FLAT:
-            return self.const(0, x)
+            return np.zeros_like(x)
         if self.swe_H == Equation.SWE_H_NOISE:
             print "Derivative of noise? Not happening, sorry"
             sys.exit() # if done, remove sys import
-
-    def const(self, alpha, x):
-        """ Hacky implementation of f(x) = alpha.
-            "return alpha" gives always a scalar
-            "return alpha*ones(len(x))" breaks if x is a scalar
-            This way all our functions can be overloaded for scalar
-            and vector input.
-            Input:
-                x number, or numpy array
-            Output:
-                alpha (number, or numpy array of len(x) elements)
-        """
-        return x*0 + alpha*1.0

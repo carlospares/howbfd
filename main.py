@@ -59,7 +59,7 @@ while t < T:
         iOff = i+gw # i with offset for {u,x}Ghost
         u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
         x_st = xGhost[iOff-gw:iOff+gw+1] # x at the stencil for ui
-        (Gl, Gr) = flux.flux(u_st, x_st, eqn)
+        (Gl, Gr) = flux.flux(u_st, x_st, eqn, dt)
         tend[:,i] = -(Gr - Gl)/dx + (1-well_balanced)*eqn.SHx(x[i], u[:,i])
     t += dt
     u = u + dt*tend
