@@ -1,6 +1,7 @@
 from equation import Equation
 import wenorec as wr
 import numpy as np
+import sys
 
 class Flux:
     UPWIND = 0
@@ -28,8 +29,11 @@ class Flux:
 
     def upwind(self, u, x, eqn):
         nvars = eqn.dim()
-        Gl = np.zeros(nvars)
-        Gr = np.zeros(nvars)
+        if nvars != 1:
+            print "[ERROR] Upwind only implemented for scalar equations!"
+            sys.exit()
+        Gl = np.zeros(1)
+        Gr = np.zeros(1)
         i = (len(u)-1)/2
         (critL, critR) = eqn.upw_criterion(u)
         if self.wb:
@@ -37,19 +41,18 @@ class Flux:
         else:
             phi = phi = eqn.F(u)
 
-        for var in range(nvars):
-            Grm = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-
-            Grp = wr.wenorec(self.order, phi[var,-1:1:-1]) # at i+1/2^+
-            Glm = wr.wenorec(self.order, phi[var,0:-2]) # at i-1/2^-
-            Glp = wr.wenorec(self.order, phi[var,-2:0:-1]) # at i-1/2^+
-            Gr[var] = (critR >= 0)*Grm + (critR < 0)*Grp
-            Gl[var] = (critL >= 0)*Glm + (critL < 0)*Glp
+        Grm = wr.wenorec(self.order, phi[0,1:-1]) # at i+1/2^-
+        Grp = wr.wenorec(self.order, phi[0,-1:1:-1]) # at i+1/2^+
+        Glm = wr.wenorec(self.order, phi[0,0:-2]) # at i-1/2^-
+        Glp = wr.wenorec(self.order, phi[0,-2:0:-1]) # at i-1/2^+
+        Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
+        Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr)
 
     def rusanov(self, u, x, eqn):
         nvars = eqn.dim()
         i = (len(u)-1)/2
-        alpha = max(abs(eqn.dF(u)))
+        alpha = np.amax(np.abs(eqn.eig_of_dF(u)))
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
         if self.wb:

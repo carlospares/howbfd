@@ -14,6 +14,8 @@ class Equation:
     swe_g = 9.8
     swe_eta = 1
 
+    SEED = 1189998819991197253 # for reproducibility
+
     def __init__(self, eqn, swe_H=SWE_H_FLAT):
         self.eq = eqn
         self.swe_H = swe_H
@@ -60,7 +62,6 @@ class Equation:
         elif self.eq==Equation.BURGERS:
             return U
         elif self.eq==Equation.SWE_REST or True:
-            print U.shape
             DF = np.zeros((U.shape[1], self.dim(), self.dim()))
             for i in range(U.shape[1]):
                 h = U[0,i]
@@ -82,7 +83,7 @@ class Equation:
             eig[1,:] = U[1,:]/U[0,:] + np.sqrt(self.swe_g*U[0,:])
             return eig
         else: # default: slow, should be avoided!
-            print "Using default (very slow) eigenvalue computation"
+            print "[WARNING] Using default (very slow) eigenvalue computation"
             eig = np.zeros(U.shape)
             for i in range(U.shape[1]):
                 # np.newaxis forces a shape (2,) numpy array to (2,1):
@@ -109,7 +110,7 @@ class Equation:
             return np.ones_like(x)
         elif self.eq == Equation.SWE_REST:
             if self.swe_H == Equation.SWE_H_FLAT:
-                return self.swe_H_eval(x)
+                return self.swe_Hx_eval(x)
 
     def S(self, U):
         if self.eq == Equation.LINEAR:
@@ -130,23 +131,12 @@ class Equation:
             return ((uStencil[0,mid]+uStencil[0,mid-1])/2, 
                     (uStencil[0,mid]+uStencil[0,mid+1])/2)
         elif self.eq==Equation.SWE_REST:
-            mid = int((len(uStencil)-1)/2) # approx. u at intercell
-            uL = (uStencil[1,mid]+uStencil[1,mid-1]) / \
-                    (uStencil[0,mid]+uStencil[0,mid-1])
-            uR = (uStencil[1,mid]+uStencil[1,mid+1]) / \
-                    (uStencil[0,mid]+uStencil[0,mid+1])
-            return (uL, uR)
+            print "[ERROR] Upwind only implemented for scalar equations!"
+            sys.exit()
 
     def max_vel(self, u):
         """ Returns maximum velocity for CFL computation """
-        return np.amax(np.abs(self.eig_of_dF(U)))
-        # if self.eq==Equation.LINEAR:
-        #     return abs(self.linear_alpha)
-        # elif self.eq==Equation.BURGERS:
-        #     return np.amax(np.abs(u))
-        # elif self.eq==Equation.SWE_REST:
-        #     # TO DO 
-        #     return 0.1 #np.amax(np.abs(u[1,:]/u[0,:])) # assume h != 0
+        return np.amax(np.abs(self.eig_of_dF(u)))
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
@@ -176,7 +166,7 @@ class Equation:
         if self.swe_H == Equation.SWE_H_FLAT:
             return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
-            np.random.seed(len(x)) # so we get consistent results
+            np.random.seed(self.SEED) # so we get consistent results
             return np.random.rand(len(x))
 
 
@@ -184,5 +174,5 @@ class Equation:
         if self.swe_H == Equation.SWE_H_FLAT:
             return np.zeros_like(x)
         if self.swe_H == Equation.SWE_H_NOISE:
-            print "Derivative of noise? Not happening, sorry"
+            print "[ERROR] Derivative of noise? Not happening, sorry"
             sys.exit() # if done, remove sys import

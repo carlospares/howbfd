@@ -9,13 +9,13 @@ from howbfd_io import IoManager
 # Options                              #
 ########################################
 init = InitCond.STEADY                 # see initcond.py
-perturb = InitCond.PERT_NONE          # see initcond.py, PERT_NONE to omit
+perturb = InitCond.PERT_NONE           # see initcond.py, PERT_NONE to omit
 equation = Equation.SWE_REST           # see equation.py
 sw_h = Equation.SWE_H_FLAT             # see equation.py
-boundary = BoundaryCond.FORCE_STEADY         # see boundary.py
-numflux = Flux.UPWIND                  # see numflux.py
+boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
+numflux = Flux.RUSANOV                 # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
-well_balanced = False                   # is it well balanced? or basic WENO?
+well_balanced = False                  # is it well balanced? or basic WENO?
 N = 100                                # number of spatial points
 cfl = 0.5                              # cfl number to use for dt
 a = -1                                 # left interval limit
@@ -51,7 +51,6 @@ tag = io_manager.get_tag(init, perturb, equation, numflux,
 
 t = 0
 while t < T:
-    print t
     dt = min(cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
     bdry.expand_with_bcs(uGhost, u, gw, initCond, xGhost=xGhost)  # apply BC to u
