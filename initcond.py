@@ -47,7 +47,7 @@ class InitCond:
             pert[0] = 0.01*x*(1-x)
         elif self.pert == InitCond.PERT_PATCH:
             pert = np.zeros((1, len(x)))
-            pert[0] = 1*(x>=0.6)*(x<=0.7)
+            pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
             pert = np.zeros((1, len(x)))
             pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))

@@ -9,9 +9,11 @@ class Equation:
     BURGERS = 1
     SWE_REST = 2 # 1D shallow water equation, vars [h,q=hu]
 
+    # Identifiers for SW topography
     SWE_H_FLAT = 0
     SWE_H_PWPOLY = 2
 
+    # other function parameters
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
     swe_eta = 1
@@ -207,6 +209,7 @@ class Equation:
         if self.eq in [Equation.LINEAR, Equation.BURGERS]: # 1D
             plt.plot(x,u[0], label='u')
             plt.legend()
+            plt.title(t)
         elif self.eq == Equation.SWE_REST:
             plt.subplot(211)
             plt.title(t)
