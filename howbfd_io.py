@@ -9,7 +9,7 @@ import argparse
 def parse_command_line():
     """ Take all arguments from command line and return them """
     parser = argparse.ArgumentParser(description='High order well-balanced FD solver')
-    parser.add_argument('-c', '--config', type=str, nargs=1, default="",
+    parser.add_argument('-c', '--config', type=str, nargs=1, default=["howbfd_config"],
                          help='Quick configuration file')
     args = parser.parse_args()
     return args.config
@@ -17,6 +17,10 @@ def parse_command_line():
 def safe_name(name):
     """ Make sure the module we are going to try to import has the 
         appropriate name ("config.linear_upwind", for example) """
+    print name
+    if name == "howbfd_config":
+        return name
+
     if "config" in name: # remove {... ./}config{./}
         name = name[name.rfind("config")+7:]
     if "." in name: # remove .py

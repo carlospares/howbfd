@@ -9,12 +9,8 @@ import os
 
 ### Get config file from command line, or load default:
 quickConf = parse_command_line() # from howbfd_io
-if quickConf == "":
-    # import howbfd_config as cf
-    cf = importlib.import_module("howbfd_config")
-else:
-    configfile = safe_name(quickConf[0]) # from howbfd_io
-    cf = importlib.import_module(configfile)
+configfile = safe_name(quickConf[0])
+cf = importlib.import_module(configfile)
 
 ### Set up problem:
 bdry = BoundaryCond(cf.boundary)
