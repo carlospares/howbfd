@@ -16,7 +16,7 @@ cf = importlib.import_module(configfile)
 bdry = BoundaryCond(cf.boundary)
 gw = int((cf.order-1)/2)+1 # number of ghost cells
 interfaces = np.linspace(cf.a,cf.b,cf.N+1) # we won't really use them
-x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (periodic BCs are well-def)
+x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
 xGhost = np.zeros(cf.N+2*gw) # storage for x with ghost cells
 bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
 
@@ -39,6 +39,7 @@ tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
 ### Main loop
 t = 0
 while t < cf.T:
+    print t
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
     bdry.expand_with_bcs(uGhost, u, gw, initCond, xGhost=xGhost)  # apply BC to u

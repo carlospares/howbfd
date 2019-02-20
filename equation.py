@@ -1,7 +1,8 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-from scipy.interpolate import UnivariateSpline, interp1d
+from scipy.interpolate import interp1d # UnivariateSpline
+from scipy.optimize import newton
 
 class Equation:
     # Identifiers for equation
@@ -27,8 +28,8 @@ class Equation:
         if swe_noise_amplit != 0:
             np.random.seed(self.SEED) # so we get consistent results
             Hnoise = swe_noise_amplit*np.random.rand(len(x))
-            # self.Hnoiseinterp = UnivariateSpline(x, Hnoise, k=1) # allows to evaluate as a function
-            self.Hnoiseinterp = interp1d(x, Hnoise, kind="nearest")
+            # self.Hnoiseinterp = UnivariateSpline(x, Hnoise, k=1) # probably faster than interp1d! To do: why does it break?
+            self.Hnoiseinterp = interp1d(x, Hnoise, kind="nearest") # allows to evaluate as a function
             # to do (or think?): this is convenient but might introduce machine-error
 
     def F(self, U):
@@ -159,8 +160,8 @@ class Equation:
         """ Returns a steady state solution of the equation u*, constrained
             to u*(xConstr) = uConstr
             Input:
-                xConstr: x to fix the constraint
-                uConstr: u*(x) = uConstr for u* we look for
+                xConstr: double, x to fix the constraint
+                uConstr: double or (dims,1) np array, u*(x) = uConstr for u* we look for
                 x: values of x at which to evaluate u*
             Output:
                 (nvars, len(x)) numpy array with the values
@@ -170,12 +171,34 @@ class Equation:
         if self.eq in [Equation.LINEAR, Equation.BURGERS]:
             Ustar[0] = uConstr*np.exp(x - xConstr)
         elif self.eq == Equation.SWE_REST:
-            if uConstr[1] != 0:
-                print "[TO DO] Not yet implemented. Ignoring q for steady..."
+            # if uConstr[1] != 0:
+            Ustar[1] = uConstr[1]*np.ones_like(x)
+            Ustar[0] = self.solve_swe_steady_poly(uConstr[1], uConstr[0], 
+                                                  self.swe_H_eval(x))
+                # print "[TO DO] Not yet implemented. Ignoring q for steady..."
                 # sys.exit()
             # else:
-            Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
+            # Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
         return Ustar
+
+    def solve_swe_steady_poly(self, qi, hi, Hj):
+        """ find h*(x) at x_j so that (h*, qi) is a steady state.
+            Input:
+                qi: double, qi = q(x_i) = q*(x_i) = q(x_j) forall j in stencil
+                hi: double, hi = h(x_i) = h*(x_i)
+                Hj: numpy array with [H(x_j)] forall j in stencil
+            Output:
+                numpy array with [h*(x_j)] forall j in stencil
+        """
+        i = (len(Hj)-1)/2 # central point is the constraint
+        Ci = 0.5*qi*qi/hi/hi + self.swe_g*hi - self.swe_g*Hj[i]
+        hstar = np.empty_like(Hj)
+        for j in range(len(Hj)):
+            hstar[j] = newton(swe_steady_poly, hi, args=(qi, Ci, Hj[j], self.swe_g), 
+                              fprime=swe_steady_poly_prime, 
+                              fprime2=swe_steady_poly_second) # for Halley's method
+        return hstar
+
 
     def swe_H_eval(self, x):
         """ H(x) for SWE """
@@ -221,3 +244,13 @@ class Equation:
             plt.subplot(212)
             plt.plot(x, u[1]/u[0], label='u')
             plt.legend()
+
+def swe_steady_poly(h, q, Ci, Hj, g):
+    """ Polynomial in h, such that P(h) = 0 iff h is a value at x_j """
+    return h*h*h - (Hj+ Ci/g)*h*h + 0.5*q*q/g
+def swe_steady_poly_prime(h, q, Ci, Hj, g):
+    """ Derivative in h of swe_steady_poly """
+    return 3*h*h - 2*(Hj + Ci/g)*h
+def swe_steady_poly_second(h, q, Ci, Hj, g):
+    """ Second derivative in h of swe_steady_poly """
+    return 6*h - 2*(Hj + Ci/g)

@@ -17,7 +17,6 @@ def parse_command_line():
 def safe_name(name):
     """ Make sure the module we are going to try to import has the 
         appropriate name ("config.linear_upwind", for example) """
-    print name
     if name == "howbfd_config":
         return name
 

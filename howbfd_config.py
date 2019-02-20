@@ -3,17 +3,16 @@ from equation import Equation
 from boundary import BoundaryCond
 from numflux import Flux
 
-########################################
+############################################
 # DEFAULT OPTIONS!
 # To use one of the premade files, call
 # python main.py -c <any file in /config/ >
-########################################
-# See detailed explanation below
+############################################
 equation = Equation.SWE_REST
 init = InitCond.PWPOLY
 perturb_init = InitCond.PERT_NONE
 sw_H = Equation.SWE_H_PWPOLY
-sw_H_noise_factor = 0.1
+sw_H_noise_factor = 0.
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
 order = 3
@@ -27,8 +26,9 @@ plot_every = 0.5
 show_plots = True
 save_plots = False
 save_npys = False
-
-
+############################################
+# Detailed explanation of options follows
+############################################
 # equation: decides the equation to be solved. It is one of:
 # Equation.
 #	LINEAR: 1D linear transport, u_t + alpha u_x = u (alpha constant)
@@ -93,6 +93,6 @@ save_npys = False
 
 # IO options:
 #	plot_every: Every (this many) seconds, do...
-#	show_plots: ...display the plot
-#	save_plots: ...save the plot in /figs
-#	save_npys:  ...save numpy array in /npys
+#	show_plots: 	...display the plot
+#	save_plots: 	...save the plot in /figs
+#	save_npys:  	...save numpy array in /npys
