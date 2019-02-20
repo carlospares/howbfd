@@ -39,7 +39,6 @@ tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
 ### Main loop
 t = 0
 while t < cf.T:
-    print t
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
     bdry.expand_with_bcs(uGhost, u, gw, initCond, xGhost=xGhost)  # apply BC to u

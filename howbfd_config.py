@@ -9,20 +9,20 @@ from numflux import Flux
 # python main.py -c <any file in /config/ >
 ############################################
 equation = Equation.SWE
-init = InitCond.PWPOLY
+init = InitCond.STEADY
 perturb_init = InitCond.PERT_NONE
-sw_H = Equation.SWE_H_PWPOLY
-sw_H_noise_factor = 0.
+sw_H = Equation.SWE_H_FLAT
+sw_H_noise_factor = 0.1
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
 order = 3
 well_balanced = True
-N = 100
+N = 200
 a = 0
 b = 20
 cfl = 0.5
 T = 8
-plot_every = 0.5
+plot_every = 0.1
 show_plots = True
 save_plots = False
 save_npys = False

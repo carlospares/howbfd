@@ -3,6 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d # UnivariateSpline
 from scipy.optimize import newton
+from Funciones_salto_estacionario import phi, phiu
 
 class Equation:
     # Identifiers for equation
@@ -100,10 +101,10 @@ class Equation:
         """ Return H_x(x) """
         if self.eq == Equation.LINEAR:
             return self.linear_alpha*np.ones_like(x)
-        elif self. eq == Equation.BURGERS:
+        elif self.eq == Equation.BURGERS:
             return np.ones_like(x)
         elif self.eq == Equation.SWE:
-            self.swe_Hx_eval(x) # see later
+            return self.swe_Hx_eval(x) # see later
 
     def S(self, U):
         """ Return S(U) """
@@ -172,13 +173,21 @@ class Equation:
             Ustar[0] = uConstr*np.exp(x - xConstr)
         elif self.eq == Equation.SWE:
             # if uConstr[1] != 0:
-            Ustar[1] = uConstr[1]*np.ones_like(x)
-            Ustar[0] = self.solve_swe_steady_poly(uConstr[1], uConstr[0], 
-                                                  self.swe_H_eval(x))
-                # print "[TO DO] Not yet implemented. Ignoring q for steady..."
-                # sys.exit()
+            #     Ustar[1] = uConstr[1]*np.ones_like(x)
+            #     Ustar[0] = self.solve_swe_steady_poly(uConstr[1], uConstr[0], 
+            #                                           self.swe_H_eval(x))
+            #     print "[TO DO] Debugging because of {}".format(uConstr[1])
             # else:
-            # Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
+            #     Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
+            Hj = self.swe_H_eval(x)
+            for j in range(len(x)):
+                (hsuperc, hsubc) = phi(uConstr[0], uConstr[1]/uConstr[0], self.swe_H_eval(xConstr), Hj[j])
+                usuperc = phiu(uConstr[0], uConstr[1]/uConstr[0], hsuperc)
+                usubc = phiu(uConstr[0], uConstr[1]/uConstr[0], hsubc)
+                # Ustar[0,j] = hsuperc
+                # Ustar[1,j] = usuperc
+                Ustar[0,j] = hsubc
+                Ustar[1,j] = usubc
         return Ustar
 
     def solve_swe_steady_poly(self, qi, hi, Hj):
