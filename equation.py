@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+from scipy.interpolate import UnivariateSpline
 
 class Equation:
     # Identifiers for equation
@@ -14,7 +15,6 @@ class Equation:
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
     swe_eta = 1
-    Hdict = None
 
     SEED = 11235813 # for reproducibility
 
@@ -23,9 +23,9 @@ class Equation:
         self.swe_H = swe_H
         if swe_H == self.SWE_H_NOISE:
             np.random.seed(self.SEED) # so we get consistent results
-            print x.shape
             Hvals = np.random.rand(len(x))
-            self.Hdict = dict(zip(x,Hvals))
+            self.Hinterp = UnivariateSpline(x, Hvals, k=1) # allows to evaluate as a function
+            # to do (or think?): this is convenient but might introduce machine-error
 
 
     # def g(self,ui,uj,xi,xj):
@@ -200,10 +200,7 @@ class Equation:
         if self.swe_H == Equation.SWE_H_FLAT:
             return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
-            if isinstance(x,float):
-                return self.Hdict[x]
-            else:
-                return np.array([self.Hdict[t] for t in x])
+            return self.Hinterp(x)
 
 
     def swe_Hx_eval(self, x):
