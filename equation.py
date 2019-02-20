@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-from scipy.interpolate import UnivariateSpline
+from scipy.interpolate import UnivariateSpline, interp1d
 
 class Equation:
     # Identifiers for equation
@@ -10,7 +10,6 @@ class Equation:
     SWE_REST = 2 # 1D shallow water equation, vars [h,q=hu]
 
     SWE_H_FLAT = 0
-    SWE_H_NOISE = 1
     SWE_H_PWPOLY = 2
 
     linear_alpha = 0.05 # advection velocity for linear
@@ -19,36 +18,16 @@ class Equation:
 
     SEED = 11235813 # for reproducibility
 
-    def __init__(self, eqn, x, swe_H=SWE_H_FLAT):
+    def __init__(self, eqn, x, swe_H=SWE_H_FLAT, swe_noise_amplit=0):
         self.eq = eqn
         self.swe_H = swe_H
-        if swe_H == self.SWE_H_NOISE:
+        self.swe_noise_amplit = swe_noise_amplit
+        if swe_noise_amplit != 0:
             np.random.seed(self.SEED) # so we get consistent results
-            Hvals = np.random.rand(len(x))
-            self.Hinterp = UnivariateSpline(x, Hvals, k=1) # allows to evaluate as a function
+            Hnoise = swe_noise_amplit*np.random.rand(len(x))
+            # self.Hnoiseinterp = UnivariateSpline(x, Hnoise, k=1) # allows to evaluate as a function
+            self.Hnoiseinterp = interp1d(x, Hnoise, kind="nearest")
             # to do (or think?): this is convenient but might introduce machine-error
-
-
-    # def g(self,ui,uj,xi,xj):
-    #     """ Input:
-    #             ui: u[i] for i the center point of the stencil
-    #             uj: u[j] for a single j, or array of values for all j in the stencil
-    #             xi: x[i] for the center point of the stencil
-    #             xj: x[j] (like uj). If array, it must be length(xj)==length(uj)
-    #         Output:
-    #             If uj is a number, returns g_i(x_j) 
-    #             If uj is an array, returns [g_i(x_j) for every j in the stencil],
-    #                                         which can be unpacked with * 
-    #     """
-    #     if self.eq==Equation.LINEAR:
-    #         return self.linear_alpha*(uj - ui*np.exp(xj-xi))
-    #     elif self.eq==Equation.BURGERS:
-    #         return uj*uj*0.5 - 0.5*ui*ui*np.exp(2*(xj-xi))
-    #     elif self.eq==Equation.SWE_REST:
-    #         G = np.zeros(uj.shape)
-    #         G[1,:] = self.swe_g*0.5*(self.swe_eta + self.swe_H_eval(xj))**2
-    #         return self.F(uj) - G
-
 
     def F(self, U):
         """ Flux function """
@@ -199,20 +178,23 @@ class Equation:
     def swe_H_eval(self, x):
         """ H(x) for SWE """
         if self.swe_H == Equation.SWE_H_FLAT:
-            return 0.1*np.ones_like(x)
-        elif self.swe_H == Equation.SWE_H_NOISE:
-            return self.Hinterp(x)
+            H = 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_PWPOLY:
-            return (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
+            H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
+
+        if self.swe_noise_amplit != 0:
+            H += self.Hnoiseinterp(x)
+        return H
 
 
     def swe_Hx_eval(self, x):
         """ H_x(x) for SWE """
+        if self.swe_noise_amplit != 0:
+            print "[ERROR] Tried to compute H_x but H has noise on, not smooth"
+            sys.exit()
+
         if self.swe_H == Equation.SWE_H_FLAT:
             return np.zeros_like(x)
-        elif self.swe_H == Equation.SWE_H_NOISE:
-            print "[ERROR] Derivative of noise? Not happening, sorry"
-            sys.exit()
         elif self.swe_H == Equation.SWE_H_PWPOLY:
             return 0.1*(x-10)*(x>=8)*(x<=12)
 
@@ -229,8 +211,9 @@ class Equation:
             plt.subplot(211)
             plt.title(t)
             H = self.swe_H_eval(x)
-            plt.plot(x, -H, 'b', label='h')
+            plt.plot(x, -H, 'b', label='-H')
             plt.plot(x, u[0]-H, 'g', label='$\eta$')
+            plt.plot(x, u[0], 'r', label='h')
             plt.legend()
             plt.subplot(212)
             plt.plot(x, u[1]/u[0], label='u')
