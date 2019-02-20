@@ -17,14 +17,16 @@ def parse_command_line():
     return args.config
 
 def safe_name(name):
+    """ Make sure the module we are going to try to import has the 
+        appropriate name ("config.linear_upwind", for example) """
     if "config" in name: # remove {... ./}config{./}
         name = name[name.rfind("config")+7:]
-    if "." in name:
+    if "." in name: # remove .py
         name = name[:name.rfind(".")]
     return "config." + name
 
+# Get config file from command line, or load default:
 quickConf = parse_command_line()
-
 if quickConf == "":
     # import howbfd_config as cf
     cf = importlib.import_module("howbfd_config")
@@ -32,6 +34,7 @@ else:
     configfile = safe_name(quickConf[0])
     cf = importlib.import_module(configfile)
 
+# Set up problem:
 bdry = BoundaryCond(cf.boundary)
 gw = int((cf.order-1)/2)+1 # number of ghost cells
 interfaces = np.linspace(cf.a,cf.b,cf.N+1) # we won't really use them
@@ -54,6 +57,8 @@ io_manager = IoManager(cf.plot_every, cf.T, eqn)
 # identifies options used to run
 tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
                          cf.boundary, int(cf.well_balanced), cf.N, cf.order)
+
+# Main loop
 t = 0
 while t < cf.T:
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
@@ -72,4 +77,5 @@ while t < cf.T:
     io_manager.io_if_appropriate(x, u, t, show_plot=cf.show_plots, tag=tag,
                                  save_plot=cf.save_plots, save_npy=cf.save_npys)
 
+# Write some final statistics
 io_manager.statistics(x, u, initCond)

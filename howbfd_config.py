@@ -4,7 +4,9 @@ from boundary import BoundaryCond
 from numflux import Flux
 
 ########################################
-# Options                              #
+# DEFAULT OPTIONS!
+# To use one of the premade files, call
+# python main.py -c <any file in /config/ >
 ########################################
 # See detailed explanation below
 equation = Equation.SWE_REST
