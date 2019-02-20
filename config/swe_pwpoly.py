@@ -5,7 +5,7 @@ from numflux import Flux
 
 # For a detailed explanation, see howbfd_config
 
-equation = Equation.SWE_REST
+equation = Equation.SWE
 init = InitCond.PWPOLY
 sw_H = Equation.SWE_H_PWPOLY
 sw_H_noise_factor = 0.1

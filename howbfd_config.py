@@ -8,7 +8,7 @@ from numflux import Flux
 # To use one of the premade files, call
 # python main.py -c <any file in /config/ >
 ############################################
-equation = Equation.SWE_REST
+equation = Equation.SWE
 init = InitCond.PWPOLY
 perturb_init = InitCond.PERT_NONE
 sw_H = Equation.SWE_H_PWPOLY
@@ -33,7 +33,7 @@ save_npys = False
 # Equation.
 #	LINEAR: 1D linear transport, u_t + alpha u_x = u (alpha constant)
 #	BURGERS: 1D Burgers equation, u_t + u u_x = u^2
-#	SWE_REST: 1D shallow water equation, variables [h, q=hu]
+#	SWE: 1D shallow water equation, variables [h, q=hu]
 # See equation.py
 
 # init: decides the initial condition of the problem. It is one of:

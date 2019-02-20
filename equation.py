@@ -8,7 +8,7 @@ class Equation:
     # Identifiers for equation
     LINEAR = 0
     BURGERS = 1
-    SWE_REST = 2 # 1D shallow water equation, vars [h,q=hu]
+    SWE = 2 # 1D shallow water equation, vars [h,q=hu]
 
     # Identifiers for SW topography
     SWE_H_FLAT = 0
@@ -38,7 +38,7 @@ class Equation:
             return self.linear_alpha*U
         elif self.eq==Equation.BURGERS:
             return U*U/2
-        elif self.eq==Equation.SWE_REST:
+        elif self.eq==Equation.SWE:
             ret = np.empty(U.shape)
             h = U[0,:]
             q = U[1,:]
@@ -52,7 +52,7 @@ class Equation:
             return self.linear_alpha*np.ones(np.size(U))
         elif self.eq==Equation.BURGERS:
             return U
-        elif self.eq==Equation.SWE_REST or True:
+        elif self.eq==Equation.SWE:
             DF = np.zeros((U.shape[1], self.dim(), self.dim()))
             for i in range(U.shape[1]):
                 h = U[0,i]
@@ -68,7 +68,7 @@ class Equation:
             return self.linear_alpha*np.ones(np.size(U))
         elif self.eq==Equation.BURGERS:
             return U
-        elif self.eq==Equation.SWE_REST:
+        elif self.eq==Equation.SWE:
             eig = np.zeros(U.shape)
             eig[0,:] = U[1,:]/U[0,:] - np.sqrt(self.swe_g*U[0,:])
             eig[1,:] = U[1,:]/U[0,:] + np.sqrt(self.swe_g*U[0,:])
@@ -93,7 +93,7 @@ class Equation:
             return self.linear_alpha*x
         elif self. eq == Equation.BURGERS:
             return x
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             return self.swe_H_eval(x) # see later
 
     def Hx(self, x):
@@ -102,7 +102,7 @@ class Equation:
             return self.linear_alpha*np.ones_like(x)
         elif self. eq == Equation.BURGERS:
             return np.ones_like(x)
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             self.swe_Hx_eval(x) # see later
 
     def S(self, U):
@@ -111,7 +111,7 @@ class Equation:
             return U
         elif self.eq == Equation.BURGERS:
             return U*U
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             return np.array([ 0, self.swe_g*U[0] ])
 
     def upw_criterion(self, uStencil):
@@ -124,7 +124,7 @@ class Equation:
             mid = int((len(uStencil)-1)/2) # approx. u at intercell
             return ((uStencil[0,mid]+uStencil[0,mid-1])/2, 
                     (uStencil[0,mid]+uStencil[0,mid+1])/2)
-        elif self.eq==Equation.SWE_REST:
+        elif self.eq==Equation.SWE:
             print "[ERROR] Upwind only implemented for scalar equations!"
             sys.exit()
 
@@ -134,7 +134,7 @@ class Equation:
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
-        if self.eq != Equation.SWE_REST:
+        if self.eq != Equation.SWE:
             return 1
         else:
             return 2
@@ -151,7 +151,7 @@ class Equation:
         if self.eq in [Equation.LINEAR, Equation.BURGERS]:
             U0 = np.zeros((1, len(x)))
             U0[0] = np.exp(x)
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             U0 = np.zeros((2, len(x)))
             U0[0,:] = self.swe_eta + self.swe_H_eval(x)
         return U0
@@ -170,7 +170,7 @@ class Equation:
         Ustar = np.zeros((self.dim(), len(x)))
         if self.eq in [Equation.LINEAR, Equation.BURGERS]:
             Ustar[0] = uConstr*np.exp(x - xConstr)
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             # if uConstr[1] != 0:
             Ustar[1] = uConstr[1]*np.ones_like(x)
             Ustar[0] = self.solve_swe_steady_poly(uConstr[1], uConstr[0], 
@@ -233,7 +233,7 @@ class Equation:
             plt.plot(x,u[0], label='u')
             plt.legend()
             plt.title(t)
-        elif self.eq == Equation.SWE_REST:
+        elif self.eq == Equation.SWE:
             plt.subplot(211)
             plt.title(t)
             H = self.swe_H_eval(x)
