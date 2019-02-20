@@ -3,38 +3,20 @@ from initcond import InitCond
 from equation import Equation
 from boundary import BoundaryCond
 from numflux import Flux
-from howbfd_io import IoManager
-import argparse
+from howbfd_io import IoManager, parse_command_line, safe_name
 import importlib
 import os
 
-def parse_command_line():
-    """ Take all arguments from command line and return them """
-    parser = argparse.ArgumentParser(description='High order well-balanced FD solver')
-    parser.add_argument('-c', '--config', type=str, nargs=1, default="",
-                         help='Quick configuration file')
-    args = parser.parse_args()
-    return args.config
-
-def safe_name(name):
-    """ Make sure the module we are going to try to import has the 
-        appropriate name ("config.linear_upwind", for example) """
-    if "config" in name: # remove {... ./}config{./}
-        name = name[name.rfind("config")+7:]
-    if "." in name: # remove .py
-        name = name[:name.rfind(".")]
-    return "config." + name
-
-# Get config file from command line, or load default:
-quickConf = parse_command_line()
+### Get config file from command line, or load default:
+quickConf = parse_command_line() # from howbfd_io
 if quickConf == "":
     # import howbfd_config as cf
     cf = importlib.import_module("howbfd_config")
 else:
-    configfile = safe_name(quickConf[0])
+    configfile = safe_name(quickConf[0]) # from howbfd_io
     cf = importlib.import_module(configfile)
 
-# Set up problem:
+### Set up problem:
 bdry = BoundaryCond(cf.boundary)
 gw = int((cf.order-1)/2)+1 # number of ghost cells
 interfaces = np.linspace(cf.a,cf.b,cf.N+1) # we won't really use them
@@ -58,7 +40,7 @@ io_manager = IoManager(cf.plot_every, cf.T, eqn)
 tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
                          cf.boundary, int(cf.well_balanced), cf.N, cf.order)
 
-# Main loop
+### Main loop
 t = 0
 while t < cf.T:
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
@@ -77,5 +59,5 @@ while t < cf.T:
     io_manager.io_if_appropriate(x, u, t, show_plot=cf.show_plots, tag=tag,
                                  save_plot=cf.save_plots, save_npy=cf.save_npys)
 
-# Write some final statistics
+### Write some final statistics
 io_manager.statistics(x, u, initCond)

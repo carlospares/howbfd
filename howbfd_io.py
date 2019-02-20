@@ -3,6 +3,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 from initcond import InitCond
 from equation import Equation
+import argparse
+
+
+def parse_command_line():
+    """ Take all arguments from command line and return them """
+    parser = argparse.ArgumentParser(description='High order well-balanced FD solver')
+    parser.add_argument('-c', '--config', type=str, nargs=1, default="",
+                         help='Quick configuration file')
+    args = parser.parse_args()
+    return args.config
+
+def safe_name(name):
+    """ Make sure the module we are going to try to import has the 
+        appropriate name ("config.linear_upwind", for example) """
+    if "config" in name: # remove {... ./}config{./}
+        name = name[name.rfind("config")+7:]
+    if "." in name: # remove .py
+        name = name[:name.rfind(".")]
+    return "config." + name
+
 
 class IoManager:
 
