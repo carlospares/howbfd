@@ -17,7 +17,7 @@ class IoManager:
 
 
     def io_if_appropriate(self, x, u, t, show_plot=False, save_npy=True,
-                          save_plot=True, tag="", is_swe=False):
+                          save_plot=True, tag=""):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
@@ -52,6 +52,6 @@ class IoManager:
         """
         Compute some statistics on u
         """
-        if init == InitCond.STEADY:
-            uExact = self.eqn.steady(x)
-            print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact)))
+        if init.initCond in [InitCond.STEADY, InitCond.PWPOLY]:
+            uExact = init.u0(x)
+            print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact),1))

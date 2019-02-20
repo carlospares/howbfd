@@ -11,6 +11,7 @@ class Equation:
 
     SWE_H_FLAT = 0
     SWE_H_NOISE = 1
+    SWE_H_PWPOLY = 2
 
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
@@ -201,15 +202,19 @@ class Equation:
             return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
             return self.Hinterp(x)
+        elif self.swe_H == Equation.SWE_H_PWPOLY:
+            return (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
 
 
     def swe_Hx_eval(self, x):
         """ H_x(x) for SWE """
         if self.swe_H == Equation.SWE_H_FLAT:
             return np.zeros_like(x)
-        if self.swe_H == Equation.SWE_H_NOISE:
+        elif self.swe_H == Equation.SWE_H_NOISE:
             print "[ERROR] Derivative of noise? Not happening, sorry"
             sys.exit()
+        elif self.swe_H == Equation.SWE_H_PWPOLY:
+            return 0.1*(x-10)*(x>=8)*(x<=12)
 
     def prepare_plot(self,x,u,t):
         """ Plot x and u in whichever way is appropriate for the equation.

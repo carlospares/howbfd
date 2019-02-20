@@ -6,6 +6,7 @@ class InitCond:
     SIN = 0
     SHOCK = 1
     STEADY = 2 # use eqn-dependent steady state
+    PWPOLY = 3
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 0
@@ -25,13 +26,16 @@ class InitCond:
     def u0(self, x):
         """ Initial condition """
         if self.initCond==InitCond.SHOCK:
-            U0 = np.zeros((1, len(x)))
+            U0 = np.zeros((eqn.dim(), len(x)))
             U0[0] = 1.0*(x <= 0.5) + 2.0 * (x>0.5)
         elif self.initCond==InitCond.SIN:
-            U0 = np.zeros((1, len(x)))
+            U0 = np.zeros((eqn.dim(), len(x)))
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
             U0 = self.eqn.steady(x)
+        elif self.initCond==InitCond.PWPOLY:
+            U0 = np.zeros((self.eqn.dim(), len(x)))
+            U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

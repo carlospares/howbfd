@@ -8,20 +8,20 @@ from howbfd_io import IoManager
 ########################################
 # Options                              #
 ########################################
-equation = Equation.SWE_REST           # see equation.py
-init = InitCond.STEADY                 # see initcond.py
+equation = Equation.BURGERS            # see equation.py
+init = InitCond.PWPOLY                 # see initcond.py
 perturb = InitCond.PERT_NONE           # see initcond.py, PERT_NONE to omit
-sw_h = Equation.SWE_H_NOISE            # see equation.py
+sw_h = Equation.SWE_H_PWPOLY           # see equation.py
 boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
 numflux = Flux.RUSANOV                 # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
 well_balanced = True                   # is it well balanced? or basic WENO?
 N = 100                                # number of spatial points
 cfl = 0.5                              # cfl number to use for dt
-a = -1                                 # left interval limit
-b = 1                                  # right interval limit
+a = 0                                  # left interval limit
+b = 2                                  # right interval limit
 T = 1                                  # end time
-plot_every = 0.1                           # call io every (this many) seconds
+plot_every = 0.001                     # call io every (this many) seconds
 show_plots = True                      # show plots?
 save_plots = False                     # save plot images?
 save_npys = False                      # save npy with solution snapshot?
@@ -68,4 +68,4 @@ while t < T:
     io_manager.io_if_appropriate(x, u, t, show_plot=show_plots, tag=tag,
                                  save_plot=save_plots, save_npy=save_npys)
 
-io_manager.statistics(x, u, init)
+io_manager.statistics(x, u, initCond)
