@@ -14,12 +14,19 @@ class Equation:
     linear_alpha = 0.05 # advection velocity for linear
     swe_g = 9.8
     swe_eta = 1
+    Hdict = None
 
-    SEED = 1189998819991197253 # for reproducibility
+    SEED = 11235813 # for reproducibility
 
-    def __init__(self, eqn, swe_H=SWE_H_FLAT):
+    def __init__(self, eqn, x, swe_H=SWE_H_FLAT):
         self.eq = eqn
         self.swe_H = swe_H
+        if swe_H == self.SWE_H_NOISE:
+            np.random.seed(self.SEED) # so we get consistent results
+            print x.shape
+            Hvals = np.random.rand(len(x))
+            self.Hdict = dict(zip(x,Hvals))
+
 
     # def g(self,ui,uj,xi,xj):
     #     """ Input:
@@ -104,7 +111,7 @@ class Equation:
         elif self. eq == Equation.BURGERS:
             return x
         elif self.eq == Equation.SWE_REST:
-            return self.swe_H_eval(x)
+            return self.swe_H_eval(x) # see later
 
     def Hx(self, x):
         """ Return H_x(x) """
@@ -113,8 +120,7 @@ class Equation:
         elif self. eq == Equation.BURGERS:
             return np.ones_like(x)
         elif self.eq == Equation.SWE_REST:
-            if self.swe_H == Equation.SWE_H_FLAT:
-                return self.swe_Hx_eval(x)
+            self.swe_Hx_eval(x) # see later
 
     def S(self, U):
         """ Return S(U) """
@@ -183,10 +189,10 @@ class Equation:
             Ustar[0] = uConstr*np.exp(x - xConstr)
         elif self.eq == Equation.SWE_REST:
             if uConstr[1] != 0:
-                print "[TO DO] Not yet implemented. Bye!"
-                sys.exit()
-            else:
-                Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
+                print "[TO DO] Not yet implemented. Ignoring q for steady..."
+                # sys.exit()
+            # else:
+            Ustar[0,:] = uConstr[0] - self.swe_H_eval(xConstr) + self.swe_H_eval(x)
         return Ustar
 
     def swe_H_eval(self, x):
@@ -194,8 +200,10 @@ class Equation:
         if self.swe_H == Equation.SWE_H_FLAT:
             return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
-            np.random.seed(self.SEED) # so we get consistent results
-            return np.random.rand(len(x))
+            if isinstance(x,float):
+                return self.Hdict[x]
+            else:
+                return np.array([self.Hdict[t] for t in x])
 
 
     def swe_Hx_eval(self, x):
@@ -204,7 +212,7 @@ class Equation:
             return np.zeros_like(x)
         if self.swe_H == Equation.SWE_H_NOISE:
             print "[ERROR] Derivative of noise? Not happening, sorry"
-            sys.exit() # if done, remove sys import
+            sys.exit()
 
     def prepare_plot(self,x,u,t):
         """ Plot x and u in whichever way is appropriate for the equation.
@@ -218,8 +226,9 @@ class Equation:
         elif self.eq == Equation.SWE_REST:
             plt.subplot(211)
             plt.title(t)
-            plt.plot(x, u[0], 'b', label='h')
-            plt.plot(x, u[0] - self.swe_H_eval(x), 'g', label='$\eta$')
+            H = self.swe_H_eval(x)
+            plt.plot(x, -H, 'b', label='h')
+            plt.plot(x, u[0]-H, 'g', label='$\eta$')
             plt.legend()
             plt.subplot(212)
             plt.plot(x, u[1]/u[0], label='u')
