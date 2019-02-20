@@ -8,19 +8,19 @@ from howbfd_io import IoManager
 ########################################
 # Options                              #
 ########################################
+equation = Equation.SWE_REST            # see equation.py
 init = InitCond.STEADY                 # see initcond.py
 perturb = InitCond.PERT_NONE           # see initcond.py, PERT_NONE to omit
-equation = Equation.BURGERS            # see equation.py
 sw_h = Equation.SWE_H_FLAT             # see equation.py
 boundary = BoundaryCond.FORCE_STEADY   # see boundary.py
-numflux = Flux.UPWIND                  # see numflux.py
+numflux = Flux.RUSANOV                  # see numflux.py
 order = 3                              # 3, 5, 7, 9, 11
 well_balanced = True                   # is it well balanced? or basic WENO?
 N = 100                                # number of spatial points
 cfl = 0.5                              # cfl number to use for dt
 a = -1                                 # left interval limit
 b = 1                                  # right interval limit
-T = 8                                  # end time
+T = 1                                  # end time
 plot_every = 1.0                       # call io every (this many) seconds
 show_plots = True                      # show plots?
 save_plots = False                     # save plot images?
@@ -43,7 +43,7 @@ xGhost = np.zeros(N+2*gw) # storage for x with ghost cells
 uGhost = np.zeros((nvars, N+2*gw)) # same for u
 bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
 tend = np.zeros((nvars,N)) # tend[i] = (d/dt)u_i
-io_manager = IoManager(plot_every, T)
+io_manager = IoManager(plot_every, T, eqn)
 
 # identifies options used to run
 tag = io_manager.get_tag(init, perturb, equation, numflux,
@@ -64,3 +64,5 @@ while t < T:
     u = u + dt*tend
     io_manager.io_if_appropriate(x, u, t, show_plot=show_plots, tag=tag,
                                  save_plot=save_plots, save_npy=save_npys)
+
+io_manager.statistics(x, u, init)

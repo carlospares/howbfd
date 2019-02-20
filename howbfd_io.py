@@ -1,20 +1,23 @@
 from math import ceil
 import matplotlib.pyplot as plt
 import numpy as np
+from initcond import InitCond
+from equation import Equation
 
 class IoManager:
 
-    def __init__(self, plot_every, T):
+    def __init__(self, plot_every, T, eqn):
         self.plot_counter = 0
         base = np.arange(0, T, plot_every)
         self.plot_times = np.append(base, T)
+        self.eqn = eqn
 
     def get_next_plot_time(self):
         return self.plot_times[self.plot_counter]
 
 
     def io_if_appropriate(self, x, u, t, show_plot=False, save_npy=True,
-                          save_plot=True, tag=""):
+                          save_plot=True, tag="", is_swe=False):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
@@ -22,11 +25,12 @@ class IoManager:
             print t
             (nvars, N) = u.shape
             plt.clf()
-            for n in range(nvars):
-                plt.plot(x,u[n,:], label="u[{}]".format(n))
-            if nvars > 1:
-                plt.legend()
-            plt.title(t)
+            self.eqn.prepare_plot(x, u, t)
+            # for n in range(nvars):
+            #     plt.plot(x,u[n,:], label="u[{}]".format(n))
+            # if nvars > 1:
+            # plt.legend()
+            # plt.title(t)
             if save_plot:
                 plt.savefig("figs/{}{}.png".format(tag,t))
             if show_plot:
@@ -43,3 +47,11 @@ class IoManager:
         return "i{}-{}e{}f{}b{}w{}n{}o{}_"\
             .format(init, perturb, equation, numflux, boundary, well_balanced,
                     N, order)
+
+    def statistics(self, x, u, init):
+        """
+        Compute some statistics on u
+        """
+        if init == InitCond.STEADY:
+            uExact = self.eqn.steady(x)
+            print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact)))

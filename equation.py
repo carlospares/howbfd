@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 
 class Equation:
     # Identifiers for equation
@@ -189,6 +190,7 @@ class Equation:
         return Ustar
 
     def swe_H_eval(self, x):
+        """ H(x) for SWE """
         if self.swe_H == Equation.SWE_H_FLAT:
             return 0.1*np.ones_like(x)
         elif self.swe_H == Equation.SWE_H_NOISE:
@@ -197,8 +199,28 @@ class Equation:
 
 
     def swe_Hx_eval(self, x):
+        """ H_x(x) for SWE """
         if self.swe_H == Equation.SWE_H_FLAT:
             return np.zeros_like(x)
         if self.swe_H == Equation.SWE_H_NOISE:
             print "[ERROR] Derivative of noise? Not happening, sorry"
             sys.exit() # if done, remove sys import
+
+    def prepare_plot(self,x,u,t):
+        """ Plot x and u in whichever way is appropriate for the equation.
+            This function will be called by io_manager.
+            This function should produce a finished plot, including title,
+            legend, labels and so on; io_manager will do plt.show() or savefig() 
+            as required """
+        if self.eq in [Equation.LINEAR, Equation.BURGERS]: # 1D
+            plt.plot(x,u[0], label='u')
+            plt.legend()
+        elif self.eq == Equation.SWE_REST:
+            plt.subplot(211)
+            plt.title(t)
+            plt.plot(x, u[0], 'b', label='h')
+            plt.plot(x, u[0] - self.swe_H_eval(x), 'g', label='$\eta$')
+            plt.legend()
+            plt.subplot(212)
+            plt.plot(x, u[1]/u[0], label='u')
+            plt.legend()
