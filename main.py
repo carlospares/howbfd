@@ -1,6 +1,7 @@
 import numpy as np
 from initcond import InitCond
-from equation import Equation
+# from equation import Equation
+from equation_factory import EquationFactory
 from boundary import BoundaryCond
 from numflux import Flux
 from howbfd_io import IoManager, parse_command_line, safe_name
@@ -20,7 +21,8 @@ x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
 xGhost = np.zeros(cf.N+2*gw) # storage for x with ghost cells
 bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
 
-eqn = Equation(cf.equation, xGhost, cf.sw_H, cf.sw_H_noise_factor)
+# eqn = Equation(cf.equation, xGhost, cf.sw_H, cf.sw_H_noise_factor)
+eqn = EquationFactory(cf.equation, xGhost, cf.sw_H, cf.sw_H_noise_factor)
 initCond = InitCond(cf.init, eqn, cf.perturb_init)
 flux = Flux(cf.numflux, cf.order, cf.well_balanced)
 

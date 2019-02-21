@@ -1,13 +1,14 @@
 from initcond import InitCond
 from equation import Equation
+from sw_equation import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
 # For a detailed explanation, see howbfd_config
 
-equation = Equation.SWE
+equation = Equation.SW
 init = InitCond.STEADY
-sw_H = Equation.SWE_H_FLAT
+sw_H = SWEquation.H_FLAT
 sw_H_noise_factor = 0.1
 perturb_init = InitCond.PERT_NONE
 boundary = BoundaryCond.FORCE_STEADY

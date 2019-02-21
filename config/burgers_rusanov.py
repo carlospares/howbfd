@@ -1,5 +1,6 @@
 from initcond import InitCond
 from equation import Equation
+from sw_equation import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
@@ -21,5 +22,5 @@ plot_every = 0.1
 show_plots = True
 save_plots = False
 save_npys = False
-sw_H = Equation.SWE_H_PWPOLY # not relevant
+sw_H = SWEquation.H_PWPOLY # not relevant
 sw_H_noise_factor = 0.1 # not relevant

@@ -1,5 +1,6 @@
 from initcond import InitCond
 from equation import Equation
+from sw_equation import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
@@ -8,10 +9,10 @@ from numflux import Flux
 # To use one of the premade files, call
 # python main.py -c <any file in /config/ >
 ############################################
-equation = Equation.SWE
+equation = Equation.SW
 init = InitCond.STEADY
 perturb_init = InitCond.PERT_NONE
-sw_H = Equation.SWE_H_FLAT
+sw_H = SWEquation.H_FLAT
 sw_H_noise_factor = 0.1
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
@@ -26,6 +27,8 @@ plot_every = 0.1
 show_plots = True
 save_plots = False
 save_npys = False
+
+
 ############################################
 # Detailed explanation of options follows
 ############################################
@@ -33,7 +36,7 @@ save_npys = False
 # Equation.
 #	LINEAR: 1D linear transport, u_t + alpha u_x = u (alpha constant)
 #	BURGERS: 1D Burgers equation, u_t + u u_x = u^2
-#	SWE: 1D shallow water equation, variables [h, q=hu]
+#	SW: 1D shallow water equation, variables [h, q=hu]
 # See equation.py
 
 # init: decides the initial condition of the problem. It is one of:
@@ -57,7 +60,7 @@ save_npys = False
 # sw_H and sw_H_noise_factor decide the bathymetry profile of SWE
 # unused for other equations at the moment
 # sw_H is one of:
-# Equation.SWE_H_
+# SWEquation.
 #	FLAT: 0.1
 #	PWPOLY: (0.13+0.05*(x-10)**2) in [8,12]; 0.33 otherwise
 # sw_H_noise_factor adds a U[0,1] perturbation to H; so the end result is

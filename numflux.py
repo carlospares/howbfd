@@ -1,4 +1,4 @@
-from equation import Equation
+# from generic_equation import GenEquation
 import wenorec as wr
 import numpy as np
 import sys
