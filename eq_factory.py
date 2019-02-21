@@ -3,7 +3,7 @@ from linear_equation import LinearEquation
 from burgers_equation import BurgersEquation
 from sw_equation import SWEquation
 
-def EquationFactory(eqn, x=[0], H=SWEquation.H_FLAT, noise_amplit=0):
+def equation_factory(eqn, x=[0], H=SWEquation.H_FLAT, noise_amplit=0):
 	if eqn == Equation.LINEAR:
 		return LinearEquation()
 	elif eqn == Equation.BURGERS:

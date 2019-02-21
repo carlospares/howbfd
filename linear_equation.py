@@ -50,9 +50,10 @@ class LinearEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
-        U0 = np.zeros((1, len(x)))
-        U0[0] = np.exp(x)
-        return U0
+        return self.steady_constraint(0, 1, x)
+        # U0 = np.zeros((1, len(x)))
+        # U0[0] = np.exp(x)
+        # return U0
 
     def steady_constraint(self, xConstr, uConstr, x):
         """ Returns a steady state solution of the equation u*, constrained

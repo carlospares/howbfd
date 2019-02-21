@@ -97,13 +97,14 @@ class SWEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
+        # Water at rest solution: [h, q](x) = [eta + H(x), 0]
         arbitrary_eta = 1
         U0 = np.zeros((2, len(x)))
         U0[0,:] = arbitrary_eta + self.H(x)
         return U0
 
     def steady_constraint(self, xConstr, uConstr, x):
-        """ Returns a steady state solution of the equation u*, constrained
+        """ Returns a steady state solution of the equation, u*, constrained
             to u*(xConstr) = uConstr
             Input:
                 xConstr: double, x to fix the constraint
