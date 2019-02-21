@@ -6,6 +6,8 @@ from scipy.optimize import newton
 from Funciones_salto_estacionario import phi, phiu
 
 class Equation:
+
+
     # Identifiers for equation
     LINEAR = 0
     BURGERS = 1

@@ -1,6 +1,6 @@
 from initcond import InitCond
 from equation import Equation
-from sw_equation import SWEquation
+from eq_sw import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
@@ -24,3 +24,4 @@ save_plots = False
 save_npys = False
 sw_H = SWEquation.H_PWPOLY # not relevant
 sw_H_noise_factor = 0.1 # not relevant
+print "Loaded config/linear_upwind.py!"

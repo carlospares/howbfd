@@ -1,7 +1,7 @@
 from equation import Equation
-from linear_equation import LinearEquation
-from burgers_equation import BurgersEquation
-from sw_equation import SWEquation
+from eq_linear import LinearEquation
+from eq_burgers import BurgersEquation
+from eq_sw import SWEquation
 
 def equation_factory(eqn, x=[0], H=SWEquation.H_FLAT, noise_amplit=0):
 	if eqn == Equation.LINEAR:

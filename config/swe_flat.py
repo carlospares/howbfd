@@ -1,6 +1,6 @@
 from initcond import InitCond
 from equation import Equation
-from sw_equation import SWEquation
+from eq_sw import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
@@ -24,3 +24,4 @@ plot_every = 0.5
 show_plots = True
 save_plots = False
 save_npys = False
+print "Loaded config/swe_flat.py!"

@@ -1,6 +1,6 @@
 from initcond import InitCond
 from equation import Equation
-from sw_equation import SWEquation
+from eq_sw import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
 
@@ -10,9 +10,9 @@ from numflux import Flux
 # python main.py -c <any file in /config/ >
 ############################################
 equation = Equation.SW
-init = InitCond.STEADY
+init = InitCond.PWPOLY
 perturb_init = InitCond.PERT_NONE
-sw_H = SWEquation.H_FLAT
+sw_H = SWEquation.H_PWPOLY
 sw_H_noise_factor = 0.1
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
@@ -27,6 +27,8 @@ plot_every = 0.1
 show_plots = True
 save_plots = False
 save_npys = False
+
+print "Loaded howbdf_config.py!"
 
 
 ############################################
