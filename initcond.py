@@ -26,10 +26,10 @@ class InitCond:
     def u0(self, x):
         """ Initial condition """
         if self.initCond==InitCond.SHOCK:
-            U0 = np.zeros((eqn.dim(), len(x)))
+            U0 = np.zeros((self.eqn.dim(), len(x)))
             U0[0] = 1.0*(x <= 0.5) + 2.0 * (x>0.5)
         elif self.initCond==InitCond.SIN:
-            U0 = np.zeros((eqn.dim(), len(x)))
+            U0 = np.zeros((self.eqn.dim(), len(x)))
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
             U0 = self.eqn.steady(x)
@@ -40,17 +40,17 @@ class InitCond:
 
     def perturbation(self, x):
         if self.pert == InitCond.PERT_SIN:
-            pert = np.zeros((1, len(x)))
+            pert = np.zeros((self.eqn.dim(), len(x)))
             pert[0] = 0.01*(self.C+np.sin(2*np.pi*x))
         elif self.pert == InitCond.PERT_POLY:
-            pert = np.zeros((1, len(x)))
+            pert = np.zeros((self.eqn.dim(), len(x)))
             pert[0] = 0.01*x*(1-x)
         elif self.pert == InitCond.PERT_PATCH:
-            pert = np.zeros((1, len(x)))
+            pert = np.zeros((self.eqn.dim(), len(x)))
             pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
-            pert = np.zeros((1, len(x)))
+            pert = np.zeros((self.eqn.dim(), len(x)))
             pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))
         else:
-            pert = np.zeros((1, len(x)))
+            pert = np.zeros((self.eqn.dim(), len(x)))
         return pert
