@@ -4,7 +4,7 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d # UnivariateSpline
+from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.optimize import newton
 from Funciones_salto_estacionario import phi
 from equation import Equation
@@ -30,9 +30,8 @@ class SWEquation(Equation):
         if noise_amplit != 0:
             np.random.seed(self.SEED) # so we get consistent results
             Hnoise = noise_amplit*np.random.rand(len(x))
-            # self.Hnoiseinterp = UnivariateSpline(x, Hnoise, k=1) # probably faster than interp1d! To do: why does it break?
-            self.Hnoiseinterp = interp1d(x, Hnoise, kind="nearest") # allows to evaluate as a function
-            # to do (or think?): this is convenient but might introduce machine-error
+            self.Hnoiseinterp = InterpolatedUnivariateSpline(x, Hnoise, k=1) # faster than interp1d!
+            # this makes access convenient, but could introduce machine-error
 
     def F(self, U):
         """ Flux function """
