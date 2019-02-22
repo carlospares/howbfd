@@ -3,10 +3,17 @@ import sys
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d # UnivariateSpline
 from scipy.optimize import newton
-from Funciones_salto_estacionario import phi, phiu
+from Funciones_salto_estacionario import phi
 from equation import Equation
 
 class SWEquation(Equation):
+    """ 1D shallow water equation, vars [h,q=hu] 
+
+        h_t +  q_x               = 0
+        q_t + (q^2/h + gh^2/2)_x = gh H_x
+
+    """
+
     # Identifiers for SW topography
     H_FLAT = 0
     H_PWPOLY = 2
@@ -103,6 +110,9 @@ class SWEquation(Equation):
         U0[0,:] = arbitrary_eta + self.H(x)
         return U0
 
+    def Froude(self, u, h):
+        return abs(u) / np.sqrt(self.g*h)
+
     def steady_constraint(self, xConstr, uConstr, x):
         """ Returns a steady state solution of the equation, u*, constrained
             to u*(xConstr) = uConstr
@@ -115,25 +125,33 @@ class SWEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(x)))
-        # if uConstr[1] != 0:
-        #     Ustar[1] = uConstr[1]*np.ones_like(x)
-        #     Ustar[0] = self.solve_steady_poly(uConstr[1], uConstr[0], 
-        #                                           self.H(x))
-        #     print "[TO DO] Debugging because of {}".format(uConstr[1])
-        # else:
-        #     Ustar[0,:] = uConstr[0] - self.H(xConstr) + self.H(x)
         Hj = self.H(x)
+        (hi, qi, ui) = (uConstr[0], uConstr[1], uConstr[1]/uConstr[0])
+        # polyNewton = self.solve_steady_poly_newton(qi, hi, Hj)
+        # print self.find_steady_poly_roots(qi, hi, Hj)
+
+        Fr_i = self.Froude(ui, hi)
         for j in range(len(x)):
-            (hsuperc, hsubc) = phi(uConstr[0], uConstr[1]/uConstr[0], self.H(xConstr), Hj[j])
-            usuperc = phiu(uConstr[0], uConstr[1]/uConstr[0], hsuperc)
-            usubc = phiu(uConstr[0], uConstr[1]/uConstr[0], hsubc)
-            # Ustar[0,j] = hsuperc
-            # Ustar[1,j] = usuperc
-            Ustar[0,j] = hsubc
-            Ustar[1,j] = usubc
+            (hsuperc, hsubc) = phi(hi, ui, self.H(xConstr), Hj[j])
+            # hstar = polyNewton[j] # Halley's method
+            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+            Ustar[1,j] = uConstr[1]
         return Ustar
 
-    # def solve_steady_poly(self, qi, hi, Hj):
+    # # TO DO: very slow. Delete me?
+    # def find_steady_poly_roots(self, qi, hi, Hj):
+    #     i = (len(Hj)-1)/2 # central point is the constraint
+    #     Ci = 0.5*qi*qi/hi/hi + self.g*(hi - Hj[i])
+    #     # hstar = np.empty_like(Hj)
+    #     # for j in range(len(Hj)):
+    #     #     hstar[j] = max(np.roots([self.g, -(Ci+self.g*Hj[j]), 0, 0.5*qi*qi]))
+    #     # return hstar
+    #     hstars = np.zeros((len(Hj), 3))
+    #     for j in range(len(Hj)):
+    #         hstars[j] = np.roots([self.g, -(Ci+self.g*Hj[j]), 0, 0.5*qi*qi])
+    #     return hstars
+    
+    # def solve_steady_poly_newton(self, qi, hi, Hj):
     #     """ find h*(x) at x_j so that (h*, qi) is a steady state.
     #         Input:
     #             qi: double, qi = q(x_i) = q*(x_i) = q(x_j) forall j in stencil
@@ -143,7 +161,7 @@ class SWEquation(Equation):
     #             numpy array with [h*(x_j)] forall j in stencil
     #     """
     #     i = (len(Hj)-1)/2 # central point is the constraint
-    #     Ci = 0.5*qi*qi/hi/hi + self.g*hi - self.g*Hj[i]
+    #     Ci = 0.5*qi*qi/hi/hi + self.g*(hi - Hj[i])
     #     hstar = np.empty_like(Hj)
     #     for j in range(len(Hj)):
     #         hstar[j] = newton(steady_poly, hi, args=(qi, Ci, Hj[j], self.g), 
@@ -168,12 +186,13 @@ class SWEquation(Equation):
         plt.plot(x, u[1]/u[0], label='u')
         plt.legend()
 
+
 # def steady_poly(h, q, Ci, Hj, g):
 #     """ Polynomial in h, such that P(h) = 0 iff h is a value at x_j """
-#     return h*h*h - (Hj+ Ci/g)*h*h + 0.5*q*q/g
+#     return g*h*h*h - (Ci+g*Hj)*h*h + 0.5*q*q
 # def steady_poly_prime(h, q, Ci, Hj, g):
 #     """ Derivative in h of steady_poly """
-#     return 3*h*h - 2*(Hj + Ci/g)*h
+#     return 3*g*h*h - 2*(Ci+g*Hj)*h
 # def steady_poly_second(h, q, Ci, Hj, g):
 #     """ Second derivative in h of steady_poly """
-#     return 6*h - 2*(Hj + Ci/g)
+#     return 6*g*h - 2*(Ci+g*Hj)

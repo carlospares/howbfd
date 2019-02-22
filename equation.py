@@ -9,9 +9,9 @@ class Equation:
 
 
     # Identifiers for equation
-    LINEAR = 0
-    BURGERS = 1
-    SW = 2 # 1D shallow water equation, vars [h,q=hu]
+    LINEAR = 0   # eq_linear.py
+    BURGERS = 1  # eq_burgers.py
+    SW = 2       # eq_sw.py
 
     SEED = 11235813 # seed for reproducibility
 

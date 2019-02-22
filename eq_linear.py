@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 from equation import Equation
 
 class LinearEquation(Equation):
+    """ 1D scalar linear transport equation with mass term
+    
+        u_t + alpha u_x = u
+
+    """
+
     alpha = 0.05
 
     def F(self, U):

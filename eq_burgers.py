@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from equation import Equation
 
 class BurgersEquation(Equation):
+    """ 1D scalar Burgers' equation with mass term
+    
+        u_t + u u_x = u
+
+    """
 
     def F(self, U):
         """ Flux function """

@@ -31,7 +31,7 @@ class Flux:
             sys.exit()
         Gl = np.zeros(1)
         Gr = np.zeros(1)
-        i = (len(u)-1)/2
+        i = (u.shape[1]-1)/2
         (critL, critR) = eqn.upw_criterion(u)
         if self.wb:
             ustar = eqn.steady_constraint(x[i], u[:,i], x)
@@ -50,7 +50,7 @@ class Flux:
 
     def rusanov(self, u, x, eqn):
         nvars = eqn.dim()
-        i = (len(u)-1)/2
+        i = (u.shape[1]-1)/2
         alpha = np.amax(np.abs(eqn.eig_of_dF(u)))
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
