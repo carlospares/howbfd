@@ -4,7 +4,6 @@
 # from generic_equation import GenEquation
 import wenorec as wr
 import numpy as np
-import sys
 
 class Flux:
     UPWIND = 0
@@ -31,7 +30,7 @@ class Flux:
         nvars = eqn.dim()
         if nvars != 1:
             print "[ERROR] Upwind only implemented for scalar equations!"
-            sys.exit()
+            raise NotImplementedError
         Gl = np.zeros(1)
         Gr = np.zeros(1)
         i = (u.shape[1]-1)/2
@@ -39,7 +38,6 @@ class Flux:
         if self.wb:
             ustar = eqn.steady_constraint(x[i], u[:,i], x)
             phi = eqn.F(u) - eqn.F(ustar)
-            # phi = eqn.g(u[:,i], u, x[i], x) # g evaluated at the stencil
         else:
             phi = phi = eqn.F(u)
 
