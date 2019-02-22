@@ -1,3 +1,7 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+# Carlos Parés Pulido, 2019
+
 import numpy as np
 from initcond import InitCond
 from eq_factory import equation_factory

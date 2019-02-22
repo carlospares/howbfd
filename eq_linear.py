@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Carlos Parés Pulido, 2019
+
 import numpy as np
 import matplotlib.pyplot as plt
 from equation import Equation

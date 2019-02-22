@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Carlos Parés Pulido, 2019
+
 from equation import Equation
 from eq_linear import LinearEquation
 from eq_burgers import BurgersEquation

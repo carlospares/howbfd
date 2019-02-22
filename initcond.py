@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Carlos Parés Pulido, 2019
+
 import numpy as np
 # from equation import Equation
 

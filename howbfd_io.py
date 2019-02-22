@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Carlos Parés Pulido, 2019
+
 from math import ceil
 import matplotlib.pyplot as plt
 import numpy as np
