@@ -90,7 +90,7 @@ print "Loaded howbdf_config.py!"
 
 # is_conservative:
 #	No effect if well_balanced = False
-#	True: use new version, conservative
+#	True: use new version, conservative for conservative subsystems
 #	False: use old version, non-conservative
 
 # Spatial parameters:
