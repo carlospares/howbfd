@@ -46,22 +46,26 @@ class Equation:
 
     def H(self, x):
         """ Return H(x).
+
             Required for SWE, other non-implemented equations """
         raise NotImplementedError
 
     def Hx(self, x):
         """ Return H_x(x). 
+
             Required for non-wb solver """
         raise NotImplementedError
 
     def S(self, U):
         """ Return S(U). 
+
             Required for non-wb solver """
         raise NotImplementedError
 
     def upw_criterion(self, uStencil):
         """ Returns a pair (l,r) with the velocity for upwind criterion at
             left and right intercells, for cell at center of uStencil.
+
             Required for upwind """
         raise NotImplementedError
 
@@ -74,6 +78,7 @@ class Equation:
                 (nvars, len(x)) numpy array with the values
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
+
             Required for InitCond.STEADY
         """
         raise NotImplementedError
@@ -89,9 +94,21 @@ class Equation:
                 (nvars, len(x)) numpy array with the values
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
+
             Required for well-balanced solver """
         raise NotImplementedError
 
+
+    def Pi(self, V):
+        """ Return the projection of vector V into the space of non-conservative
+            subsystems. E.g. for SWE [h, q], only the first equation is
+            conservative; therefore Pi([4,2]) returns [0,2].
+            Defaults to assuming no conservative subsystems are present 
+            (ie Pi(V)=V); but this makes the scheme lose conservativeness.
+
+            Required for well-balanced solver to be conservative """
+        print "[WARNING] Using default Pi; this will lose conservativeness"
+        return V
 
 
 
@@ -102,7 +119,9 @@ class Equation:
     def eig_of_dF(self, U):
         """ Returns eigenvalues of dF(U), as
             numpy array shaped like U, with
-            eig[0,i] < eig[1,i] < ... for all i """
+            eig[0,i] < eig[1,i] < ... for all i
+
+            Strongly advised for Rusanov flux """
         print "[WARNING] Using default (very slow) eigenvalue computation"
         eig = np.zeros(U.shape)
         for i in range(U.shape[1]):
@@ -117,13 +136,14 @@ class Equation:
             This function will be called by io_manager.
             This function should produce a finished plot, including title,
             legend, labels and so on; io_manager will do plt.show() or savefig() 
-            as required """
+            as required 
+
+            Suggested for nicer plotting """
         print "[WARNING] Using default (unlabelled) plotting"
         for var in u.shape[0]:    
             plt.plot(x,u[var])
             plt.legend()
             plt.title(t)
-
 
 
     ###########################################################################

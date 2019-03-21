@@ -11,7 +11,7 @@ from numflux import Flux
 ############################################
 equation = Equation.SW
 init = InitCond.PWPOLY
-perturb_init = InitCond.PERT_NONE
+perturb_init = InitCond.PERT_PATCH
 sw_H = SWEquation.H_PWPOLY
 sw_H_noise_factor = 0.0
 boundary = BoundaryCond.FORCE_STEADY
@@ -20,7 +20,7 @@ order = 3
 well_balanced = True
 is_conservative = True
 N = 100
-a = 0
+a = -1
 b = 20
 cfl = 0.5
 T = 8
@@ -90,7 +90,7 @@ print "Loaded howbdf_config.py!"
 
 # is_conservative:
 #	No effect if well_balanced = False
-#	True: use new version, conservative (requires double the WENO reconstructions)
+#	True: use new version, conservative
 #	False: use old version, non-conservative
 
 # Spatial parameters:

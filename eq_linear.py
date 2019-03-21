@@ -50,6 +50,11 @@ class LinearEquation(Equation):
         """ Returns dimension of the problem: 1 for scalars """
         return 1
 
+    def Pi(self, V):
+        """ Return projection of V into the space of non-conservative subsys.
+            (i.e. everywhere) """
+        return V
+
     def steady(self, x):
         """ Returns an arbitrary steady state for the equation.
             Input: 

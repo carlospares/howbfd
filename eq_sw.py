@@ -117,6 +117,13 @@ class SWEquation(Equation):
     def Froude(self, u, h):
         return abs(u) / np.sqrt(self.g*h)
 
+    def Pi(self, V):
+        """ Return projection of V into the space of non-conservative subsys.
+            (i.e. Pi([4,2]) = [0,2]) """
+        PV = np.zeros_like(V)
+        PV[1] = V[1]
+        return PV
+
     def steady_constraint(self, xConstr, uConstr, x):
         """ Returns a steady state solution of the equation, u*, constrained
             to u*(xConstr) = uConstr
