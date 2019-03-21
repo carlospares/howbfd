@@ -24,7 +24,7 @@ class Flux:
               eqn: object of class Equation
         """
         if self.wb: # is well balanced
-            if self.conservative: # new conservative version
+            if self.conservative: # new version, conservative where RHS is 0
                 if self.numflux == self.UPWIND:
                     return self.upwind(u, x, eqn)
                 elif self.numflux == self.RUSANOV:

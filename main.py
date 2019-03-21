@@ -41,8 +41,12 @@ io_manager = IoManager(cf.plot_every, cf.T, eqn)
 tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
                          cf.boundary, int(cf.well_balanced), cf.N, cf.order)
 
-### Main loop
 t = 0
+# Deal with possible plot at t=0
+io_manager.io_if_appropriate(x, u, t, show_plot=cf.show_plots, tag=tag,
+                             save_plot=cf.save_plots, save_npy=cf.save_npys)
+
+### Main loop
 while t < cf.T:
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
