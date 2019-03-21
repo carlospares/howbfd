@@ -13,6 +13,7 @@ boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.UPWIND
 order = 3
 well_balanced = True
+is_conservative = True
 N = 100
 cfl = 0.5
 a = -1

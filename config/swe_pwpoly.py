@@ -14,6 +14,7 @@ boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
 order = 3
 well_balanced = True
+is_conservative = True
 N = 100
 a = 0
 b = 20

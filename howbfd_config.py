@@ -18,12 +18,13 @@ boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
 order = 3
 well_balanced = True
+is_conservative = True
 N = 100
 a = 0
 b = 20
 cfl = 0.5
 T = 8
-plot_every = 0.1
+plot_every = 0.5
 show_plots = True
 save_plots = False
 save_npys = False
@@ -86,6 +87,11 @@ print "Loaded howbdf_config.py!"
 # well_balanced:
 #	True: use high order well-balanced version
 #	False: use plain WENO reconstruction + source terms for SH_x (requires H_x implemented)
+
+# is_conservative:
+#	No effect if well_balanced = False
+#	True: use new version, conservative (requires double the WENO reconstructions)
+#	False: use old version, non-conservative
 
 # Spatial parameters:
 #	N: number of spatial points

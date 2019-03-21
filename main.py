@@ -27,7 +27,7 @@ bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
 # equation_factory returns an object of the appropriate subclass of Equation
 eqn = equation_factory(cf.equation, xGhost, cf.sw_H, cf.sw_H_noise_factor)
 initCond = InitCond(cf.init, eqn, cf.perturb_init)
-flux = Flux(cf.numflux, cf.order, cf.well_balanced)
+flux = Flux(cf.numflux, cf.order, cf.well_balanced, cf.is_conservative)
 
 u = initCond.u0(x) # value of u0 at midpoint of cells
 nvars = eqn.dim()

@@ -6,9 +6,11 @@ from numflux import Flux
 
 # For a detailed explanation, see howbfd_config
 
-equation = Equation.BURGERS
-init = InitCond.STEADY
-perturb_init = InitCond.PERT_PATCH
+equation = Equation.SW
+init = InitCond.FLAT
+sw_H = SWEquation.H_FLAT
+sw_H_noise_factor = 0.0
+perturb_init = InitCond.PERT_MGAUSS
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
 order = 3
@@ -18,12 +20,9 @@ N = 100
 cfl = 0.5
 a = -1
 b = 1
-T = 2
-plot_every = 0.1
+T = 0.5
+plot_every = 0.02
 show_plots = True
-save_plots = False
+save_plots = True
 save_npys = False
-sw_H = SWEquation.H_PWPOLY # not relevant
-sw_H_noise_factor = 0.1 # not relevant
-
-print "Loaded config/burgers_rusanov.py!"
+print "Loaded config/swe_pond.py!"
