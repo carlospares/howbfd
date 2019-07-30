@@ -42,7 +42,7 @@ class IoManager:
         return self.plot_times[self.plot_counter]
 
 
-    def io_if_appropriate(self, x, u, t, show_plot=False, save_npy=True,
+    def io_if_appropriate(self, x, u, H, t, show_plot=False, save_npy=True,
                           save_plot=True, tag=""):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
@@ -51,7 +51,7 @@ class IoManager:
             print t
             (nvars, N) = u.shape
             plt.clf()
-            self.eqn.prepare_plot(x, u, t)
+            self.eqn.prepare_plot(x, u, H, t)
             # for n in range(nvars):
             #     plt.plot(x,u[n,:], label="u[{}]".format(n))
             # if nvars > 1:
@@ -74,10 +74,9 @@ class IoManager:
             .format(init, perturb, equation, numflux, boundary, well_balanced,
                     N, order)
 
-    def statistics(self, x, u, init):
+    def statistics(self, x, u, H, eqn):
         """
         Compute some statistics on u
         """
-        if init.initCond in [InitCond.STEADY, InitCond.PWPOLY]:
-            uExact = init.u0(x)
-            print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact),1))
+        uExact = eqn.steady(H)
+        print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact),1))

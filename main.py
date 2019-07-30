@@ -3,10 +3,13 @@
 # Carlos Parés Pulido, 2019
 
 import numpy as np
+from pylab import *
 from initcond import InitCond
 from eq_factory import equation_factory
+from functionH import FunH
 from boundary import BoundaryCond
 from numflux import Flux
+from timest import TimeStepping
 from howbfd_io import IoManager, parse_command_line, safe_name
 import importlib
 import os
@@ -15,6 +18,7 @@ import os
 quickConf = parse_command_line() # from howbfd_io
 configfile = safe_name(quickConf[0])
 cf = importlib.import_module(configfile)
+
 
 ### Set up problem:
 bdry = BoundaryCond(cf.boundary)
@@ -25,16 +29,19 @@ xGhost = np.zeros(cf.N+2*gw) # storage for x with ghost cells
 bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
 
 # equation_factory returns an object of the appropriate subclass of Equation
-eqn = equation_factory(cf.equation, xGhost, cf.sw_H, cf.sw_H_noise_factor)
+eqn = equation_factory(cf.equation)
+funH = FunH(cf.funh, x, cf.H_noise_factor)
+H = funH.H(x)
 initCond = InitCond(cf.init, eqn, cf.perturb_init)
 flux = Flux(cf.numflux, cf.order, cf.well_balanced, cf.is_conservative)
+timest = TimeStepping(cf.timest)
 
-u = initCond.u0(x) # value of u0 at midpoint of cells
+
+u = initCond.u0(x, funH.H(x)) # value of u0 at midpoint of cells
 nvars = eqn.dim()
 dx = x[1]-x[0]
 
-uGhost = np.zeros((nvars, cf.N+2*gw)) # same for u
-tend = np.zeros((nvars,cf.N)) # tend[i] = (d/dt)u_i
+#uGhost = np.zeros((nvars, cf.N+2*gw)) # same for u
 io_manager = IoManager(cf.plot_every, cf.T, eqn)
 
 # identifies options used to run
@@ -43,26 +50,19 @@ tag = io_manager.get_tag(cf.init, cf.perturb_init, cf.equation, cf.numflux,
 
 t = 0
 # Deal with possible plot at t=0
-io_manager.io_if_appropriate(x, u, t, show_plot=cf.show_plots, tag=tag,
+io_manager.io_if_appropriate(x, u, H, t, show_plot=cf.show_plots, tag=tag,
                              save_plot=cf.save_plots, save_npy=cf.save_npys)
 
 ### Main loop
 while t < cf.T:
     dt = min(cf.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
     # create expanded array for u with appropriate BCs:
-    bdry.expand_with_bcs(uGhost, u, gw, initCond, xGhost=xGhost)  # apply BC to u
-    for i in range(cf.N):
-        iOff = i+gw # i with offset for {u,x}Ghost
-        u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
-        x_st = xGhost[iOff-gw:iOff+gw+1] # x at the stencil for ui
-        (Gl, Gr) = flux.flux(u_st, x_st, eqn, dt)
-        tend[:,i] = -(Gr - Gl)/dx
-        if not cf.well_balanced:
-            tend[:,i] += eqn.SHx(x[i], u[:,i])
+    u = timest.update(x,u, flux, bdry,funH,eqn,cf.well_balanced,cf.N, gw,nvars, dx,dt)
     t += dt
-    u = u + dt*tend
-    io_manager.io_if_appropriate(x, u, t, show_plot=cf.show_plots, tag=tag,
+    io_manager.io_if_appropriate(x, u, H, t, show_plot=cf.show_plots, tag=tag,
                                  save_plot=cf.save_plots, save_npy=cf.save_npys)
 
 ### Write some final statistics
-io_manager.statistics(x, u, initCond)
+#plot(x, initCond.u0(x, funH.H(x))[0],'k',x, eqn.steady(funH.H(x))[0],'r')
+#show()
+io_manager.statistics(x, u, funH.H(x), eqn)

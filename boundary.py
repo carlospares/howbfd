@@ -13,7 +13,7 @@ class BoundaryCond:
     def __init__(self, bc):
         self.bc = bc
 
-    def expand_with_bcs(self, uNew, uOld, gw, initCond, xGhost=0):
+    def expand_with_bcs(self, uNew, uOld, gw, eqn, funH, xGhost=0):
         """ Take the array of values and make a copy, augmented with BCs
         Input:
             uNew: array (assumed initialized) which will be written (size N+2*gw)
@@ -30,15 +30,16 @@ class BoundaryCond:
             uNew[:,:gw] = uOld[:,-gw:]
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw])
+            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])
                 uNew[:,N+gw+j] = uOld[:,-1] + (j+1)*(uOld[:,-1]-uOld[:,-2])
         elif self.bc==BoundaryCond.FORCE_STEADY:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw])
-            uNew[:,-gw:] = initCond.u0(xGhost[-gw:])
+            uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw]))
+            uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:]))
+#            print uNew[:,:gw], funH.H(xGhost[:gw]), uNew[:,-gw:], funH.H(xGhost[-gw:])
 
     def x_expand_with_bcs(self, xNew, xOld, gw):
         """ Take x and make a copy, augmented with BCs

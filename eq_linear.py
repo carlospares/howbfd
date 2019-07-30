@@ -28,13 +28,6 @@ class LinearEquation(Equation):
             eig[0,i] < eig[1,i] < ... for all i """
         return self.alpha*np.ones(np.size(U))
 
-    def H(self, x):
-        """ Return H(x) """
-        return self.alpha*x
-
-    def Hx(self, x):
-        """ Return H_x(x) """
-        return self.alpha*np.ones_like(x)
 
     def S(self, U):
         """ Return S(U) """
@@ -55,7 +48,7 @@ class LinearEquation(Equation):
             (i.e. everywhere) """
         return V
 
-    def steady(self, x):
+    def steady(self, H):
         """ Returns an arbitrary steady state for the equation.
             Input: 
                 x: spatial coordinates
@@ -64,9 +57,9 @@ class LinearEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
-        return self.steady_constraint(0, 1, x)
+        return self.steady_constraint(0, 1, H)
 
-    def steady_constraint(self, xConstr, uConstr, x):
+    def steady_constraint(self, HConstr, uConstr, H):
         """ Returns a steady state solution of the equation u*, constrained
             to u*(xConstr) = uConstr
             Input:
@@ -77,11 +70,11 @@ class LinearEquation(Equation):
                 (nvars, len(x)) numpy array with the values
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
-        Ustar = np.zeros((self.dim(), len(x)))
-        Ustar[0] = uConstr*np.exp(x - xConstr)
+        Ustar = np.zeros((self.dim(), len(H)))
+        Ustar[0] = uConstr*np.exp(H- HConstr)
         return Ustar
 
-    def prepare_plot(self,x,u,t):
+    def prepare_plot(self,x,u,H,t):
         """ Plot x and u in whichever way is appropriate for the equation.
             This function will be called by io_manager.
             This function should produce a finished plot, including title,

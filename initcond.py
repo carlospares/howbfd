@@ -28,7 +28,7 @@ class InitCond:
         self.pert = pert
         self.eqn = eqn
 
-    def u0(self, x):
+    def u0(self, x, H):
         """ Initial condition """
         U0 = np.zeros((self.eqn.dim(), len(x)))
         if self.initCond==InitCond.SHOCK:
@@ -36,7 +36,7 @@ class InitCond:
         elif self.initCond==InitCond.SIN:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
-            U0 = self.eqn.steady(x)
+            U0 = self.eqn.steady(H)
         elif self.initCond==InitCond.PWPOLY:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.initCond==InitCond.FLAT:

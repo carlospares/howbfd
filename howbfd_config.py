@@ -1,8 +1,10 @@
 from initcond import InitCond
 from equation import Equation
+from functionH import FunH
 from eq_sw import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
+from timest import TimeStepping
 
 ############################################
 # DEFAULT OPTIONS!
@@ -10,21 +12,22 @@ from numflux import Flux
 # python main.py -c <any file in /config/ >
 ############################################
 equation = Equation.SW
-init = InitCond.PWPOLY
-perturb_init = InitCond.PERT_PATCH
-sw_H = SWEquation.H_PWPOLY
-sw_H_noise_factor = 0.0
+init = InitCond.STEADY
+funh = FunH.DISC_BOT
+H_noise_factor = 0.
+perturb_init = InitCond.PERT_NONE
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.RUSANOV
+timest = TimeStepping.EULER
 order = 3
 well_balanced = True
 is_conservative = True
 N = 100
-a = -1
-b = 20
+a = 0
+b = 2
 cfl = 0.5
-T = 8
-plot_every = 0.5
+T = .1
+plot_every = 1.
 show_plots = True
 save_plots = False
 save_npys = False

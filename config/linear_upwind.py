@@ -1,16 +1,21 @@
 from initcond import InitCond
 from equation import Equation
+from functionH import FunH
 from eq_sw import SWEquation
 from boundary import BoundaryCond
 from numflux import Flux
+from timest import TimeStepping
 
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.LINEAR
 init = InitCond.STEADY
+funh = FunH.IDENT
+H_noise_factor = 0.0
 perturb_init = InitCond.PERT_PATCH
 boundary = BoundaryCond.FORCE_STEADY
 numflux = Flux.UPWIND
+timest = TimeStepping.EULER
 order = 3
 well_balanced = True
 is_conservative = True
@@ -23,6 +28,5 @@ plot_every = 2
 show_plots = True
 save_plots = False
 save_npys = False
-sw_H = SWEquation.H_PWPOLY # not relevant
-sw_H_noise_factor = 0.1 # not relevant
+
 print "Loaded config/linear_upwind.py!"

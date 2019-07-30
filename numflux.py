@@ -15,7 +15,7 @@ class Flux:
         self.wb = is_wb
         self.conservative = is_conservative # forced to True in main
 
-    def flux(self, u, x, eqn, dt=0.1):
+    def flux(self, u, x, H, eqn, dt=0.1):
         """ Computes a numerical flux corresponding to F  s.t.
             u_t + (1/dx)(Fr - Fl) = 0
           Input:
@@ -26,21 +26,21 @@ class Flux:
         if self.wb: # is well balanced
             if self.conservative: # new version, conservative where RHS is 0
                 if self.numflux == self.UPWIND:
-                    return self.upwind(u, x, eqn)
+                    return self.upwind(u, x, H,eqn)
                 elif self.numflux == self.RUSANOV:
-                    return self.rusanov(u, x, eqn)
+                    return self.rusanov(u, x, H,eqn)
             else: # old, non conservative version (kept for completeness)
                 if self.numflux == self.UPWIND:
-                    return self.upwind_nonconservative(u, x, eqn)
+                    return self.upwind_nonconservative(u, x, H,eqn)
                 elif self.numflux == self.RUSANOV:
-                    return self.rusanov_nonconservative(u, x, eqn)
+                    return self.rusanov_nonconservative(u, x, H,eqn)
         else: # basic WENO
             if self.numflux == self.UPWIND:
                 return self.upwind_nowb(u, x, eqn)
             elif self.numflux == self.RUSANOV:
                 return self.rusanov_nowb(u, x, eqn)
 
-    def upwind(self, u, x, eqn):
+    def upwind(self, u, x, H,eqn):
         nvars = eqn.dim()
         if nvars != 1:
             print "[ERROR] Upwind (nc) only implemented for scalar equations!"
@@ -49,7 +49,7 @@ class Flux:
         Gr = np.zeros(1)
         i = (u.shape[1]-1)/2
         (critL, critR) = eqn.upw_criterion(u)
-        ustar = eqn.steady_constraint(x[i], u[:,i], x)
+        ustar = eqn.steady_constraint(H[i], u[:,i], H)
         phi = eqn.F(u) - eqn.Pi(eqn.F(ustar))
 
         Grm = wr.wenorec(self.order, phi[0,1:-1]) # at i+1/2^-
@@ -60,13 +60,13 @@ class Flux:
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr)
 
-    def rusanov(self, u, x, eqn):
+    def rusanov(self, u, x, H, eqn):
         nvars = eqn.dim()
         i = (u.shape[1]-1)/2
         alpha = np.amax(np.abs(eqn.eig_of_dF(u)))
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
-        ustar = eqn.steady_constraint(x[i], u[:,i], x)
+        ustar = eqn.steady_constraint(H[i], u[:,i], H)
         phip = eqn.F(u) - eqn.Pi(eqn.F(ustar)) + alpha*(u - ustar)
         phim = eqn.F(u) - eqn.Pi(eqn.F(ustar)) - alpha*(u - ustar)
 
@@ -81,7 +81,7 @@ class Flux:
         return (Gl, Gr)
 
 
-    def upwind_nonconservative(self, u, x, eqn):
+    def upwind_nonconservative(self, u, x, H, eqn):
         nvars = eqn.dim()
         if nvars != 1:
             print "[ERROR] Upwind (nc) only implemented for scalar equations!"
@@ -90,7 +90,7 @@ class Flux:
         Gr = np.zeros(1)
         i = (u.shape[1]-1)/2
         (critL, critR) = eqn.upw_criterion(u)
-        ustar = eqn.steady_constraint(x[i], u[:,i], x)
+        ustar = eqn.steady_constraint(H[i], u[:,i], H)
         phi = eqn.F(u) - eqn.F(ustar)
 
         Grm = wr.wenorec(self.order, phi[0,1:-1]) # at i+1/2^-
@@ -101,13 +101,13 @@ class Flux:
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr)
 
-    def rusanov_nonconservative(self, u, x, eqn):
+    def rusanov_nonconservative(self, u, x, H, eqn):
         nvars = eqn.dim()
         i = (u.shape[1]-1)/2
         alpha = np.amax(np.abs(eqn.eig_of_dF(u)))
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
-        ustar = eqn.steady_constraint(x[i], u[:,i], x)
+        ustar = eqn.steady_constraint(H[i], u[:,i], H)
         phip = eqn.F(u) - eqn.F(ustar) + alpha*(u - ustar)
         phim = eqn.F(u) - eqn.F(ustar) - alpha*(u - ustar)
 

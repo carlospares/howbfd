@@ -38,23 +38,23 @@ class Equation:
     # Following functions MUST be overridden for some purposes:
     ###########################################################################
 
-    def __init__(self):
-        """ Must be overridden if any initialization is required
-            In particular, if the class needs a random number, their __init__
-            needs to call np.random.seed(self.SEED) """
-        pass
+    # def __init__(self):
+        # """ Must be overridden if any initialization is required
+            # In particular, if the class needs a random number, their __init__
+            # needs to call np.random.seed(self.SEED) """
+        # pass
 
-    def H(self, x):
-        """ Return H(x).
+    # def H(self, x):
+        # """ Return H(x).
 
-            Required for SWE, other non-implemented equations """
-        raise NotImplementedError
+            # Required for SWE, other non-implemented equations """
+        # raise NotImplementedError
 
-    def Hx(self, x):
-        """ Return H_x(x). 
+    # def Hx(self, x):
+        # """ Return H_x(x). 
 
-            Required for non-wb solver """
-        raise NotImplementedError
+            # Required for non-wb solver """
+        # raise NotImplementedError
 
     def S(self, U):
         """ Return S(U). 
