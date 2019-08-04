@@ -12,9 +12,9 @@ class Equation:
 
 
     # Identifiers for equation
-    LINEAR = 0   # eq_linear.py
-    BURGERS = 1  # eq_burgers.py
-    SW = 2       # eq_sw.py
+    LINEAR = 700   # eq_linear.py
+    BURGERS = 701  # eq_burgers.py
+    SW = 702       # eq_sw.py
 
     SEED = 11235813 # seed for reproducibility
 
@@ -37,24 +37,6 @@ class Equation:
     ###########################################################################
     # Following functions MUST be overridden for some purposes:
     ###########################################################################
-
-    # def __init__(self):
-        # """ Must be overridden if any initialization is required
-            # In particular, if the class needs a random number, their __init__
-            # needs to call np.random.seed(self.SEED) """
-        # pass
-
-    # def H(self, x):
-        # """ Return H(x).
-
-            # Required for SWE, other non-implemented equations """
-        # raise NotImplementedError
-
-    # def Hx(self, x):
-        # """ Return H_x(x). 
-
-            # Required for non-wb solver """
-        # raise NotImplementedError
 
     def S(self, U):
         """ Return S(U). 
@@ -109,6 +91,14 @@ class Equation:
             Required for well-balanced solver to be conservative """
         print "[WARNING] Using default Pi; this will lose conservativeness"
         return V
+        
+    def exact(self, x, t, params):
+        """ Return the exact solution for U(x,t) for params.
+            This heavily depends on the parameters.
+            If not implemented, call this function so zeros are returned
+            with a printed warning """
+        print "[WARNING] exact for these parameters not implemented. Returning zero!"
+        return np.zeros((self.dim(), len(x)))
 
 
 

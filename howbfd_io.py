@@ -7,22 +7,36 @@ import numpy as np
 from initcond import InitCond
 from equation import Equation
 import argparse
+from parameters import Parameters
+
+DEFAULT = "howbfd_config"
 
 
 def parse_command_line():
-    """ Take all arguments from command line and return them """
+    """ Take all arguments from command line and return a Parameters object
+        containing all of them """
     parser = argparse.ArgumentParser(description='High order well-balanced FD solver')
-    parser.add_argument('-c', '--config', type=str, nargs=1, default=["howbfd_config"],
+    parser.add_argument('-c', '--config', type=str, nargs=1, default=[DEFAULT],
                          help='Quick configuration file')
+    parser.add_argument('-r', '--refinements', type=int, nargs=1,
+                         help="If >0, duplicate mesh resolution r times and compute EOC")
+    parser.add_argument('-N', type=int, nargs=1, help='Grid is of size N')
     args = parser.parse_args()
-    return args.config
+    cf = Parameters(safe_name(args.config[0]))
+    
+    # TO DO: repeat this for all variables controllable from command line
+    if args.N is not None:
+        cf.N = args.N[0]
+    if args.refinements is not None:
+        cf.refinements = args.refinements[0]
+    
+    return cf
 
 def safe_name(name):
     """ Make sure the module we are going to try to import has the 
         appropriate name ("config.linear_upwind", for example) """
-    if name == "howbfd_config":
+    if name == DEFAULT:
         return name
-
     if "config" in name: # remove {... ./}config{./}
         name = name[name.rfind("config")+7:]
     if "." in name: # remove .py
@@ -42,7 +56,7 @@ class IoManager:
         return self.plot_times[self.plot_counter]
 
 
-    def io_if_appropriate(self, x, u, H, t, show_plot=False, save_npy=True,
+    def io_if_appropriate(self, x, u, H, t, cf, show_plot=False, save_npy=True,
                           save_plot=True, tag=""):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
@@ -52,6 +66,9 @@ class IoManager:
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
+            
+            plt.plot(x, self.eqn.exact(x,t,cf).T, 'r')
+            
             # for n in range(nvars):
             #     plt.plot(x,u[n,:], label="u[{}]".format(n))
             # if nvars > 1:
@@ -64,6 +81,9 @@ class IoManager:
             if save_npy:
                 np.save("npys/{}{}.npy".format(tag,t), u)
             self.plot_counter += 1
+            
+    def reset_timer(self):
+        self.plot_counter = 0
 
     def get_tag(self, init, perturb, equation, numflux, boundary, 
                 well_balanced, N, order):

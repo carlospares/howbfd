@@ -6,14 +6,14 @@ import wenorec as wr
 import numpy as np
 
 class Flux:
-    UPWIND = 0
-    RUSANOV = 1
+    UPWIND = 100
+    RUSANOV = 101
 
     def __init__(self, flux, order, is_wb=True, is_conservative=True):
         self.numflux = flux
         self.order = order
         self.wb = is_wb
-        self.conservative = is_conservative # forced to True in main
+        self.conservative = is_conservative
 
     def flux(self, u, x, H, eqn, dt=0.1):
         """ Computes a numerical flux corresponding to F  s.t.
@@ -43,7 +43,7 @@ class Flux:
     def upwind(self, u, x, H,eqn):
         nvars = eqn.dim()
         if nvars != 1:
-            print "[ERROR] Upwind (nc) only implemented for scalar equations!"
+            print "[ERROR] Upwind only implemented for scalar equations!"
             raise NotImplementedError
         Gl = np.zeros(1)
         Gr = np.zeros(1)

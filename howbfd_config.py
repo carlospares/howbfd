@@ -28,7 +28,7 @@ b = 2
 cfl = 0.5
 T = .1
 plot_every = 1.
-show_plots = True
+show_plots = False
 save_plots = False
 save_npys = False
 

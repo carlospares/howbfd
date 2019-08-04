@@ -9,11 +9,11 @@ import numpy as np
 # from equation import Equation
 
 class FunH:
-    FLAT = 0
-    IDENT = 1
-    DISC = 2
-    BUMP = 3
-    DISC_BOT= 4
+    FLAT = 300
+    IDENT = 301
+    DISC = 302
+    BUMP = 303
+    DISC_BOT= 304
 
     SEED = 11235813 # seed for reproducibility
 

@@ -5,15 +5,15 @@ import numpy as np
 
 class BoundaryCond:
     # Identifiers for BCs
-    PERIODIC = 0
-    IN_OUT = 1 # inflow (as in IC) on left, homogeneous Neumann on right
-    LIN_EXTRAP = 2 # linear extrapolation (for spatial domain)
-    FORCE_STEADY = 3 # make BCs be values for u0(x)
+    PERIODIC = 400
+    IN_OUT = 401 # inflow (as in IC) on left, homogeneous Neumann on right
+    LIN_EXTRAP = 402 # linear extrapolation (for spatial domain)
+    FORCE_STEADY = 403 # make BCs be values for u0(x)
 
     def __init__(self, bc):
         self.bc = bc
 
-    def expand_with_bcs(self, uNew, uOld, gw, eqn, funH, xGhost=0):
+    def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost=0):
         """ Take the array of values and make a copy, augmented with BCs
         Input:
             uNew: array (assumed initialized) which will be written (size N+2*gw)
@@ -30,7 +30,7 @@ class BoundaryCond:
             uNew[:,:gw] = uOld[:,-gw:]
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw])) *0 + 1 # TODO FIXME
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):

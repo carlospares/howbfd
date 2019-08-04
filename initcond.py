@@ -6,19 +6,19 @@ import numpy as np
 
 class InitCond:
     # Identifiers for initial condition
-    SIN = 0
-    SHOCK = 1
-    STEADY = 2 # use eqn-dependent steady state
-    PWPOLY = 3
-    FLAT = 4
+    SIN = 500
+    SHOCK = 501
+    STEADY = 502 # use eqn-dependent steady state
+    PWPOLY = 503
+    FLAT = 504
 
     # Identifiers for perturbation (if relevant)
-    PERT_NONE = 0
-    PERT_POLY = 1
-    PERT_PATCH = 2
-    PERT_SIN = 3
-    PERT_GAUSS = 4
-    PERT_MGAUSS = 5
+    PERT_NONE = 600
+    PERT_POLY = 601
+    PERT_PATCH = 602
+    PERT_SIN = 603
+    PERT_GAUSS = 604
+    PERT_MGAUSS = 605
 
     C = 0 # average of sine perturbation
 

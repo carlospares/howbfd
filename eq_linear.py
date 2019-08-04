@@ -4,6 +4,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from equation import Equation
+from initcond import InitCond
+from boundary import BoundaryCond
+from functionH import FunH
 
 class LinearEquation(Equation):
     """ 1D scalar linear transport equation with mass term
@@ -73,6 +76,32 @@ class LinearEquation(Equation):
         Ustar = np.zeros((self.dim(), len(H)))
         Ustar[0] = uConstr*np.exp(H- HConstr)
         return Ustar
+        
+    def exact(self, x, t, params):
+        alpha = self.alpha
+        x0 = x - alpha*t
+        U = np.zeros((self.dim(), len(x)))
+        if params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_PATCH and params.boundary == BoundaryCond.FORCE_STEADY:
+            U[0] = (x <= (-0.5 + alpha*t))*np.exp(x) + (x >= (-0.3+alpha*t))*np.exp(x) +\
+                    (x > (-0.5 + alpha*t))*(x < (-0.3+alpha*t))*(np.exp(alpha*t) + np.exp(x))
+            return U
+                    
+        elif params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_MGAUSS and params.boundary == BoundaryCond.FORCE_STEADY:
+            U[0] = (-0.3*np.exp(-200*x0*x0) + np.exp(x0))*np.exp(alpha*t)
+            return U
+            
+        elif params.funh == FunH.IDENT and params.init == InitCond.SIN and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
+            U[0] = (x > -1 + alpha*t)*(1+np.sin(2*np.pi*x0))*np.exp(t)
+            return U
+            
+        elif params.funh == FunH.FLAT and params.init == InitCond.SIN and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
+            U[0] = 1*(x<= -1 + alpha*t) + (x > -1 + alpha*t)*(1+np.sin(2*np.pi*x0))
+            return U
+            
+        else:
+            return Equation.exact(self, x, t, params) # return default exact method from class Equation
+        
+            
 
     def prepare_plot(self,x,u,H,t):
         """ Plot x and u in whichever way is appropriate for the equation.
@@ -84,3 +113,9 @@ class LinearEquation(Equation):
         plt.plot(x,u[0], label='u')
         plt.legend()
         plt.title(t)
+        
+        # alpha = self.alpha
+        # exact = (x <= (-0.5 + alpha*t))*np.exp(x) + (x >= (-0.3+alpha*t))*np.exp(x) + (x > (-0.5 + alpha*t))*(x < (-0.3+alpha*t))*(np.exp(alpha*t) + np.exp(x))
+        # x0 = x - alpha*t
+        # exact = (-0.3*np.exp(-200*x0*x0) + np.exp(x0))*np.exp(0.05*t)
+        # plt.plot(x, exact-u[0], 'r')
