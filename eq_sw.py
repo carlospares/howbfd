@@ -77,7 +77,7 @@ class SWEquation(Equation):
         # U0 = np.zeros((2, len(x)))
         # U0[0,:] = arbitrary_eta + self.H(x)
         # return U0
-        HConst = 1.
+        HConst = 0.1
         uConst = [1., 5.]
         return self.steady_constraint(HConst, uConst, H)
 
