@@ -11,6 +11,7 @@ class InitCond:
     STEADY = 502 # use eqn-dependent steady state
     PWPOLY = 503
     FLAT = 504
+    RAREFACTION = 505
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -32,7 +33,7 @@ class InitCond:
         """ Initial condition """
         U0 = np.zeros((self.eqn.dim(), len(x)))
         if self.initCond==InitCond.SHOCK:
-            U0[0] = 1.0*(x <= 0.5) + 2.0 * (x>0.5)
+            U0[0] = 2.0*(x <= 0.5) + 1.0 * (x>0.5)
         elif self.initCond==InitCond.SIN:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
@@ -41,6 +42,9 @@ class InitCond:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.initCond==InitCond.FLAT:
             U0[0] = np.ones_like(x)
+        elif self.initCond==InitCond.RAREFACTION:
+            U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
+            
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

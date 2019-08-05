@@ -30,8 +30,8 @@ class BoundaryCond:
             uNew[:,:gw] = uOld[:,-gw:]
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw])) *0 + 1 # TODO FIXME
-            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
+            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])

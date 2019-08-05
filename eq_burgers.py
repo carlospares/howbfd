@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from equation import Equation
 from functionH import FunH
+from initcond import InitCond
+from boundary import BoundaryCond
 
 class BurgersEquation(Equation):
     """ 1D scalar Burgers' equation with mass term
@@ -83,3 +85,20 @@ class BurgersEquation(Equation):
         plt.plot(x,u[0], label='u')
         plt.legend()
         plt.title(t)
+        
+    def exact(self, x, t, params):
+        U = np.zeros((self.dim(), len(x)))
+        if params.funh == FunH.FLAT and params.init == InitCond.SHOCK and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
+            U[0] = 1. + 1.*(x < 0.5 + 1.5*t)
+            return U
+            
+        if params.funh == FunH.FLAT and params.init == InitCond.RAREFACTION and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
+            U[0] = 1.*(x <= t) + (x/t)*(x>t)*(x<2*t) + 2.*(x >= 2*t)
+            return U
+            
+        if params.funh == FunH.IDENT and params.init == InitCond.SHOCK and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
+            U[0] = 1. + 1.*(x < 0.5 + 1.5*t)
+            return U
+            
+        else:
+            return Equation.exact(self, x, t, params) # return default exact method from class Equation
