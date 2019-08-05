@@ -66,14 +66,8 @@ class IoManager:
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
+            # plt.plot(x, self.eqn.exact(x,t,cf).T, 'r')
             
-            plt.plot(x, self.eqn.exact(x,t,cf).T, 'r')
-            
-            # for n in range(nvars):
-            #     plt.plot(x,u[n,:], label="u[{}]".format(n))
-            # if nvars > 1:
-            # plt.legend()
-            # plt.title(t)
             if save_plot:
                 plt.savefig("figs/{}{}.png".format(tag,t))
             if show_plot:

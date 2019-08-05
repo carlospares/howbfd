@@ -15,7 +15,7 @@ class LinearEquation(Equation):
 
     """
 
-    alpha = 0.05
+    alpha = 0.1
 
     def F(self, U):
         """ Flux function """
@@ -74,7 +74,7 @@ class LinearEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
-        Ustar[0] = uConstr*np.exp(H- HConstr)
+        Ustar[0] = uConstr*np.exp((H - HConstr)/self.alpha)
         return Ustar
         
     def exact(self, x, t, params):
@@ -82,16 +82,16 @@ class LinearEquation(Equation):
         x0 = x - alpha*t
         U = np.zeros((self.dim(), len(x)))
         if params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_PATCH and params.boundary == BoundaryCond.FORCE_STEADY:
-            U[0] = (x <= (-0.5 + alpha*t))*np.exp(x) + (x >= (-0.3+alpha*t))*np.exp(x) +\
-                    (x > (-0.5 + alpha*t))*(x < (-0.3+alpha*t))*(np.exp(alpha*t) + np.exp(x))
+            U[0] = (x <= (-0.5 + alpha*t))*np.exp(x/alpha) + (x >= (-0.3+alpha*t))*np.exp(x/alpha) +\
+                    (x > (-0.5 + alpha*t))*(x < (-0.3+alpha*t))*(np.exp(t) + np.exp(x/alpha))
             return U
                     
         elif params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_MGAUSS and params.boundary == BoundaryCond.FORCE_STEADY:
-            U[0] = (-0.3*np.exp(-200*x0*x0) + np.exp(x0))*np.exp(alpha*t)
+            U[0] = (-0.3*np.exp(-200*x0*x0) + np.exp(x0/alpha))*np.exp(t)
             return U
             
         elif params.funh == FunH.IDENT and params.init == InitCond.SIN and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
-            U[0] = (x > -1 + alpha*t)*(1+np.sin(2*np.pi*x0))*np.exp(t)
+            U[0] = np.exp((x + 1)/alpha)*(x<= -1 + alpha*t) + (x > -1 + alpha*t)*(1+np.sin(2*np.pi*x0))*np.exp(t)
             return U
             
         elif params.funh == FunH.FLAT and params.init == InitCond.SIN and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
