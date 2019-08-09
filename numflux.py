@@ -8,12 +8,12 @@ import numpy as np
 class Flux:
     UPWIND = 100
     RUSANOV = 101
-
-    def __init__(self, flux, order, is_wb=True, is_conservative=True):
-        self.numflux = flux
-        self.order = order
-        self.wb = is_wb
-        self.conservative = is_conservative
+    
+    def __init__(self, cf):
+        self.numflux = cf.numflux
+        self.order = cf.order
+        self.wb = cf.well_balanced
+        self.conservative = cf.is_conservative
 
     def flux(self, u, x, H, eqn, dt=0.1):
         """ Computes a numerical flux corresponding to F  s.t.

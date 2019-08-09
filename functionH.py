@@ -16,13 +16,12 @@ class FunH:
     DISC_BOT= 304
 
     SEED = 11235813 # seed for reproducibility
-
-    def __init__(self, fh, x, noise_amplit=0):
-        self.funH = fh
-        self.noise_amplit = noise_amplit
-        if noise_amplit != 0:
+    def __init__(self, x, cf):
+        self.funH = cf.funh
+        self.noise_amplit = cf.H_noise_factor
+        if self.noise_amplit != 0:
             np.random.seed(self.SEED) # so we get consistent results
-            Hnoise = noise_amplit*np.random.rand(len(x))
+            Hnoise = self.noise_amplit*np.random.rand(len(x))
             self.Hnoiseinterp = InterpolatedUnivariateSpline(x, Hnoise, k=1) # faster than interp1d!
 
 

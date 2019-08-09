@@ -25,7 +25,7 @@ a = -1
 b = 1
 T = 15
 plot_every = 2
-show_plots = False
+show_plots = True
 save_plots = False
 save_npys = False
 

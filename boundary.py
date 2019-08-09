@@ -10,8 +10,8 @@ class BoundaryCond:
     LIN_EXTRAP = 402 # linear extrapolation (for spatial domain)
     FORCE_STEADY = 403 # make BCs be values for u0(x)
 
-    def __init__(self, bc):
-        self.bc = bc
+    def __init__(self, cf):
+        self.bc = cf.boundary
 
     def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost=0):
         """ Take the array of values and make a copy, augmented with BCs

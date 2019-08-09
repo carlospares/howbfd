@@ -45,19 +45,17 @@ def safe_name(name):
 
 
 class IoManager:
-
-    def __init__(self, plot_every, T, eqn):
+    def __init__(self, eqn, cf):
         self.plot_counter = 0
-        base = np.arange(0, T, plot_every)
-        self.plot_times = np.append(base, T)
+        base = np.arange(0, cf.T, cf.plot_every)
+        self.plot_times = np.append(base, cf.T)
         self.eqn = eqn
 
     def get_next_plot_time(self):
         return self.plot_times[self.plot_counter]
 
 
-    def io_if_appropriate(self, x, u, H, t, cf, show_plot=False, save_npy=True,
-                          save_plot=True, tag=""):
+    def io_if_appropriate(self, x, u, H, t, cf):
         """ 
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
@@ -66,31 +64,52 @@ class IoManager:
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
-            # plt.plot(x, self.eqn.exact(x,t,cf).T, 'r')
             
-            if save_plot:
+            if cf.plot_exact:
+                exact = self.eqn.exact(x, t, cf)
+                if np.any(exact): # if it's not all zeros, plot it!
+                    plt.plot(x, self.eqn.exact(x,t,cf).T, 'r', label='exact')
+                    
+            tag = self.get_tag(len(x), cf)
+            if cf.save_plots:
                 plt.savefig("figs/{}{}.png".format(tag,t))
-            if show_plot:
+            if cf.show_plots:
                 plt.show()
-            if save_npy:
+            if cf.save_npys:
                 np.save("npys/{}{}.npy".format(tag,t), u)
             self.plot_counter += 1
             
     def reset_timer(self):
         self.plot_counter = 0
-
-    def get_tag(self, init, perturb, equation, numflux, boundary, 
-                well_balanced, N, order):
+                             
+    def get_tag(self, N, cf):
         """
         Returns a tag that summarises options used to get a simulation
         """
-        return "i{}-{}e{}f{}b{}w{}n{}o{}_"\
-            .format(init, perturb, equation, numflux, boundary, well_balanced,
-                    N, order)
+        return "i{}-{}e{}H{}f{}b{}w{}n{}o{}_"\
+            .format(cf.init, cf.perturb_init, cf.equation, cf.funh, cf.numflux, 
+                    cf.boundary, int(cf.well_balanced), N, cf.order)
 
     def statistics(self, x, u, H, eqn):
         """
-        Compute some statistics on u
+        Compute some statistics on u.
+        Probably obsolete with equation.exact() and EOC...
         """
-        uExact = eqn.steady(H)
-        print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uExact),1))
+        uSteady = eqn.steady(H)
+        print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uSteady),1))
+        
+    def plot_eoc(dxs, errors, order=None):
+        """
+        Draws a loglog plot for errors wrt dxs.
+        If order is not None, add a reference line of that order
+        """
+        plt.close() # clear possible hanging plots
+        z = np.polyfit(np.log(dxs), np.log(errors), 1)
+        z = z[0].round(2)
+        plt.loglog(dxs, errors, 'x-', label="Best fit {}".format(z))
+        if order is not None:
+            plt.loglog(dxs, [ (h**order) * errors[0] / (dxs[0]**order) for h in dxs], '--', 
+                        label='h^{}'.format(config.timest))
+        plt.grid()
+        plt.legend()
+        plt.show()

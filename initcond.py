@@ -24,9 +24,9 @@ class InitCond:
     C = 0 # average of sine perturbation
 
 
-    def __init__(self, ic, eqn, pert=PERT_NONE):
-        self.initCond = ic
-        self.pert = pert
+    def __init__(self, eqn, cf):
+        self.initCond = cf.init
+        self.pert = cf.perturb_init
         self.eqn = eqn
 
     def u0(self, x, H):
