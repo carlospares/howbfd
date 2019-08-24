@@ -4,6 +4,7 @@
 # from generic_equation import GenEquation
 import wenorec as wr
 import numpy as np
+from nosteadyexc import NoSteadyError
 
 class Flux:
     UPWIND = 100
@@ -49,8 +50,14 @@ class Flux:
         Gr = np.zeros(1)
         i = (u.shape[1]-1)/2
         (critL, critR) = eqn.upw_criterion(u)
-        ustar = eqn.steady_constraint(H[i], u[:,i], H)
-        phi = eqn.F(u) - eqn.Pi(eqn.F(ustar))
+        noSteady = 0
+        try: 
+            ustar = eqn.steady_constraint(H[i], u[:,i], H)
+            phi = eqn.F(u) - eqn.Pi(eqn.F(ustar))
+        except NoSteadyError, e: # no steady state exists! Default to basic WENO
+            print "NoSteadyError triggered: {}".format(str(e))
+            phi = eqn.F(u)
+            noSteady = 1
 
         Grm = wr.wenorec(self.order, phi[0,1:-1]) # at i+1/2^-
         Grp = wr.wenorec(self.order, phi[0,-1:1:-1]) # at i+1/2^+
@@ -58,7 +65,7 @@ class Flux:
         Glp = wr.wenorec(self.order, phi[0,-2:0:-1]) # at i-1/2^+
         Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
-        return (Gl, Gr)
+        return (Gl, Gr, noSteady)
 
     def rusanov(self, u, x, H, eqn):
         nvars = eqn.dim()
@@ -66,9 +73,16 @@ class Flux:
         alpha = np.amax(np.abs(eqn.eig_of_dF(u)))
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
-        ustar = eqn.steady_constraint(H[i], u[:,i], H)
-        phip = eqn.F(u) - eqn.Pi(eqn.F(ustar)) + alpha*(u - ustar)
-        phim = eqn.F(u) - eqn.Pi(eqn.F(ustar)) - alpha*(u - ustar)
+        noSteady = 0
+        try:
+            ustar = eqn.steady_constraint(H[i], u[:,i], H)
+            phip = eqn.F(u) - eqn.Pi(eqn.F(ustar)) + alpha*(u - ustar)
+            phim = eqn.F(u) - eqn.Pi(eqn.F(ustar)) - alpha*(u - ustar)
+        except NoSteadyError, e: # no steady state exists! Default to basic WENO
+            #print "NoSteadyError triggered: {}".format(str(e))
+            phip = eqn.F(u) + alpha*u
+            phim = eqn.F(u) - alpha*u
+            noSteady = 1
 
         for var in range(nvars):
             Grm = wr.wenorec(self.order, phip[var,1:-1]) # phip at i+1/2^-
@@ -78,7 +92,7 @@ class Flux:
             Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
             Gl[var] = 0.5*(Glm + Glp)
             Gr[var] = 0.5*(Grm + Grp)
-        return (Gl, Gr)
+        return (Gl, Gr, noSteady)
 
 
     def upwind_nonconservative(self, u, x, H, eqn):

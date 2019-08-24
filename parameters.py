@@ -12,7 +12,6 @@ import importlib
 
 
 class Parameters:
-    NO_REFINEMENTS = 0
     # For a detailed explanation, see howbfd_config
     
     def __init__(self, filename):
@@ -67,5 +66,5 @@ class Parameters:
         self.save_npys = cf.save_npys
         
         self.plot_exact = True
-        self.refinements = self.NO_REFINEMENTS
+        self.refinements = 0
         

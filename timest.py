@@ -20,11 +20,11 @@ class TimeStepping:
         self.timest = cf.timest
         
     def order(self):
-        if self.timest == EULER:
+        if self.timest == self.EULER:
             return 1.
-        elif self.timest == TVDRK2:
+        elif self.timest == self.TVDRK2:
             return 2.
-        elif self.timest == TVDRK3:
+        elif self.timest == self.TVDRK3:
             return 3.
         else:
             return None
@@ -45,14 +45,18 @@ class TimeStepping:
         bdry.x_expand_with_bcs(xGhost, x, gw) 
         uGhost = np.zeros((nvars, N+2*gw)) 
         bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH,xGhost=xGhost)  # apply BC to u
+        fails = 0
         for i in range(N):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
-            (Gl, Gr) = flux.flux(u_st, x_st, funH.H(x_st), eqn, dt)
+            (Gl, Gr, fail) = flux.flux(u_st, x_st, funH.H(x_st), eqn, dt)
+            fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if not cf.well_balanced:
                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
+        if fails>0:
+            print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
         return u + dt*tend
     
     def tvdrk2(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf):

@@ -8,7 +8,8 @@ class BoundaryCond:
     PERIODIC = 400
     IN_OUT = 401 # inflow (as in IC) on left, homogeneous Neumann on right
     LIN_EXTRAP = 402 # linear extrapolation (for spatial domain)
-    FORCE_STEADY = 403 # make BCs be values for u0(x)
+    FORCE_STEADY = 403 # fill left (r. right) ghost cells with steady state consistent with value at first (r. last) cell
+    FORCE_STEADY_ARBITRARY = 404 # fill ghost cells with whatever initcond.STEADY says (used to be the default, but bad idea)
 
     def __init__(self, cf):
         self.bc = cf.boundary
@@ -37,9 +38,11 @@ class BoundaryCond:
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])
                 uNew[:,N+gw+j] = uOld[:,-1] + (j+1)*(uOld[:,-1]-uOld[:,-2])
         elif self.bc==BoundaryCond.FORCE_STEADY:
+            uNew[:,:gw] = eqn.steady_constraint(funH.H(xGhost[gw]), uOld[:,0], funH.H(xGhost[:gw]))
+            uNew[:,-gw:] = eqn.steady_constraint(funH.H(xGhost[-gw-1]), uOld[:,-1], funH.H(xGhost[-gw:]))
+        elif self.bc==BoundaryCond.FORCE_STEADY_ARBITRARY:
             uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw]))
             uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:]))
-#            print uNew[:,:gw], funH.H(xGhost[:gw]), uNew[:,-gw:], funH.H(xGhost[-gw:])
 
     def x_expand_with_bcs(self, xNew, xOld, gw):
         """ Take x and make a copy, augmented with BCs

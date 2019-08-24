@@ -15,7 +15,7 @@ class LinearEquation(Equation):
 
     """
 
-    alpha = 0.1
+    alpha = 0.01
 
     def F(self, U):
         """ Flux function """

@@ -68,7 +68,7 @@ class IoManager:
             if cf.plot_exact:
                 exact = self.eqn.exact(x, t, cf)
                 if np.any(exact): # if it's not all zeros, plot it!
-                    plt.plot(x, self.eqn.exact(x,t,cf).T, 'r', label='exact')
+                    plt.plot(x, (u-self.eqn.exact(x,t,cf)).T, 'r', label='exact')
                     
             tag = self.get_tag(len(x), cf)
             if cf.save_plots:
@@ -98,7 +98,7 @@ class IoManager:
         uSteady = eqn.steady(H)
         print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uSteady),1))
         
-    def plot_eoc(dxs, errors, order=None):
+    def plot_eoc(self, dxs, errors, order=None):
         """
         Draws a loglog plot for errors wrt dxs.
         If order is not None, add a reference line of that order
@@ -109,7 +109,7 @@ class IoManager:
         plt.loglog(dxs, errors, 'x-', label="Best fit {}".format(z))
         if order is not None:
             plt.loglog(dxs, [ (h**order) * errors[0] / (dxs[0]**order) for h in dxs], '--', 
-                        label='h^{}'.format(config.timest))
+                        label='h^{}'.format(order))
         plt.grid()
         plt.legend()
         plt.show()

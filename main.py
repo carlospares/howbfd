@@ -58,8 +58,8 @@ for level in range(0, config.refinements+1):
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
     exact = eqn.exact(x, t, config)
-    errors[level] = np.sum(np.abs( (exact[:,N/2:] - u[:,N/2:]) ))*dx
-    # ^ ugly hack! Compute error only in right half of domain to avoid inflow from left
+    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
+    # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print errors[level]
     dxs[level] = dx
     
