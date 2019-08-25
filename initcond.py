@@ -12,6 +12,7 @@ class InitCond:
     PWPOLY = 503
     FLAT = 504
     RAREFACTION = 505
+    WATER_AT_REST = 506
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -44,6 +45,8 @@ class InitCond:
             U0[0] = np.ones_like(x)
         elif self.initCond==InitCond.RAREFACTION:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
+        elif self.initCond==InitCond.WATER_AT_REST:
+            U0[0] = 1 + H
             
         return U0 + self.perturbation(x)
 

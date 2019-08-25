@@ -2,7 +2,7 @@
 """
 Created on Sun Apr 28 12:10:50 2019
 
-@author: Usuario
+@author: Carlos Parés Madroñal
 """
 import numpy as np
 from eq_factory import equation_factory
@@ -44,7 +44,12 @@ class TimeStepping:
         xGhost = np.zeros(N+2*gw)
         bdry.x_expand_with_bcs(xGhost, x, gw) 
         uGhost = np.zeros((nvars, N+2*gw)) 
-        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH,xGhost=xGhost)  # apply BC to u
+        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
+        # import matplotlib.pyplot as plt
+        # print uGhost
+        # plt.title("uGhost at timest")
+        # plt.plot(uGhost[0], '-*')
+        # plt.show()
         fails = 0
         for i in range(N):
             iOff = i+gw # i with offset for {u,x}Ghost

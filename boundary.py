@@ -10,18 +10,21 @@ class BoundaryCond:
     LIN_EXTRAP = 402 # linear extrapolation (for spatial domain)
     FORCE_STEADY = 403 # fill left (r. right) ghost cells with steady state consistent with value at first (r. last) cell
     FORCE_STEADY_ARBITRARY = 404 # fill ghost cells with whatever initcond.STEADY says (used to be the default, but bad idea)
+    FORCE_STEADY_INIT = 405 # force steady state which agrees with HConstr = H[0], uConstr = u0[:,0]
 
     def __init__(self, cf):
         self.bc = cf.boundary
 
-    def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost=0):
+    def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost):
         """ Take the array of values and make a copy, augmented with BCs
         Input:
             uNew: array (assumed initialized) which will be written (size N+2*gw)
             uOld: array with values for inner cells (size N)
             gw: number of ghost cells: should be (q+1)/2 for WENO-q
-            inflow: if appropriate, value to be written at inflow boundary
-            xGhost: if appropriate, x at ghost cells (for FORCE_STEADY)
+            eqn: object of class Equation
+            initCond: object of class InitCond
+            funH: object of class FunH
+            xGhost: array of values for x (of length N+2*gw, ie including ghost cells)
         Output:
             None (uNew updated in place)
         """
@@ -43,6 +46,17 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.FORCE_STEADY_ARBITRARY:
             uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw]))
             uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:]))
+        elif self.bc==BoundaryCond.FORCE_STEADY_INIT:
+            HConstr = funH.H(xGhost[gw])
+            uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
+            # import matplotlib.pyplot as plt
+            # print eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))
+            # plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
+            # plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
+            # plt.title("steady constraint")
+            # plt.show()
+            uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw]))
+            uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:]))
 
     def x_expand_with_bcs(self, xNew, xOld, gw):
         """ Take x and make a copy, augmented with BCs

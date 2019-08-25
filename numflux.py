@@ -113,7 +113,7 @@ class Flux:
         Glp = wr.wenorec(self.order, phi[0,-2:0:-1]) # at i-1/2^+
         Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
-        return (Gl, Gr)
+        return (Gl, Gr, 0)
 
     def rusanov_nonconservative(self, u, x, H, eqn):
         nvars = eqn.dim()
@@ -133,7 +133,7 @@ class Flux:
             Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
             Gl[var] = 0.5*(Glm + Glp)
             Gr[var] = 0.5*(Grm + Grp)
-        return (Gl, Gr)
+        return (Gl, Gr, 0)
 
 
     def upwind_nowb(self, u, x, eqn):
@@ -153,7 +153,7 @@ class Flux:
         Glp = wr.wenorec(self.order, phi[0,-2:0:-1]) # at i-1/2^+
         Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
-        return (Gl, Gr)
+        return (Gl, Gr, 0)
 
     def rusanov_nowb(self, u, x, eqn):
         nvars = eqn.dim()
@@ -172,4 +172,4 @@ class Flux:
             Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
             Gl[var] = 0.5*(Glm + Glp)
             Gr[var] = 0.5*(Grm + Grp)
-        return (Gl, Gr)
+        return (Gl, Gr, 0)

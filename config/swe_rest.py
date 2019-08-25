@@ -9,9 +9,9 @@ from timest import TimeStepping
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.SW
-init = InitCond.PWPOLY
-funh = FunH.BUMP
-H_noise_factor = 0.1
+init = InitCond.WATER_AT_REST
+funh = FunH.FLAT
+H_noise_factor = 0.0
 perturb_init = InitCond.PERT_NONE
 boundary = BoundaryCond.FORCE_STEADY_INIT
 numflux = Flux.RUSANOV
@@ -29,4 +29,4 @@ show_plots = True
 save_plots = False
 save_npys = False
 
-print "Loaded config/swe_pwpoly.py!"
+print "Loaded config/swe_rest.py!"

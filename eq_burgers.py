@@ -99,7 +99,7 @@ class BurgersEquation(Equation):
         if params.funh == FunH.IDENT and params.init == InitCond.SHOCK and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
             U[0] = 1. + 1.*(x < 0.5 + 1.5*t)
             return U
-        if params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.FORCE_STEADY:
+        if params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_NONE and (params.boundary in [BoundaryCond.FORCE_STEADY, BoundaryCond.FORCE_STEADY_ARBITRARY, BoundaryCond.FORCE_STEADY_INIT]):
             U[0] = np.exp(x)
             return U
             

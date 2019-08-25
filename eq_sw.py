@@ -114,7 +114,6 @@ class SWEquation(Equation):
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
         (hi, qi, ui) = (uConstr[0], uConstr[1], uConstr[1]/uConstr[0])
-        
         Hstar = self.critical_H(HConstr, qi, hi)
         if np.min(H) < Hstar:
             raise NoSteadyError("No steady state exists for constraint \

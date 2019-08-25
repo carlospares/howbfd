@@ -2,11 +2,11 @@
 """
 Created on Tue Apr 30 20:23:32 2019
 
-@author: Usuario
+@author: Carlos Parés Madroñal
 """
 from scipy.interpolate import InterpolatedUnivariateSpline
 import numpy as np
-# from equation import Equation
+from boundary import BoundaryCond
 
 class FunH:
     FLAT = 300
@@ -16,13 +16,15 @@ class FunH:
     DISC_BOT= 304
 
     SEED = 11235813 # seed for reproducibility
-    def __init__(self, x, cf):
+    def __init__(self, xGhost, cf):
         self.funH = cf.funh
         self.noise_amplit = cf.H_noise_factor
         if self.noise_amplit != 0:
+            xNeeded = xGhost[cf.gw:-cf.gw] if cf.boundary == BoundaryCond.PERIODIC else xGhost
+            # unless BCs are periodic, we need to generate H also for ghost points
             np.random.seed(self.SEED) # so we get consistent results
-            Hnoise = self.noise_amplit*np.random.rand(len(x))
-            self.Hnoiseinterp = InterpolatedUnivariateSpline(x, Hnoise, k=1) # faster than interp1d!
+            Hnoise = self.noise_amplit*np.random.rand(len(xNeeded))
+            self.Hnoiseinterp = InterpolatedUnivariateSpline(xNeeded, Hnoise, k=1) # faster than interp1d!
 
 
     def H(self, x):

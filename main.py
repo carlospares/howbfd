@@ -39,13 +39,13 @@ for level in range(0, config.refinements+1):
     x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
     xGhost = np.zeros(N+2*gw) # storage for x with ghost cells
     bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
-    funH = FunH(x, config)
+    funH = FunH(xGhost, config)
     H = funH.H(x)
 
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
     dx = x[1]-x[0]
 
-    t = 0
+    t = 0.0
     # Deal with possible plot at t=0
     io_manager.io_if_appropriate(x, u, H, t, config)
 
@@ -60,7 +60,7 @@ for level in range(0, config.refinements+1):
     exact = eqn.exact(x, t, config)
     errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
-    print errors[level]
+    print "Error at N={} is {}".format(N, errors[level])
     dxs[level] = dx
     
     io_manager.reset_timer() # otherwise only level=0 will plot
