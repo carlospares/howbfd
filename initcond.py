@@ -49,7 +49,9 @@ class InitCond:
         elif self.initCond==InitCond.WATER_AT_REST:
             U0[0] = 1 + H
         elif self.initCond==InitCond.ORDER_TEST:
-            U0[0] = np.exp(-1./(1 -x**2))*(x < 1)*(x > -1)
+            U0[0] =  (x**3 -3*x**3*(x-1) + 6*x**3*(x-1)**2)*(x > 0)*(x<1)+ 1.*(x>=1.)
+#            U0[0] = (-2*x**3 + 3* x**2)*(x > 0)*(x<1)+ 1.*(x>=1.)
+#            U0[0] = np.exp(-1./(1 -x**2))*(x < 1)*(x > -1)
 #            U0[0] = (1- x**2)*(x < 1)*(x > -1)
             
         return U0 + self.perturbation(x)

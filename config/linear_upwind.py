@@ -23,9 +23,9 @@ N = 100
 cfl = 0.5
 a = -2.
 b = 10.
-T = 3.
-plot_every = 3
-show_plots = True
+T = 1.
+plot_every = 1.
+show_plots = False
 save_plots = False
 save_npys = False
 

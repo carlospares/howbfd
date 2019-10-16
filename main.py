@@ -66,6 +66,9 @@ for level in range(0, config.refinements+1):
     
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print "Error at N={} is {}".format(N, errors[level])
+    if level > 0:
+        order = (np.log(errors[level-1]) -np.log(errors[level]))/np.log(2.)
+        print "Order: "+str(order)
     dxs[level] = dx
     
     io_manager.reset_timer() # otherwise only level=0 will plot
