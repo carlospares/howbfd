@@ -69,6 +69,7 @@ class IoManager:
                 exact = self.eqn.exact(x, t, cf)
                 if np.any(exact): # if it's not all zeros, plot it!
                     plt.plot(x, 1e3*(u-self.eqn.exact(x,t,cf)).T, 'r', label='error*1e3')
+                    plt.plot(x, self.eqn.exact(x,t,cf).T)
                     plt.legend()
                     
             tag = self.get_tag(len(x), cf)

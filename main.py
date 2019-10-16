@@ -16,6 +16,8 @@ import os
 ### Get config file from command line, or load default:
 config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
+print config.a, config.b, config.T
+
 ### Set up problem:
 bdry = BoundaryCond(config)
 gw = int((config.order-1)/2)+1 # number of ghost cells
@@ -58,7 +60,10 @@ for level in range(0, config.refinements+1):
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
     exact = eqn.exact(x, t, config)
-    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
+#    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
+
+    errors[level] = np.sum(np.abs(exact - u))*dx
+    
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print "Error at N={} is {}".format(N, errors[level])
     dxs[level] = dx

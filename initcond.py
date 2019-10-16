@@ -13,6 +13,7 @@ class InitCond:
     FLAT = 504
     RAREFACTION = 505
     WATER_AT_REST = 506
+    ORDER_TEST = 507
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -47,6 +48,9 @@ class InitCond:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
         elif self.initCond==InitCond.WATER_AT_REST:
             U0[0] = 1 + H
+        elif self.initCond==InitCond.ORDER_TEST:
+            U0[0] = np.exp(-1./(1 -x**2))*(x < 1)*(x > -1)
+#            U0[0] = (1- x**2)*(x < 1)*(x > -1)
             
         return U0 + self.perturbation(x)
 

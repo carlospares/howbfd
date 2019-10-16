@@ -15,7 +15,7 @@ class LinearEquation(Equation):
 
     """
 
-    alpha = 0.01
+    alpha = 1.0
 
     def F(self, U):
         """ Flux function """
@@ -96,6 +96,10 @@ class LinearEquation(Equation):
             
         elif params.funh == FunH.FLAT and params.init == InitCond.SIN and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
             U[0] = 1*(x<= -1 + alpha*t) + (x > -1 + alpha*t)*(1+np.sin(2*np.pi*x0))
+            return U
+        elif params.init==InitCond.ORDER_TEST:
+            U[0] = np.exp(3.)*np.exp(-1./(1 -(x-3.)**2))*(x < 4)*(x > 2)
+#            U[0] = np.exp(3.)*(1 -(x-3.)**2)*(x < 4)*(x > 2)
             return U
             
         else:
