@@ -54,6 +54,7 @@ for level in range(0, config.refinements+1):
     ### Main loop
     while t < config.T:
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
+#        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
         u = timest.update(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, config)
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)

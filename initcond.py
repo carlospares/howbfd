@@ -14,6 +14,7 @@ class InitCond:
     RAREFACTION = 505
     WATER_AT_REST = 506
     ORDER_TEST = 507
+    TWO_ST=508
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -49,10 +50,14 @@ class InitCond:
         elif self.initCond==InitCond.WATER_AT_REST:
             U0[0] = 1 + H
         elif self.initCond==InitCond.ORDER_TEST:
-            U0[0] =  (x**3 -3*x**3*(x-1) + 6*x**3*(x-1)**2)*(x > 0)*(x<1)+ 1.*(x>=1.)
+            U0[0] = (x**6*(1 - 6*(x-1) + 21*(x-1)**2 - 56*(x-1)**3 + 126*(x-1)**4-252*(x-1)**5))*( x >0)*(x < 1) + 1.*(x >= 1)
+            #            U0[0] =  (x**5*(1 - 5*(x-1) + 15*(x-1)**2 - 35*(x-1)**3 + 70*(x-1)**4))*( x >0)*(x < 1) + 1.*(x >= 1)
+#            U0[0] =  (x**3 -3*x**3*(x-1) + 6*x**3*(x-1)**2)*(x > 0)*(x<1)+ 1.*(x>=1.)
 #            U0[0] = (-2*x**3 + 3* x**2)*(x > 0)*(x<1)+ 1.*(x>=1.)
 #            U0[0] = np.exp(-1./(1 -x**2))*(x < 1)*(x > -1)
 #            U0[0] = (1- x**2)*(x < 1)*(x > -1)
+        elif self.initCond==InitCond.TWO_ST:
+            U0[0] = 10*np.exp(x)*(x<0)+ np.exp(x)*(x>=0)
             
         return U0 + self.perturbation(x)
 
