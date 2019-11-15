@@ -11,16 +11,20 @@ from boundary import BoundaryCond
 from numflux import Flux
 from timest import TimeStepping
 from howbfd_io import IoManager, parse_command_line#, safe_name
+from time import clock
 import os
+
+tini = clock()
 
 ### Get config file from command line, or load default:
 config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
-print config.a, config.b, config.T
+print config.a, config.b, config.T,  config.plot_exact
 
 ### Set up problem:
 bdry = BoundaryCond(config)
 gw = int((config.order-1)/2)+1 # number of ghost cells
+
 
 # equation_factory returns an object of the appropriate subclass of Equation
 eqn = equation_factory(config)
@@ -43,7 +47,6 @@ for level in range(0, config.refinements+1):
     bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
     funH = FunH(xGhost, config)
     H = funH.H(x)
-
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
     dx = x[1]-x[0]
 
@@ -60,10 +63,11 @@ for level in range(0, config.refinements+1):
         io_manager.io_if_appropriate(x, u, H, t, config)
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
-    exact = eqn.exact(x, t, config)
+    exact = eqn.exact(x, t, H, config)
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
     errors[level] = np.sum(np.abs(exact - u))*dx
+    
     
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print "Error at N={} is {}".format(N, errors[level])
@@ -76,3 +80,7 @@ for level in range(0, config.refinements+1):
 
 if config.refinements > 0:
     io_manager.plot_eoc(dxs, errors, timest.order())
+    
+tfin = clock()
+
+print 'CPU Time: ' + str(tfin-tini)

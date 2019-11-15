@@ -65,6 +65,6 @@ class Parameters:
         self.save_plots = cf.save_plots
         self.save_npys = cf.save_npys
         
-        self.plot_exact = True
+        self.plot_exact = cf.plot_exact
         self.refinements = 0
         

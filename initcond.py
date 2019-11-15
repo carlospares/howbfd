@@ -2,6 +2,7 @@
 # Carlos Parés Pulido, 2019
 
 import numpy as np
+from scipy.optimize import *
 # from equation import Equation
 
 class InitCond:
@@ -15,6 +16,8 @@ class InitCond:
     WATER_AT_REST = 506
     ORDER_TEST = 507
     TWO_ST=508
+    WATER_MASS = 509
+#    SW_TRANS = 510
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -40,7 +43,7 @@ class InitCond:
         elif self.initCond==InitCond.SIN:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
-            U0 = self.eqn.steady(H)
+            U0 = self.eqn.steady(H,x)
         elif self.initCond==InitCond.PWPOLY:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.initCond==InitCond.FLAT:
@@ -49,6 +52,8 @@ class InitCond:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
         elif self.initCond==InitCond.WATER_AT_REST:
             U0[0] = 1 + H
+        elif self.initCond==InitCond.WATER_MASS:
+            U0[0]= 1 + H + 1.*(x>9)*(x < 11)
         elif self.initCond==InitCond.ORDER_TEST:
             U0[0] = (x**6*(1 - 6*(x-1) + 21*(x-1)**2 - 56*(x-1)**3 + 126*(x-1)**4-252*(x-1)**5))*( x >0)*(x < 1) + 1.*(x >= 1)
             #            U0[0] =  (x**5*(1 - 5*(x-1) + 15*(x-1)**2 - 35*(x-1)**3 + 70*(x-1)**4))*( x >0)*(x < 1) + 1.*(x >= 1)
@@ -57,7 +62,9 @@ class InitCond:
 #            U0[0] = np.exp(-1./(1 -x**2))*(x < 1)*(x > -1)
 #            U0[0] = (1- x**2)*(x < 1)*(x > -1)
         elif self.initCond==InitCond.TWO_ST:
-            U0[0] = 10*np.exp(x)*(x<0)+ np.exp(x)*(x>=0)
+            U0[0] = 4*np.exp(x)*(x<0)+ np.exp(x)*(x>=0)
+#        elif self.initCond==InitCond.SW_TRANS:
+#            U0 = self.trans(x,H)
             
         return U0 + self.perturbation(x)
 
@@ -74,3 +81,39 @@ class InitCond:
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         return pert
+    
+#    def trans(self,x, H):
+#        L = len(x)
+#        g = 9.812
+#        q = 2.5
+#        C = 17.56957396120237
+#        U0 = np.zeros((2,L))
+#        U0[1,:] = q
+#        def f(h, H): #Esta es la función que igualamos a 0 y a la que le aplicamos el método de Newton o el método de la biyección.
+#            y = h + q**2/(2*g*h**2) - H  -  C/g
+#            return y
+#        hmin = (q**2/g)**(1/3.) #Es donde se encuentra el mínimo de la función.
+#
+#        tol1 = 1e-4
+#        tol2 = 1e-10
+#        tol3 = 1e-8
+#    #Cuando Hr es próximo al Hmin, la solución es próxima a hmin.
+#        for i in range(L):
+#            fhmin= f(hmin, H[i])
+#            if (hmin< tol2): 
+#                z = (hmin, hmin)
+#            elif ((abs(fhmin) > tol1)):
+#                Hi = H[i]
+#                try:
+#                    z = (bisect(f, 1e-20, hmin,Hi), newton(f, hmin*2, args = (Hi,))) #El primer estado es el supercrítico y el segundo es el subcrítico.
+#                except:
+#                    print 'fallo'
+#                    z = (hmin,hmin)
+#            else:
+#                z = (hmin, hmin)
+#    
+#            if x[i] <= 0:
+#                U0[0,i] = z[1]
+#            else:
+#                U0[0,i] = z[0]
+#        return U0

@@ -15,6 +15,7 @@ class Equation:
     LINEAR = 700   # eq_linear.py
     BURGERS = 701  # eq_burgers.py
     SW = 702       # eq_sw.py
+    SW_WAR = 703
 
     SEED = 11235813 # seed for reproducibility
 
@@ -92,7 +93,7 @@ class Equation:
         print "[WARNING] Using default Pi; this will lose conservativeness"
         return V
         
-    def exact(self, x, t, params):
+    def exact(self, x, t, H,params):
         """ Return the exact solution for U(x,t) for params.
             This heavily depends on the parameters.
             If not implemented, call this function so zeros are returned

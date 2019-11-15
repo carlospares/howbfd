@@ -50,7 +50,7 @@ class BurgersEquation(Equation):
             (i.e. everywhere) """
         return V
 
-    def steady(self, H):
+    def steady(self, H,x):
         """ Returns an arbitrary steady state for the equation.
             Input: 
                 x: spatial coordinates
@@ -59,9 +59,9 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
-        return self.steady_constraint(0., 1., H)
+        return self.steady_constraint(0., 1., H,x)
 
-    def steady_constraint(self, HConstr, uConstr, H):
+    def steady_constraint(self, HConstr, uConstr, H,x, U = 0):
         """ Returns a steady state solution of the equation u*, constrained
             to u*(xConstr) = uConstr
             Input:

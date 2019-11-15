@@ -14,6 +14,8 @@ class FunH:
     DISC = 302
     BUMP = 303
     DISC_BOT= 304
+    IDpSIN= 305
+    BUMP2 = 306
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -39,6 +41,12 @@ class FunH:
             H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.funH==self.DISC_BOT:
             H = (1 + x)*(x <= 1) + (2+x)*(x > 1)
+        elif self.funH==self.IDpSIN:
+            A = 0.1
+            alfa = 100
+            H = x+ A*np.sin(alfa*x)
+        elif self.funH == self.BUMP2:
+            H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
         if self.noise_amplit != 0:
             H += self.Hnoiseinterp(x)
         return H
@@ -59,5 +67,11 @@ class FunH:
             Hx= 0.1*(x-10)*(x>=8)*(x<=12)
         elif self.funH==self.DISC_BOT:
             Hx = np.ones_like(x)
+        elif self.funH == self.IDpSIN:
+            A = 0.1
+            alfa = 100
+            Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
+        elif self.funH == self.BUMP2:
+            Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
         return Hx
 

@@ -10,14 +10,14 @@ from timest import TimeStepping
 
 equation = Equation.SW
 init = InitCond.WATER_AT_REST
-funh = FunH.FLAT
-H_noise_factor = 0.0
+funh = FunH.BUMP
+H_noise_factor = 0.1
 perturb_init = InitCond.PERT_NONE
 boundary = BoundaryCond.FORCE_STEADY_INIT
 numflux = Flux.RUSANOV
 timest = TimeStepping.EULER
 order = 3
-well_balanced = True
+well_balanced = False
 is_conservative = True
 N = 100
 a = 0

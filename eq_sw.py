@@ -19,7 +19,7 @@ class SWEquation(Equation):
     """
     
     # other function parameters
-    g = 9.8
+    g = 9.812
 
     def F(self, U):
         """ Flux function """
@@ -29,6 +29,43 @@ class SWEquation(Equation):
         ret[0,:] = q
         ret[1,:] = q*q/h + 0.5*self.g*h*h
         return ret
+
+    def Fp(self, U):
+        """ Flux function """
+        ret = np.empty(U.shape)
+        h = U[0,:]
+        q = U[1,:]
+        l1 = q/h - np.sqrt(.5*self.g*h)
+        l2 = q/h + np.sqrt(.5*self.g*h)
+        l1p = l1*(l1 >= 0)
+        l2p = l2*(l2 >= 0)
+        a11 = l2*l1p -  l1*l2p
+        a12 = -l1p + l2p
+        a21 = l1*l2*(l1p - l2p)
+        a22 = -l1*l1p + l2*l2p
+        d = 1/np.sqrt(2*self.g*h)
+        ret[0,:] = d*(a11*h + a12*q)
+        ret[1,:] = d*(a21*h + a22*q)
+        return ret
+
+    def Fm(self, U):
+        """ Flux function """
+        ret = np.empty(U.shape)
+        h = U[0,:]
+        q = U[1,:]
+        l1 = q/h - np.sqrt(.5*self.g*h)
+        l2 = q/h + np.sqrt(.5*self.g*h)
+        l1m = l1*(l1 <= 0)
+        l2m = l2*(l2 <= 0)
+        a11 = l2*l1m -  l1*l2m
+        a12 = -l1m + l2m
+        a21 = l1*l2*(l1m - l2m)
+        a22 = -l1*l1m + l2*l2m
+        d = 1/np.sqrt(2*self.g*h)
+        ret[0,:] = d*(a11*h + a12*q)
+        ret[1,:] = d*(a21*h + a22*q)
+        return ret
+    
 
     def dF(self, U):
         """ Derivative of flux function """
@@ -64,7 +101,8 @@ class SWEquation(Equation):
         """ Returns dimension of the problem: 1 for scalars """
         return 2
 
-    def steady(self, H):
+    def steady(self, H,x):
+        U0 = np.ones((self.dim(), len(H)))
         """ Returns an arbitrary steady state for the equation.
             Input: 
                 x: spatial coordinates
@@ -78,9 +116,41 @@ class SWEquation(Equation):
         # U0 = np.zeros((2, len(x)))
         # U0[0,:] = arbitrary_eta + self.H(x)
         # return U0
-        HConst = 0.1
-        uConst = [1., 5.]
-        return self.steady_constraint(HConst, uConst, H)
+        HConst = 0.
+        qConst = 2.5
+        U0[1,:] = qConst
+        hConst = 2.
+        uConst = [hConst, qConst]
+        return self.steady_constraint(HConst, uConst, H,x, U0)
+    
+    def steady_trans(self,H,x): 
+        U0 = np.ones((self.dim(), len(H)))
+        g = self.g
+        HConst = -.5
+        qConst = 2.5
+        U0[1,:] = qConst
+        hConst = np.abs(qConst)**(2/3.)/g**(1/3.)
+        uConst = qConst/hConst
+        uConst = [hConst, qConst]
+        return self.steady_constraint(HConst, uConst, H,x, U0)
+#        print 'steady',index, H[index]
+#        index = np.argmin(np.abs(H-HConst)) 
+#        U0 = np.zeros((self.dim(), len(H)))
+#        for j in range(len(H)):
+#            # phi may fail to find a steady state even if it formally exists
+#            # when flow is close to critical. This is a failsafe for that.
+#            try: 
+#                (hsuperc, hsubc) = phi(hConst, uConst, HConst, H[j])
+#            except Exception:
+#                raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
+#                                    (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConst, hConst, uConst, H[j]-Const ))
+#            # hstar = polyNewton[j] # Halley's method
+#            U0[0,j] = hsuperc if j >= index else hsubc
+#            U0[1,j] = qConst
+#        return U0
+
+
+
 
     def Froude(self, u, h):
         return abs(u) / np.sqrt(self.g*h)
@@ -101,7 +171,7 @@ class SWEquation(Equation):
         """
         return Hc + 1.5*(qc*qc/self.g)**(1./3) - (0.5/self.g)*qc*qc/(hc*hc) - hc
 
-    def steady_constraint(self, HConstr, uConstr, H):
+    def steady_constraint(self, HConstr, uConstr, H,x, U0):
         """ Returns a steady state solution of the equation, u*, constrained
             to u*(xConstr) = uConstr
             Input:
@@ -127,13 +197,15 @@ class SWEquation(Equation):
             # phi may fail to find a steady state even if it formally exists
             # when flow is close to critical. This is a failsafe for that.
             try: 
-                (hsuperc, hsubc) = phi(hi, ui, HConstr, H[j])
+                (hsuperc, hsubc) = phi(hi, ui, HConstr, H[j], U0[0,j])
             except Exception:
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
             Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+#            Ustar[0,j] = hsuperc if x[j] > 0. else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
+  
         return Ustar
 
     # # TO DO: very slow. Delete me?
@@ -183,7 +255,8 @@ class SWEquation(Equation):
         plt.plot(x, u[1]/u[0], label='u')
         plt.legend()
 
-
+    def exact(self, x, t, H, params):
+        return self.steady(H,x)
 # def steady_poly(h, q, Ci, Hj, g):
     # """ Polynomial in h, such that P(h) = 0 iff h is a value at x_j """
     # return g*h*h*h - (Ci+g*Hj)*h*h + 0.5*q*q
@@ -193,3 +266,4 @@ class SWEquation(Equation):
 # def steady_poly_second(h, q, Ci, Hj, g):
     # """ Second derivative in h of steady_poly """
     # return 6*g*h - 2*(Ci+g*Hj)
+    

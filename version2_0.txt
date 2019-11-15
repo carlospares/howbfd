@@ -1,0 +1,20 @@
+
+NOVEDADES DE LA VERSIÓN 2.0:
+
+1. He creado una nueva ecuación SW_WAR, que es heredera de SW, para poder tener un esquema que solo sea WB para el agua en reposo.
+
+2. Flujo programados:
+
+* Upwind:  wb conservativo, wb no conservativo (realmente no tiene utilidad, ya que no está implementado para sistemas) y no wb
+
+* Rusanov: cálculo de alfa local. Versiones implementadas: wb conservativa (que realmente no es conservativo por culpa de alfa), wb no conservativa y no wb
+
+* Rusanovg: cáclulo de alfa local. Versiones implementadas: wb conservativa (que lo es), wb no conservativa y no wb.  La versión no wb está implemntada de manera que no se calculan los flujos dos veces.
+
+* SW_split: basado en un splitting particular para las SW. Mismas versiones e implementaciones que Rusnovg
+
+3. En la función steady_cosntraint he añadido como parámetros de entrada:
+
+*x: esto permite usar un criterio para elegir entre las reconstrucciones subc y supc con un criterio basado en x
+
+*U0: esto permite probar si la h_j que tengo en la celda j del stencil i es ya la que busco al reconstruir, y en ese caso no la busco. Esto ahorra muchas cuentas cuando la c.i. es una solución estacionaria. Cuando llamo a la función desde la condición inicial o de contorno, pongo U0 = 0.

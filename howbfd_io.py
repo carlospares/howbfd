@@ -9,7 +9,8 @@ from equation import Equation
 import argparse
 from parameters import Parameters
 
-DEFAULT = "howbfd_config"
+#DEFAULT = "howbfd_config"
+DEFAULT = "burgers_rusanov"
 
 
 def parse_command_line():
@@ -64,13 +65,15 @@ class IoManager:
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
-            
+            dx = x[1]-x[0]
+            mass = np.sum(u[0])*dx
+            print mass
             if cf.plot_exact:
-                exact = self.eqn.exact(x, t, cf)
+                exact = self.eqn.exact(x, t, H, cf)
                 if np.any(exact): # if it's not all zeros, plot it!
 #                    plt.plot(x, 1e3*(u-self.eqn.exact(x,t,cf)).T, 'r', label='error*1e3')
-                    plt.plot(x, u.T,x, self.eqn.exact(x,t,cf).T)
-                    plt.legend()
+                    plt.plot(x, u.T,x, self.eqn.exact(x,t,H,cf).T)
+                    plt.legend(['CACA'])
                     
             tag = self.get_tag(len(x), cf)
             if cf.save_plots:
