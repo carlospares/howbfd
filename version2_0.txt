@@ -18,3 +18,10 @@ NOVEDADES DE LA VERSIÓN 2.0:
 *x: esto permite usar un criterio para elegir entre las reconstrucciones subc y supc con un criterio basado en x
 
 *U0: esto permite probar si la h_j que tengo en la celda j del stencil i es ya la que busco al reconstruir, y en ese caso no la busco. Esto ahorra muchas cuentas cuando la c.i. es una solución estacionaria. Cuando llamo a la función desde la condición inicial o de contorno, pongo U0 = 0.
+
+4. Para simular un flujo transcritico con sw hay que hacer:
+- cambiar el  nombre de steady_trans a steady y el de steady al de steday_sub en eq_sw.py
+- comentar la línea 205 de steady_constraint para que el criterio sea 
+            Ustar[0,j] = hsuperc if x[j] > xcrit else hsubc # xcrit es la coordenada del punto crítico
+en vez de
+            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc

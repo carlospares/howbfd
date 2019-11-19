@@ -49,7 +49,7 @@ for level in range(0, config.refinements+1):
     H = funH.H(x)
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
     dx = x[1]-x[0]
-
+#    print '[', 0,',', np.sum(u[0])*dx, '],' 
     t = 0.0
     # Deal with possible plot at t=0
     io_manager.io_if_appropriate(x, u, H, t, config)
@@ -57,10 +57,11 @@ for level in range(0, config.refinements+1):
     ### Main loop
     while t < config.T:
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
-#        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
+        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
         u = timest.update(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, config)
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
+#        print '[', t,',', np.sum(u[0])*dx, '],' 
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
     exact = eqn.exact(x, t, H, config)

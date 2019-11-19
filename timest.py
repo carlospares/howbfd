@@ -77,10 +77,12 @@ class TimeStepping:
             fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
-                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
-        
+                print 'fails at ', x[i]
+                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
         if fails>0:
             print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
+        
+
         return u + dt*tend
 
     def eulernwb(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf):

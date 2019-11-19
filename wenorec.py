@@ -45,7 +45,7 @@ def weno3_rec(phim1, phi0, phip1):
     alpha1 = (2.0/3.0) / (eps + beta1) / (eps + beta1)
 #    alpha0 = 1./3.
 #    alpha1 = 2./3.
-     
+#     
     alpha_sum = alpha0 + alpha1
      
     w0 = alpha0 / alpha_sum

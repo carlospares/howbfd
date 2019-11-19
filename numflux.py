@@ -160,7 +160,7 @@ class Flux:
         return (Gl, Gr, noSteady)
 
     def rusanovg(self, u, x, H, alpha, eqn):
-        tol = 1.e-12
+        tol = 1.e-6
         nvars = eqn.dim()
         i = (u.shape[1]-1)/2
         I = nvars - np.sum(eqn.Pi(np.ones(nvars)))
@@ -181,24 +181,30 @@ class Flux:
             phip = F + alpha*u  # phi plus
             phim = F - alpha*u # phi minus
             noSteady = 1
-
+        
         for var in range(nvars):
             if var < I and max(abs(F[var,0:-1] - F[var,i]))< tol:
-                Glm = F[var,i]
-                Grm = F[var,i]
-            else:        
-                Grm = wr.wenorec(self.order, phip[var,1:-1]) # phip at i+1/2^-
+                Gl[var] = F[var,i]
+            else:  
                 Glm = wr.wenorec(self.order, phip[var,0:-2]) # phip at i-1/2^-
-
-            if  var < I and max(abs(F[var,1:] - F[var,i]))< tol:  
-                Grp = F[var,i]
-                Glp = F[var,i]
-            else:
-                Grp = wr.wenorec(self.order, phim[var,-1:1:-1]) # phim at i+1/2^+
                 Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
+                Gl[var] = 0.5*(Glm + Glp)
+            if  var < I and max(abs(F[var,1:] - F[var,i]))< tol: 
+                Gr[var] = F[var,i]
+            else:
+                Grp = wr.wenorec(self.order, phim[var,-1:1:-1]) # phim at i+1/2^+ 
+                Grm = wr.wenorec(self.order, phip[var,1:-1]) # phip at i+1/2^-
+                Gr[var] = 0.5*(Grm + Grp)
+              
+            
+
+               
+
+            
+
 #            print phip[var,1:-1],  phip[var,0:-2],phim[var,-1:1:-1], phim[var,-2:0:-1]
-            Gl[var] = 0.5*(Glm + Glp)
-            Gr[var] = 0.5*(Grm + Grp)
+            
+            
 
         return (Gl, Gr, noSteady)
 
@@ -225,24 +231,23 @@ class Flux:
             phip = eqn.Fp(u)  # phi plus
             phim = eqn.Fm(u) # phi minus
             noSteady = 1
+        
 
         for var in range(nvars):
             if var < I and max(abs(F[var,0:-1] - F[var,i]))< tol:
-                Glm = F[var,i]
-                Grm = F[var,i]
-            else:        
-                Grm = wr.wenorec(self.order, phip[var,1:-1]) # phip at i+1/2^-
+                Gl[var] = F[var,i]
+            else:  
                 Glm = wr.wenorec(self.order, phip[var,0:-2]) # phip at i-1/2^-
-
-            if  var < I and max(abs(F[var,1:] - F[var,i]))< tol:  
-                Grp = F[var,i]
-                Glp = F[var,i]
-            else:
-                Grp = wr.wenorec(self.order, phim[var,-1:1:-1]) # phim at i+1/2^+
                 Glp = wr.wenorec(self.order, phim[var,-2:0:-1]) # phim at i-1/2^+
-#            print phip[var,1:-1],  phip[var,0:-2],phim[var,-1:1:-1], phim[var,-2:0:-1]
-                Gl[var] = 0.5*(Glm + Glp)
-                Gr[var] = 0.5*(Grm + Grp)
+                Gl[var] = Glm + Glp
+                
+            if  var < I and max(abs(F[var,1:] - F[var,i]))< tol: 
+                Gr[var] = F[var,i]
+            else:
+                Grp = wr.wenorec(self.order, phim[var,-1:1:-1]) # phim at i+1/2^+ 
+                Grm = wr.wenorec(self.order, phip[var,1:-1]) # phip at i+1/2^-
+                Gr[var] = Grm + Grp
+
         return (Gl, Gr, noSteady)
 
 
@@ -335,8 +340,8 @@ class Flux:
 #            print 'wb'
 #            print phip[var,1:-1],  phip[var,0:-2],phim[var,-1:1:-1], phim[var,-2:0:-1]
 #            print Grm, Glm, Grp, Glp
-            Gl[var] = 0.5*(Glm + Glp)
-            Gr[var] = 0.5*(Grm + Grp)
+            Gl[var] = (Glm + Glp)
+            Gr[var] =  (Grm + Grp)
         return (Gl, Gr, noSteady)
 
 
@@ -413,9 +418,9 @@ class Flux:
         phim = eqn.Fm(u)
 #        print x, phip, phim
         for var in range(nvars):
-            Gl[var] = .5*wr.wenorec(self.order, phim[var,::-1]) # phim at i-1/2^+
+            Gl[var] = wr.wenorec(self.order, phim[var,::-1]) # phim at i-1/2^+
 #            print phim[var,::-1], Gl[var]
-            Gr[var] = .5*wr.wenorec(self.order, phip[var,:]) # phip at i+1/2^-
+            Gr[var] = wr.wenorec(self.order, phip[var,:]) # phip at i+1/2^-
 #            print phip[var,:], Gr[var]
         return (Gl, Gr, 0)
 

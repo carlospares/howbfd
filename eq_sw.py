@@ -203,9 +203,13 @@ class SWEquation(Equation):
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
             Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-#            Ustar[0,j] = hsuperc if x[j] > 0. else hsubc  # transcritical stationary solution with critical point at x = 0
+#            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
-  
+        i = (U0.shape[1]-1)/2
+#        if x[i]== -1.05:
+#            print ''
+#            print U0
+#            print Ustar
         return Ustar
 
     # # TO DO: very slow. Delete me?

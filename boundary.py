@@ -57,8 +57,8 @@ class BoundaryCond:
             # plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
             # plt.title("steady constraint")
             # plt.show()
-            uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw]),xGhost[:gw])
-            uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:]), xGhost[-gw:])
+            uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw]),xGhost[:gw], np.zeros((nvars,gw)))
+            uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:]), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.WALL:
 #            print eqn
             uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]

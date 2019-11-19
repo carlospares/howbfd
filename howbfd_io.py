@@ -61,13 +61,11 @@ class IoManager:
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
         if t >= self.get_next_plot_time():
-            print t
+#            print t
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
             dx = x[1]-x[0]
-            mass = np.sum(u[0])*dx
-            print mass
             if cf.plot_exact:
                 exact = self.eqn.exact(x, t, H, cf)
                 if np.any(exact): # if it's not all zeros, plot it!
