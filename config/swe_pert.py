@@ -6,26 +6,29 @@ from boundary import BoundaryCond
 from nummeth import NumericalMethod
 from timest import TimeStepping
 
+
 # For a detailed explanation, see howbfd_config
 
-equation = Equation.LINEAR
-init = InitCond.TWO_ST
-funh = FunH.IDENT
-H_noise_factor = 0.0
+equation = Equation.SW
+init = InitCond.STEADY
+funh = FunH.BUMP2
+H_noise_factor = 0
 perturb_init = InitCond.PERT_NONE
-boundary = BoundaryCond.IN_OUT
-nummeth = NumericalMethod.UPWINDWB
+boundary = BoundaryCond.FORCE_STEADY_ARBITRARY
+nummeth = NumericalMethod.RUSANOVGWB
 timest = TimeStepping.TVDRK3
 order = 5
-N = 100
+N = 200
+a = -3
+b = 3
 cfl = 0.5
-a = -.5
-b = 2.
 T = 1.
-plot_every = .25
+plot_exact = False
+plot_every = 1.
 show_plots = True
 save_plots = False
 save_npys = True
-plot_exact = False
 
-print "Loaded config/linear_upwind.py!"
+
+
+print "Loaded config/swe_rest.py!"

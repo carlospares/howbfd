@@ -18,6 +18,7 @@ def feval(mf0,*args):
 
 g = 9.812
 heps = 1e-12
+heps = 1e-8
 
 def phi(hl, ul, Hl, Hr,  hr): #Parte del estado WL= (hL, uL,HL) y calcula el h del estado al que se llega en el nivel Hr.
 #    print hl, hr

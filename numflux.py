@@ -11,6 +11,7 @@ class Flux:
     RUSANOV = 101
     RUSANOVG = 102#Rusanov with global alpha
     SW_SPLIT = 103
+    UPWIND_SW = 104
     
     def __init__(self, cf):
         self.numflux = cf.numflux
@@ -36,6 +37,8 @@ class Flux:
                     return self.rusanovg(u, x, H,alpha, eqn)
                 elif self.numflux == self.SW_SPLIT:
                     return self.sw_split(u,x,H,eqn)
+                elif self.numflux == self.UPWIND_SW:
+                    return self.upwind_sw(u,x,H,eqn)
             else: # old, non conservative version (kept for completeness)
                 if self.numflux == self.UPWIND:
                     return self.upwind_nonconservative(u, x, H,eqn)
@@ -54,6 +57,8 @@ class Flux:
                 return self.rusanovg_nowb(u, x, alpha, eqn)
             elif self.numflux == self.SW_SPLIT:
                 return self.sw_split_nowb(u,x,eqn)
+            elif self.numflux == self.UPWIND_SW:
+                return self.upwind_sw_nowb(u,x,H,eqn)
 
     def upwind(self, u, x, H, eqn):
         nvars = eqn.dim()
@@ -79,6 +84,50 @@ class Flux:
         Glp = wr.wenorec(self.order, phi[0,-2:0:-1]) # at i-1/2^+
         Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
+        return (Gl, Gr, noSteady)
+    
+    def upwind_sw(self, u, x, H, eqn):
+        g=9.812
+        nvars = eqn.dim()
+        Gl = np.zeros(nvars)
+        Gr = np.zeros(nvars)
+        i = (u.shape[1]-1)/2
+        noSteady = 0
+        try: 
+            ustar = eqn.steady_constraint(H[i], u[:,i], H,x, u)
+            phi = eqn.F(u) - eqn.Pi(eqn.F(ustar))
+        except NoSteadyError, e: # no steady state exists! Default to basic WENO
+            print "NoSteadyError triggered: {}".format(str(e))
+            phi = eqn.F(u)
+            noSteady = 1
+        
+        for var in range(nvars):
+            Grm = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-
+            Grp = wr.wenorec(self.order, phi[var,-1:1:-1]) # at i+1/2^+
+            Glm = wr.wenorec(self.order, phi[var,0:-2]) # at i-1/2^-
+            Glp = wr.wenorec(self.order, phi[var,-2:0:-1]) # at i-1/2^+
+            
+        um = .5*(u[:,i-1] + u[:,i])
+        up = .5*(u[:,i] + u[:,i+1])
+        lambdam1 = um[1]/um[0] - np.sqrt(g*um[0])
+        lambdam2 = um[1]/um[0] + np.sqrt(g*um[0])
+        lambdap1 = up[1]/up[0] - np.sqrt(g*up[0])
+        lambdap2 = up[1]/up[0] + np.sqrt(g*up[0])
+
+
+        if lambdap2 < 0:
+            Gr[0] = Grp
+        elif lambdap1 > 0:
+            Gr[0] = Grm
+        else:
+            Gr[0] = .5*(Grp + Grm)
+        if lambdam2 < 0:
+            Gl[0] = Glp
+        elif lambdam1 > 0:
+            Gl[0] = Glm
+        else:
+            Gl[0] = .5*(Glp + Glm)
+  
         return (Gl, Gr, noSteady)
 
 #    def rusanov(self, u, x, H, eqn):
@@ -272,6 +321,8 @@ class Flux:
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr, 0)
     
+    
+    
     def rusanov_nonconservative(self, u, x, H, eqn):
         nvars = eqn.dim()
         i = (u.shape[1]-1)/2
@@ -363,6 +414,11 @@ class Flux:
         Gr[0] = (critR >= 0)*Grm + (critR < 0)*Grp
         Gl[0] = (critL >= 0)*Glm + (critL < 0)*Glp
         return (Gl, Gr, 0)
+    
+    
+
+
+    
     
     def rusanovg_nowb(self, u, x,alpha, eqn):
         

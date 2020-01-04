@@ -50,11 +50,9 @@ class Parameters:
         self.boundary = cf.boundary
         self.H_noise_factor = cf.H_noise_factor
         self.perturb_init = cf.perturb_init
-        self.numflux = cf.numflux
+        self.nummeth = cf.nummeth
         self.timest = cf.timest
         self.order = cf.order
-        self.well_balanced = cf.well_balanced
-        self.is_conservative = cf.is_conservative
         self.N = cf.N
         self.cfl = cf.cfl
         self.a = cf.a

@@ -9,8 +9,8 @@ from equation import Equation
 import argparse
 from parameters import Parameters
 
-#DEFAULT = "howbfd_config"
-DEFAULT = "burgers_rusanov"
+DEFAULT = "howbfd_config"
+#DEFAULT = "burgers_rusanov"
 
 
 def parse_command_line():
@@ -89,9 +89,9 @@ class IoManager:
         """
         Returns a tag that summarises options used to get a simulation
         """
-        return "i{}-{}e{}H{}f{}b{}w{}n{}o{}_"\
-            .format(cf.init, cf.perturb_init, cf.equation, cf.funh, cf.numflux, 
-                    cf.boundary, int(cf.well_balanced), N, cf.order)
+        return "i{}-{}e{}H{}f{}b{}n{}o{}_"\
+            .format(cf.init, cf.perturb_init, cf.equation, cf.funh, cf.nummeth, 
+                    cf.boundary, N, cf.order)
 
     def statistics(self, x, u, H, eqn):
         """

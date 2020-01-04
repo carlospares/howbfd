@@ -13,6 +13,7 @@ class BoundaryCond:
     FORCE_STEADY_INIT = 405 # force steady state which agrees with HConstr = H[0], uConstr = u0[:,0]
     WALL = 406
     INIT = 407
+    HDOWNQUP = 408
 
     def __init__(self, cf):
         self.bc = cf.boundary
@@ -36,7 +37,8 @@ class BoundaryCond:
             uNew[:,:gw] = uOld[:,-gw:]
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+#            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw]), xGhost[:gw])
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):
@@ -68,6 +70,11 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.INIT:
             uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
             uNew[:,-gw:] = initCond.u0(xGhost[-gw:], funH.H(xGhost[-gw:]))
+        elif self.bc == BoundaryCond.HDOWNQUP:
+            uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]
+            uNew[0,:gw] = 2.
+            uNew[1,-gw:] = 2.5
+            uNew[1,:gw] = uOld[1, gw:0:-1]            
 
     def x_expand_with_bcs(self, xNew, xOld, gw):
         """ Take x and make a copy, augmented with BCs

@@ -45,12 +45,12 @@ class Equation:
             Required for non-wb solver """
         raise NotImplementedError
 
-    def upw_criterion(self, uStencil):
-        """ Returns a pair (l,r) with the velocity for upwind criterion at
-            left and right intercells, for cell at center of uStencil.
-
-            Required for upwind """
-        raise NotImplementedError
+#    def upw_criterion(self, uStencil):
+#        """ Returns a pair (l,r) with the velocity for upwind criterion at
+#            left and right intercells, for cell at center of uStencil.
+#
+#            Required for upwind """
+#        raise NotImplementedError
 
 
     def steady(self, x):
@@ -92,6 +92,16 @@ class Equation:
             Required for well-balanced solver to be conservative """
         print "[WARNING] Using default Pi; this will lose conservativeness"
         return V
+    
+    def Piplus(self, ui, uip1):
+        """Return the projection matrix P^+_{i+1/2} to be used in the uwpind method"""
+        raise NotImplementedError
+        
+    def Piminus(self, ui,  uip1):
+        """Return the projection matrix P^-_{i+1/2} to be used in the uwpind method"""
+        raise NotImplementedError
+
+        
         
     def exact(self, x, t, H,params):
         """ Return the exact solution for U(x,t) for params.
@@ -100,6 +110,14 @@ class Equation:
             with a printed warning """
         print "[WARNING] exact for these parameters not implemented. Returning zero!"
         return np.zeros((self.dim(), len(x)))
+
+    def Fp(self, U):
+        """ Flux-splitting plus function """
+        raise NotImplementedError
+        
+    def Fm(self, U):
+        """ Flux-splitting minus function """
+        raise NotImplementedError
 
 
 

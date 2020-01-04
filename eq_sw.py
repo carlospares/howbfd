@@ -90,18 +90,46 @@ class SWEquation(Equation):
         """ Return S(U) """
         return np.array([ 0, self.g*U[0] ])
 
-    def upw_criterion(self, uStencil):
-        """ Returns a pair (l,r) with the velocity for upwind criterion at
-            left and right intercells, for cell at center of uStencil
-        """
-        print "[ERROR] Upwind only implemented for scalar equations!"
-        raise NotImplementedError
-
+#    def upw_criterion(self, uStencil):
+#        """ Returns a pair (l,r) with the velocity for upwind criterion at
+#            left and right intercells, for cell at center of uStencil
+#        """
+#        print "[ERROR] Upwind only implemented for scalar equations!"
+#        raise NotImplementedError
+        
+    def Piplus(self, ui, uip1):
+        hl = ui[0]
+        hr = uip1[0]
+        ul = ui[1]/ui[0]
+        ur = uip1[1]/uip1[0]
+        h = .5*(hl + hr)
+        u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
+        l1 = u - np.sqrt(self.g*h)
+        l2 = u + np.sqrt(self.g*h)
+        s1 = .5*(1 + np.sign(l1))
+        s2 = .5*(1 + np.sign(l2))
+        A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
+        return 1./(l2 - l1)*A
+    
+    def Piminus(self, ui, uip1):
+        hl = ui[0]
+        hr = uip1[0]
+        ul = ui[1]/ui[0]
+        ur = uip1[1]/uip1[0]
+        h = .5*(hl + hr)
+        u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
+        l1 = u - np.sqrt(self.g*h)
+        l2 = u + np.sqrt(self.g*h)
+        s1 = .5*(1 - np.sign(l1))
+        s2 = .5*(1 - np.sign(l2))
+        A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
+        return 1./(l2 - l1)*A
+    
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
         return 2
 
-    def steady(self, H,x):
+    def steady_sup(self, H,x):
         U0 = np.ones((self.dim(), len(H)))
         """ Returns an arbitrary steady state for the equation.
             Input: 
@@ -116,21 +144,32 @@ class SWEquation(Equation):
         # U0 = np.zeros((2, len(x)))
         # U0[0,:] = arbitrary_eta + self.H(x)
         # return U0
-        HConst = 0.
+# BUMP2
+#        HConst = 0.
+#        qConst = 2.5
+#        hConst = 2.
+        
+#        HConst = 0.23
+#        qConst = 1.
+#        hConst = 1.
+        
+#BUMPD  
+        HConst = -.5
         qConst = 2.5
+        hConst = .5
         U0[1,:] = qConst
-        hConst = 2.
+#        hConst = 2.
+
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
     
-    def steady_trans(self,H,x): 
+    def steady(self,H,x): 
         U0 = np.ones((self.dim(), len(H)))
         g = self.g
         HConst = -.5
         qConst = 2.5
         U0[1,:] = qConst
         hConst = np.abs(qConst)**(2/3.)/g**(1/3.)
-        uConst = qConst/hConst
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
 #        print 'steady',index, H[index]
@@ -150,7 +189,26 @@ class SWEquation(Equation):
 #        return U0
 
 
+    def twosteady(self,H,x):
+        U0 = np.ones((self.dim(), len(H)))
+        cond= np.where(x>=0)
+        if len(cond[0]) == 0:
+            ind = len(H)+1
+        else:
+            ind = cond[0][0]
+        qConst = 1.
+        if ind > 0:
+            HConstL = 1.
+            hConstL = 1.
+            uConstL = [hConstL, qConst]
+            U0[:,0:ind] = self.steady_constraint(HConstL,uConstL, H[0:ind], x[0:ind], U0[:,0:ind])
+        if ind < len(H) + 1:
+            HConstR = 11.
+            hConstR = 9.
+            uConstR = [hConstR, qConst]
+            U0[:,ind:] = self.steady_constraint(HConstR,uConstR, H[ind:], x[ind:], U0[:,ind:])
 
+        return U0
 
     def Froude(self, u, h):
         return abs(u) / np.sqrt(self.g*h)
@@ -185,7 +243,8 @@ class SWEquation(Equation):
         Ustar = np.zeros((self.dim(), len(H)))
         (hi, qi, ui) = (uConstr[0], uConstr[1], uConstr[1]/uConstr[0])
         Hstar = self.critical_H(HConstr, qi, hi)
-        if np.min(H) < Hstar:
+        if np.min(H) < Hstar - 1.e-6:
+            print 'no existe solucion estacionaria'
             raise NoSteadyError("No steady state exists for constraint \
                                 (Hi={}, hi={}, ui={}), H={}"\
                                 .format(HConstr, hi, ui, [myH for myH in H if myH<Hstar] ))
@@ -199,13 +258,14 @@ class SWEquation(Equation):
             try: 
                 (hsuperc, hsubc) = phi(hi, ui, HConstr, H[j], U0[0,j])
             except Exception:
+                print 'no se ha encontrado la solucion estacionaria'
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
-            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-#            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
+#            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
-        i = (U0.shape[1]-1)/2
+#        i = (U0.shape[1]-1)/2
 #        if x[i]== -1.05:
 #            print ''
 #            print U0

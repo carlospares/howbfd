@@ -17,6 +17,7 @@ class FunH:
     IDpSIN= 305
     BUMP2 = 306
     BUMPD = 307
+    SLOPE = 308
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -49,7 +50,9 @@ class FunH:
         elif self.funH == self.BUMP2:
             H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
         elif self.funH == self.BUMPD:
-             H = -.25*(1 + np.cos(5*np.pi*(x+1.2)))*(x<-1)*(x>-1.4) + 1.*(x > 0)
+            H = -.25*(1 + np.cos(5*np.pi*(x+1.2)))*(x<-1)*(x>-1.4) + 1.*(x > 0)
+        elif self.funH == self.SLOPE:
+            H = x + 11
         if self.noise_amplit != 0:
             H += self.Hnoiseinterp(x)
         return H
@@ -76,5 +79,9 @@ class FunH:
             Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
         elif self.funH == self.BUMP2:
             Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
+        elif self.funH == self.SLOPE:
+            Hx = np.ones_like(x)
+        elif self.funH == self.BUMPD:
+            Hx =  1.25*np.pi*np.sin(5*np.pi*(x+1.2))*(x<-1)*(x>-1.4) 
         return Hx
 

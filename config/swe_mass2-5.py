@@ -8,24 +8,24 @@ from timest import TimeStepping
 
 # For a detailed explanation, see howbfd_config
 
-equation = Equation.LINEAR
-init = InitCond.TWO_ST
-funh = FunH.IDENT
-H_noise_factor = 0.0
-perturb_init = InitCond.PERT_NONE
-boundary = BoundaryCond.IN_OUT
-nummeth = NumericalMethod.UPWINDWB
+equation = Equation.SW
+init = InitCond.STEADY
+funh = FunH.BUMP
+H_noise_factor = 0
+perturb_init = InitCond.PERT_WM
+boundary = BoundaryCond.FORCE_STEADY
+nummeth = NumericalMethod.RUSANOVG
 timest = TimeStepping.TVDRK3
 order = 5
-N = 100
-cfl = 0.5
-a = -.5
-b = 2.
-T = 1.
-plot_every = .25
+N = 200
+a = -10
+b = 30
+cfl = 0.3
+T =.5
+plot_every = 0.5
 show_plots = True
 save_plots = False
 save_npys = True
 plot_exact = False
 
-print "Loaded config/linear_upwind.py!"
+print "Loaded config/swe_rest.py!"

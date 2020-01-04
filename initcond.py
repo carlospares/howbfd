@@ -17,6 +17,7 @@ class InitCond:
     ORDER_TEST = 507
     TWO_ST=508
     WATER_MASS = 509
+    TWO_ST_SW = 510
 #    SW_TRANS = 510
 
     # Identifiers for perturbation (if relevant)
@@ -26,6 +27,8 @@ class InitCond:
     PERT_SIN = 603
     PERT_GAUSS = 604
     PERT_MGAUSS = 605
+    PERT_WB = 607
+    PERT_WM = 608
 
     C = 0 # average of sine perturbation
 
@@ -51,7 +54,7 @@ class InitCond:
         elif self.initCond==InitCond.RAREFACTION:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
         elif self.initCond==InitCond.WATER_AT_REST:
-            U0[0] = 1 + H
+            U0[0] = 2 + H
         elif self.initCond==InitCond.WATER_MASS:
             U0[0]= 1 + H + 1.*(x>9)*(x < 11)
         elif self.initCond==InitCond.ORDER_TEST:
@@ -63,7 +66,8 @@ class InitCond:
 #            U0[0] = (1- x**2)*(x < 1)*(x > -1)
         elif self.initCond==InitCond.TWO_ST:
             U0[0] = 4*np.exp(x)*(x<0)+ np.exp(x)*(x>=0)
-#        elif self.initCond==InitCond.SW_TRANS:
+        elif self.initCond==InitCond.TWO_ST_SW:
+            U0 = self.eqn.twosteady(H,x)
 #            U0 = self.trans(x,H)
             
         return U0 + self.perturbation(x)
@@ -80,6 +84,10 @@ class InitCond:
             pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
+        elif self.pert ==InitCond.PERT_WB:
+            pert[0] = .02*(x<=-.3)*(x>=-.4)
+        elif self.pert == InitCond.PERT_WM:
+            pert[0] = .5*(x<7.)*(x > 5.)
         return pert
     
 #    def trans(self,x, H):

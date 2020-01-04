@@ -36,11 +36,12 @@ class LinearEquation(Equation):
         """ Return S(U) """
         return U
 
-    def upw_criterion(self, uStencil):
-        """ Returns a pair (l,r) with the velocity for upwind criterion at
-            left and right intercells, for cell at center of uStencil
-        """
-        return (np.sign(self.alpha),np.sign(self.alpha))
+    
+    def Piplus(self, ui, uip1):
+        return 1.*(self.alpha >  0)
+    
+    def Piminus(self, ui, uip1):
+        return 1.*(self.alpha < 0)
 
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
@@ -77,7 +78,7 @@ class LinearEquation(Equation):
         Ustar[0] = uConstr*np.exp((H - HConstr)/self.alpha)
         return Ustar
         
-    def exact(self, x, t, params):
+    def exact(self, x, t, H, params):
         alpha = self.alpha
         x0 = x - alpha*t
         U = np.zeros((self.dim(), len(x)))
@@ -107,7 +108,7 @@ class LinearEquation(Equation):
             return U
             
         else:
-            return Equation.exact(self, x, t, params) # return default exact method from class Equation
+            return Equation.exact(self, x, t, H, params) # return default exact method from class Equation
         
             
 

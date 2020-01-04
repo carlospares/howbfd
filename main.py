@@ -6,20 +6,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from initcond import InitCond
 from eq_factory import equation_factory
+from nm_factory import nummeth_factory
 from functionH import FunH
 from boundary import BoundaryCond
-from numflux import Flux
 from timest import TimeStepping
 from howbfd_io import IoManager, parse_command_line#, safe_name
 from time import clock
 import os
 
-tini = clock()
 
 ### Get config file from command line, or load default:
 config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
-print config.a, config.b, config.T,  config.plot_exact
+#print config.a, config.b, config.T,  config.plot_exact
 
 ### Set up problem:
 bdry = BoundaryCond(config)
@@ -28,9 +27,9 @@ gw = int((config.order-1)/2)+1 # number of ghost cells
 
 # equation_factory returns an object of the appropriate subclass of Equation
 eqn = equation_factory(config)
+nm = nummeth_factory(config)
 
 initCond = InitCond(eqn, config)
-flux = Flux(config)
 timest = TimeStepping(config)
 io_manager = IoManager(eqn, config)
 
@@ -39,6 +38,7 @@ dxs = np.zeros(config.refinements+1)
 errors = np.zeros(config.refinements+1)
 
 for level in range(0, config.refinements+1):
+    tini = clock()
     N = config.N * (2**level)
     print "Starting simulation with N={}...".format(N)
     interfaces = np.linspace(config.a,config.b,N+1) # we won't really use them
@@ -57,8 +57,8 @@ for level in range(0, config.refinements+1):
     ### Main loop
     while t < config.T:
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
-        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
-        u = timest.update(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, config)
+#        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
+        u = timest.update(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, config)
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
@@ -78,10 +78,11 @@ for level in range(0, config.refinements+1):
     dxs[level] = dx
     
     io_manager.reset_timer() # otherwise only level=0 will plot
+    tfin = clock()
+    print 'CPU Time: ' + str(tfin-tini)
 
 if config.refinements > 0:
     io_manager.plot_eoc(dxs, errors, timest.order())
     
-tfin = clock()
 
-print 'CPU Time: ' + str(tfin-tini)
+

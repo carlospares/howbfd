@@ -33,14 +33,15 @@ class BurgersEquation(Equation):
         """ Return S(U) """
         return U*U
 
-    def upw_criterion(self, uStencil):
-        """ Returns a pair (l,r) with the velocity for upwind criterion at
-            left and right intercells, for cell at center of uStencil
-        """
-        mid = int((len(uStencil)-1)/2) # approx. u at intercell
-        return ((uStencil[0,mid]+uStencil[0,mid-1])/2, 
-                (uStencil[0,mid]+uStencil[0,mid+1])/2)
+    def Piplus(self,ui, uip1):
+        uip12 = .5*(ui + uip1)
+        return 1.*(uip12 > 0 )
+    
+    def Piminus(self,ui, uip1):
+        uip12 = .5*(ui  + uip1)
+        return 1.*(uip12 < 0 )
 
+        
     def dim(self):
         """ Returns dimension of the problem: 1 for scalars """
         return 1
@@ -86,7 +87,7 @@ class BurgersEquation(Equation):
         plt.legend()
         plt.title(t)
         
-    def exact(self, x, t, params):
+    def exact(self, x, t, H, params):
         U = np.zeros((self.dim(), len(x)))
         if params.funh == FunH.FLAT and params.init == InitCond.SHOCK and params.perturb_init == InitCond.PERT_NONE and params.boundary == BoundaryCond.IN_OUT:
             U[0] = 1. + 1.*(x < 0.5 + 1.5*t)
@@ -104,4 +105,4 @@ class BurgersEquation(Equation):
             return U
             
         else:
-            return Equation.exact(self, x, t, params) # return default exact method from class Equation
+            return Equation.exact(self, x, t, H,params) # return default exact method from class Equation
