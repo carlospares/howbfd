@@ -41,10 +41,12 @@ class Upwind(NumericalMethod):
             
         if cf.funh==FunH.DISC:
             ind = np.where(x>=0)[0][0]
+            Ssing=  eqn.S(0.5*(u[:,ind-1] + u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
 #            Ssing=  .5*(eqn.S(u[:,ind-1]) + eqn.S(u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
-            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
-            Ssingp = Ssing
-            Ssingm = 0
+#            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+            Ssingp = np.dot(eqn.Piplus(u[:,ind-1], u[:,ind]), Ssing)
+            Ssingm = np.dot(eqn.Piminus(u[:,ind-1], u[:,ind]), Ssing)
+
             tend[:,ind-1] += Ssingm
             tend[:,ind] += Ssingp
 

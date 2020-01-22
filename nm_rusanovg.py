@@ -40,14 +40,26 @@ class RusanovG(NumericalMethod):
         for i in range(N):
             tend[:,i] = -(fl[:,i+2] - fl[:,i+1])/dx+ eqn.S(u[:,i])*funH.Hx(x[i])
             
-        if cf.funh==FunH.DISC:
+        if cf.funh==FunH.DISC or cf.funh==BUMPD:
             ind = np.where(x>=0)[0][0]
-#            Ssing=  .5*(eqn.S(u[:,ind-1]) + eqn.S(u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
-            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
-            Ssingp = Ssing
-            Ssingm = 0
+            Ssing=  eqn.S(.5*(u[:,ind-1] + u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx#
+#            Ssing= .5*(eqn.S(u[:,ind-1]) + eqn.S(u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+#            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+            Ssingp = np.dot(eqn.Piplus(u[:,ind-1], u[:,ind]), Ssing)
+            Ssingm = np.dot(eqn.Piminus(u[:,ind-1], u[:,ind]), Ssing)
+#            print '1', Ssingp, Ssingm
             tend[:,ind-1] += Ssingm
             tend[:,ind] += Ssingp
+
+#            tend[:,ind-1] += Ssingm
+#            tend[:,ind] += Ssingp
+#            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+#            Ssingp = Ssing
+#            Ssingm = 0
+#            print '2', Ssingp, Ssingm
+
+            
+
 
         return tend
     

@@ -37,9 +37,10 @@ io_manager = IoManager(eqn, config)
 dxs = np.zeros(config.refinements+1)
 errors = np.zeros(config.refinements+1)
 
+tini = clock()
 for level in range(0, config.refinements+1):
-    tini = clock()
     N = config.N * (2**level)
+#    N = config.N
     print "Starting simulation with N={}...".format(N)
     interfaces = np.linspace(config.a,config.b,N+1) # we won't really use them
     x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
@@ -78,8 +79,8 @@ for level in range(0, config.refinements+1):
     dxs[level] = dx
     
     io_manager.reset_timer() # otherwise only level=0 will plot
-    tfin = clock()
-    print 'CPU Time: ' + str(tfin-tini)
+tfin = clock()
+print 'CPU Time: ' + str(tfin-tini)
 
 if config.refinements > 0:
     io_manager.plot_eoc(dxs, errors, timest.order())

@@ -60,7 +60,9 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
-        return self.steady_constraint(0., 1., H,x)
+        HConstr = 0.
+        uConstr = 1.
+        return self.steady_constraint(HConstr, uConstr, H,x)
 
     def steady_constraint(self, HConstr, uConstr, H,x, U = 0):
         """ Returns a steady state solution of the equation u*, constrained

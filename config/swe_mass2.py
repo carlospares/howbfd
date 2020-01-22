@@ -14,18 +14,18 @@ funh = FunH.BUMP
 H_noise_factor = 0
 perturb_init = InitCond.PERT_WM
 boundary = BoundaryCond.FORCE_STEADY_ARBITRARY
-nummeth = NumericalMethod.RUSANOVGWB
+nummeth = NumericalMethod.RUSANOVGWB1
 timest = TimeStepping.TVDRK3
-order = 3
-N = 400
+order = 5
+N = 200
 a = -10
 b = 30
 cfl = 0.5
 T =.5
 plot_every = 0.5
-show_plots = True
+show_plots = False
 save_plots = False
-save_npys = True
+save_npys = False
 plot_exact = False
 
 print "Loaded config/swe_rest.py!"

@@ -129,7 +129,7 @@ class SWEquation(Equation):
         """ Returns dimension of the problem: 1 for scalars """
         return 2
 
-    def steady_sup(self, H,x):
+    def steady(self, H,x):
         U0 = np.ones((self.dim(), len(H)))
         """ Returns an arbitrary steady state for the equation.
             Input: 
@@ -145,25 +145,25 @@ class SWEquation(Equation):
         # U0[0,:] = arbitrary_eta + self.H(x)
         # return U0
 # BUMP2
-#        HConst = 0.
-#        qConst = 2.5
-#        hConst = 2.
+        HConst = 0.
+        qConst = 2.5
+        hConst = 2.
         
-#        HConst = 0.23
+#        HConst = 0.13
 #        qConst = 1.
 #        hConst = 1.
         
 #BUMPD  
-        HConst = -.5
-        qConst = 2.5
-        hConst = .5
-        U0[1,:] = qConst
+#        HConst = -.5
+#        qConst = 2.5
+#        hConst = .5
+#        U0[1,:] = qConst
 #        hConst = 2.
 
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
     
-    def steady(self,H,x): 
+    def steady_trans(self,H,x): 
         U0 = np.ones((self.dim(), len(H)))
         g = self.g
         HConst = -.5
@@ -262,8 +262,8 @@ class SWEquation(Equation):
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
-#            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
+            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+#            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
 #        i = (U0.shape[1]-1)/2
 #        if x[i]== -1.05:
