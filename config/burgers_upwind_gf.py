@@ -14,9 +14,9 @@ funh = FunH.IDENT
 H_noise_factor = 0.0
 perturb_init = InitCond.PERT_GAUSS
 boundary = BoundaryCond.FORCE_STEADY_INIT
-nummeth = NumericalMethod.UPWINDWB
+nummeth = NumericalMethod.UPWINDGF
 timest = TimeStepping.TVDRK3
-order = 5
+order = 3
 N = 100
 cfl = 0.5
 a = -1
@@ -28,4 +28,4 @@ save_plots = False
 save_npys = False
 plot_exact = True
 
-print "Loaded config/burgers_rusanov.py!"
+print "Loaded config/burgers_upwind_gf.py!"

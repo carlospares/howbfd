@@ -16,6 +16,7 @@ class NumericalMethod:
     UPWINDWB= 101   # well-balanced upwind
     UPWINDWBCONS = 110 # well-balanced upwind conservative (only conservative for supercritical problems)
     UPWINDWB1 = 112 # upwind well-balanced for only one solution
+    UPWINDGF = 113 # upwind well-balanced global flux
     RUSANOVG = 102 # standard Rusanov with alpha computed globally
     RUSANOVGWB = 103 # Rusanov WB for everty stationary solution with global alpha (no conservative)# 
     RUSANOV = 104  # standard Rusanov with alpha computed locally
@@ -39,7 +40,10 @@ class NumericalMethod:
         """ Tendences"""
         raise NotImplementedError
 
-    def flux(self, u, x, H, alpha, eqn, dt=0.1):
+    def flux(self, u, x, H, eqn, fstar, dt=0.1):
         """Numerical flux"""
         raise NotImplementedError
    
+    def gf(self, u, x, Hx, eqn, gw, dx):
+        """Numerical flux"""
+        raise NotImplementedError
