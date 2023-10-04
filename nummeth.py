@@ -40,7 +40,7 @@ class NumericalMethod:
         """ Tendences"""
         raise NotImplementedError
 
-    def flux(self, u, x, H, eqn, fstar, dt=0.1):
+    def flux(self, u, x, H, eqn, alpha=None, fstar=None, dt=0.1):
         """Numerical flux"""
         raise NotImplementedError
    
