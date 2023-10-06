@@ -53,12 +53,12 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.FORCE_STEADY_INIT:
             HConstr = funH.H(xGhost[gw])
             uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
-            # import matplotlib.pyplot as plt
-            # print eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))
-            # plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
-            # plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
-            # plt.title("steady constraint")
-            # plt.show()
+            #import matplotlib.pyplot as plt
+            #print eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))
+            #plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
+            #plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
+            #plt.title("steady constraint")
+            #plt.show()
             uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw]),xGhost[:gw], np.zeros((nvars,gw)))
             uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:]), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.WALL:

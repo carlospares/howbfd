@@ -25,7 +25,8 @@ class UpwindGF(NumericalMethod):
         uGhost = np.zeros((nvars, N+2*gw)) 
         bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
         tend = np.zeros((nvars,N))
-        fstar = self.gf(u, x, funH.Hx, eqn, gw, dx) #it returns the integral of the source term in the extended mesh
+        fstar = self.gf(uGhost, xGhost, funH.Hx, eqn, gw, dx) #it returns the integral of the source term in the extended mesh
+
 
         fails = 0
         fail = 0
@@ -33,6 +34,8 @@ class UpwindGF(NumericalMethod):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             fstar_st = fstar[:,iOff-gw:iOff+gw+1]
+            #if i==2:
+            #    print i,iOff-gw, iOff+gw+1,u_st,fstar_st
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
             (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st), fstar_st, eqn)
             #fails += fail
@@ -45,19 +48,29 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, eqn, gw, dx):
-        nsteps = 1
+        ab_coeff=[-9./24., 37./24., -59./24., 55./24]
+        #ab_coeff=[1]
+        nsteps = 4
+        m1=-nsteps
+        m2=-1
         nvars = eqn.dim()
-        N = len(x)
-        fstar = np.zeros((nvars,N+2*gw))
-        fstar[:,0:nsteps-1] =  eqn.F(u[:,0]) ### initatilization of the multistep method
+        N = len(x)-2*gw
+        fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
 
-        for i in range(N):
-            sumSHx =0.
-            fstar[:,gw+i+1] = fstar[:,gw+i] + dx*eqn.S(u[:,i])*Hx(x[i])
+        fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
 
-        for i in range(gw):
-            fstar[:,N+i+gw] = fstar[:,N]
+        for i in range(N+min(2*gw-nsteps,0)):
+            iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
+            sumSHx = 0.
+            for j in [-4, -3, -2, -1]:
+                sumSHx += ab_coeff[j+nsteps]*eqn.S(u[:,iOff+j])*Hx(x[iOff+j])
+
+            fstar[:,iOff] = fstar[:,iOff-1] + dx*sumSHx
+
+        if nsteps< 2*gw :
+            fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
     
+        
         return fstar
 
     def flux(self, u, x, H, fstar, eqn):

@@ -21,10 +21,10 @@ N = 100
 cfl = 0.5
 a = -1
 b = 1
-T = 1
+T = 1.0#0.0037157669102204603
 plot_every = 0.25
 show_plots = True
-save_plots = False
+save_plots = True
 save_npys = False
 plot_exact = True
 

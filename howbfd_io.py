@@ -73,6 +73,8 @@ class IoManager:
                     plt.plot(x, u.T,x, self.eqn.exact(x,t,H,cf).T)
                     plt.legend(['CACA'])
                     
+            #plt.xlim(-1, 1)    
+            #plt.ylim(-0.4, 2.5)    
             tag = self.get_tag(len(x), cf)
             if cf.save_plots:
                 plt.savefig("figs/{}{}.png".format(tag,t))
@@ -116,3 +118,4 @@ class IoManager:
         plt.grid()
         plt.legend()
         plt.show()
+
