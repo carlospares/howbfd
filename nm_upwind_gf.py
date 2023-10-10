@@ -2,6 +2,7 @@
 # Carlos Parés Pulido, 2019
 
 import wenorec as wr
+import ode_integrators as odi
 import numpy as np
 from nosteadyexc import NoSteadyError
 from nummeth import NumericalMethod
@@ -48,11 +49,7 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, eqn, gw, dx):
-        ab_coeff=[-9./24., 37./24., -59./24., 55./24]
-        #ab_coeff=[1]
-        nsteps = 4
-        m1=-nsteps
-        m2=-1
+        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
         fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
@@ -61,10 +58,8 @@ class UpwindGF(NumericalMethod):
 
         for i in range(N+min(2*gw-nsteps,0)):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-            sumSHx = 0.
-            for j in [-4, -3, -2, -1]:
-                sumSHx += ab_coeff[j+nsteps]*eqn.S(u[:,iOff+j])*Hx(x[iOff+j])
 
+            sumSHx=odi.odeint(nsteps, eqn, Hx, u, x, iOff)
             fstar[:,iOff] = fstar[:,iOff-1] + dx*sumSHx
 
         if nsteps< 2*gw :
