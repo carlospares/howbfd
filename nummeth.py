@@ -36,7 +36,7 @@ class NumericalMethod:
     # Following functions MUST be overridden by subclasses for anything to work:
     ###########################################################################
     
-    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
+    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc):
         """ Tendences"""
         raise NotImplementedError
 
@@ -44,6 +44,6 @@ class NumericalMethod:
         """Numerical flux"""
         raise NotImplementedError
    
-    def gf(self, u, x, Hx, eqn, gw, dx):
+    def gf(self, u, x, Hx, eqn, gw, dx, tloc):
         """Numerical flux"""
         raise NotImplementedError

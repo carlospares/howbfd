@@ -18,15 +18,15 @@ class UpwindGF(NumericalMethod):
     def __init__(self, cf):
         self.order = cf.order
 
-    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
+    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc):
         nvars = eqn.dim()
         N = len(x)
         xGhost = np.zeros(N+2*gw)
-        bdry.x_expand_with_bcs(xGhost, x, gw) 
+        bdry.x_expand_with_bcs(xGhost, x, gw)
         uGhost = np.zeros((nvars, N+2*gw)) 
-        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
+        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         tend = np.zeros((nvars,N))
-        fstar = self.gf(uGhost, xGhost, funH.Hx, eqn, gw, dx) #it returns the integral of the source term in the extended mesh
+        fstar = self.gf(uGhost, xGhost, funH.Hx, eqn, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
 
         fails = 0
@@ -38,17 +38,17 @@ class UpwindGF(NumericalMethod):
             #if i==2:
             #    print i,iOff-gw, iOff+gw+1,u_st,fstar_st
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
-            (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st), fstar_st, eqn)
+            (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, eqn)
             #fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
                 print 'fails at ', x[i]
-                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
+                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
         if fails>0:
             print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
         return tend
     
-    def gf(self, u, x, Hx, eqn, gw, dx):
+    def gf(self, u, x, Hx, eqn, gw, dx, tloc):
         nsteps = 4
         nvars = eqn.dim()
         N = len(x)-2*gw
@@ -59,7 +59,7 @@ class UpwindGF(NumericalMethod):
         for i in range(N+min(2*gw-nsteps,0)):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
 
-            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, u, x, iOff)
+            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, u, x, iOff, tloc)
             fstar[:,iOff] = fstar[:,iOff-1] + dx*sumSHx
 
         if nsteps< 2*gw :

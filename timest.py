@@ -29,29 +29,34 @@ class TimeStepping:
         else:
             return None
     
-    def update(self, x,u, nm, bdry,funH,initCond,eqn, gw, dx, dt, cf):
+    def update(self, x,u, nm, bdry,funH,initCond,eqn, gw, dx, dt, cf, t):
         if self.timest == self.EULER:
-            return self.euler(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf)
+            return self.euler(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf, t)
         if self.timest == self.TVDRK2:
-            return self.tvdrk2(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf)
+            return self.tvdrk2(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf, t)
         if self.timest == self.TVDRK3:
-            return self.tvdrk3(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf)
+            return self.tvdrk3(x, u, nm, bdry,funH,initCond, eqn, gw, dx, dt, cf, t)
              
 
         
-    def euler(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
-        return u + dt*nm.tend(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf)
+    def euler(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, t):
+        return u + dt*nm.tend(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, t)
 
     
-    def tvdrk2(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf):
-        u1 = self.euler(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf)
-        u2 = self.euler(x, u1, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf)
+    def tvdrk2(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, t):
+        tloc = t
+        u1 = self.euler(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc)
+        tloc = t + 0.5*dt
+        u2 = self.euler(x, u1, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc)
         return .5*(u + u2)
         
-    def tvdrk3(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf):
-        u1 = self.euler(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf)
-        u2 = self.euler(x, u1, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf)
+    def tvdrk3(self, x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, t):
+        tloc = t
+        u1 = self.euler(x, u, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc)
+        tloc = t + dt
+        u2 = self.euler(x, u1, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc)
         uint = 3/4.*u + 1/4.*u2
-        u3 = self.euler(x, uint, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf)
+        tloc = t + 0.5*dt
+        u3 = self.euler(x, uint, flux, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc)
         return 1/3.*u + 2/3.*u3
     

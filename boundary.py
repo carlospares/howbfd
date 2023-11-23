@@ -18,7 +18,7 @@ class BoundaryCond:
     def __init__(self, cf):
         self.bc = cf.boundary
 
-    def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost):
+    def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost, tloc):
         """ Take the array of values and make a copy, augmented with BCs
         Input:
             uNew: array (assumed initialized) which will be written (size N+2*gw)
@@ -38,20 +38,20 @@ class BoundaryCond:
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
 #            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
-            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw]), xGhost[:gw])
+            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])
                 uNew[:,N+gw+j] = uOld[:,-1] + (j+1)*(uOld[:,-1]-uOld[:,-2])
         elif self.bc==BoundaryCond.FORCE_STEADY:
-            uNew[:,:gw] = eqn.steady_constraint(funH.H(xGhost[gw]), uOld[:,0], funH.H(xGhost[:gw]), xGhost[:gw],np.zeros((nvars,gw)))
-            uNew[:,-gw:] = eqn.steady_constraint(funH.H(xGhost[-gw-1]), uOld[:,-1], funH.H(xGhost[-gw:]), xGhost[-gw:], np.zeros((nvars,gw)))
+            uNew[:,:gw] = eqn.steady_constraint(funH.H(xGhost[gw],tloc), uOld[:,0], funH.H(xGhost[:gw,tloc]), xGhost[:gw],np.zeros((nvars,gw)))
+            uNew[:,-gw:] = eqn.steady_constraint(funH.H(xGhost[-gw-1,tloc]), uOld[:,-1], funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.FORCE_STEADY_ARBITRARY:
-            uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw]), xGhost[:gw])
-            uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:]), xGhost[-gw:])
+            uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw],tloc), xGhost[:gw])
+            uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:],tloc), xGhost[-gw:])
         elif self.bc==BoundaryCond.FORCE_STEADY_INIT:
-            HConstr = funH.H(xGhost[gw])
+            HConstr = funH.H(xGhost[gw],tloc)
             uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
             #import matplotlib.pyplot as plt
             #print eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))
@@ -59,8 +59,8 @@ class BoundaryCond:
             #plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
             #plt.title("steady constraint")
             #plt.show()
-            uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw]),xGhost[:gw], np.zeros((nvars,gw)))
-            uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:]), xGhost[-gw:], np.zeros((nvars,gw)))
+            uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw],tloc),xGhost[:gw], np.zeros((nvars,gw)))
+            uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.WALL:
 #            print eqn
             uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]
@@ -68,8 +68,8 @@ class BoundaryCond:
             uNew[1,-gw:] = -uOld[1,-1:-1-gw:-1]
             uNew[1,:gw] = -uOld[1, gw:0:-1]
         elif self.bc==BoundaryCond.INIT:
-            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
-            uNew[:,-gw:] = initCond.u0(xGhost[-gw:], funH.H(xGhost[-gw:]))
+            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw],tloc))
+            uNew[:,-gw:] = initCond.u0(xGhost[-gw:], funH.H(xGhost[-gw:],tloc))
         elif self.bc == BoundaryCond.HDOWNQUP:
             uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]
             uNew[0,:gw] = 2.

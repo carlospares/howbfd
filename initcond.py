@@ -18,6 +18,7 @@ class InitCond:
     TWO_ST=508
     WATER_MASS = 509
     TWO_ST_SW = 510
+    MMSburg  = 511
 #    SW_TRANS = 510
 
     # Identifiers for perturbation (if relevant)
@@ -69,7 +70,8 @@ class InitCond:
         elif self.initCond==InitCond.TWO_ST_SW:
             U0 = self.eqn.twosteady(H,x)
 #            U0 = self.trans(x,H)
-            
+        elif self.initCond==InitCond.MMSburg:
+            U0 = np.exp(-(x-5.0)*(x-5.0))
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

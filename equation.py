@@ -158,9 +158,9 @@ class Equation:
     ###########################################################################
     # Following functions are convenience aliases and can be left alone:
     ###########################################################################
-    def SHx(self, x, U):
+    def SHx(self, x, t, U):
         """ Return S(U) H_x(x) """
-        return self.S(U)*self.Hx(x)
+        return self.S(U)*self.Hx(x,t)
 
     def max_vel(self, U):
         """ Returns maximum velocity for CFL computation """

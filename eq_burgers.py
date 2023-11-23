@@ -11,7 +11,7 @@ from boundary import BoundaryCond
 class BurgersEquation(Equation):
     """ 1D scalar Burgers' equation with mass term
     
-        u_t + u u_x = u
+        u_t + u u_x = S(u)Hx
 
     """
 
@@ -31,7 +31,8 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        return U*U
+        return U*U # std burger's case
+        #return (U - 1.0)# MMSburg case
 
     def Piplus(self,ui, uip1):
         uip12 = .5*(ui + uip1)
@@ -104,6 +105,9 @@ class BurgersEquation(Equation):
             return U
         if params.funh == FunH.IDENT and params.init == InitCond.STEADY and params.perturb_init == InitCond.PERT_NONE and (params.boundary in [BoundaryCond.FORCE_STEADY, BoundaryCond.FORCE_STEADY_ARBITRARY, BoundaryCond.FORCE_STEADY_INIT]):
             U[0] = np.exp(x)
+            return U
+        if params.funh == FunH.MMSburg and params.init == InitCond.MMSburg and params.perturb_init == InitCond.PERT_NONE and (params.boundary in [BoundaryCond.FORCE_STEADY, BoundaryCond.FORCE_STEADY_ARBITRARY, BoundaryCond.FORCE_STEADY_INIT]):
+            U[0] = np.exp(-(x-5.0-t)*(x-5.0-t))
             return U
             
         else:

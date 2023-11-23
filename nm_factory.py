@@ -6,7 +6,7 @@ from nm_upwind import Upwind
 from nm_upwind_wb import UpwindWB
 from nm_upwind_wb_cons import UpwindWBCons
 from nm_upwind_wb1 import UpwindWB1
-from nm_upwind_gf import UpwindGF
+from nm_upwind_gf import UpwindGF #added by Maria
 from nm_rusanovg import RusanovG
 from nm_rusanovg_wb import RusanovGWB
 from nm_rusanov import Rusanov
@@ -32,7 +32,7 @@ def nummeth_factory(cf):
         return UpwindWBCons(cf)
     elif nm == NumericalMethod.UPWINDWB1:
         return UpwindWB1(cf)
-    elif nm == NumericalMethod.UPWINDGF:
+    elif nm == NumericalMethod.UPWINDGF: #added by Maria
         return UpwindGF(cf)
     elif nm == NumericalMethod.RUSANOVG:
         return RusanovG(cf)

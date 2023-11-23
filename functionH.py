@@ -18,6 +18,7 @@ class FunH:
     BUMP2 = 306
     BUMPD = 307
     SLOPE = 308
+    MMSburg   = 309
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -31,7 +32,7 @@ class FunH:
             self.Hnoiseinterp = InterpolatedUnivariateSpline(xNeeded, Hnoise, k=1) # faster than interp1d!
 
 
-    def H(self, x):
+    def H(self, x, t):
         """ Initial condition """
         if self.funH==self.FLAT:
             H = 0.1*np.ones_like(x)
@@ -55,9 +56,11 @@ class FunH:
             H = x + 11
         if self.noise_amplit != 0:
             H += self.Hnoiseinterp(x)
+        elif self.funH==self.MMSburg:
+            H = np.exp(-(x-5.0-t)*(x-5.0-t))
         return H
     
-    def Hx(self, x):
+    def Hx(self, x, t):
         """ Initial condition """
         #if self.noise_amplit != 0:
         #    print "[ERROR] Tried to compute H_x but H has noise on, not smooth"
@@ -82,6 +85,8 @@ class FunH:
         elif self.funH == self.SLOPE:
             Hx = np.ones_like(x)
         elif self.funH == self.BUMPD:
-            Hx =  1.25*np.pi*np.sin(5*np.pi*(x+1.2))*(x<-1)*(x>-1.4) 
+            Hx =  1.25*np.pi*np.sin(5*np.pi*(x+1.2))*(x<-1)*(x>-1.4)
+        elif self.funH == self.MMSburg:
+            Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))
         return Hx
 
