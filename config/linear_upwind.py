@@ -24,7 +24,7 @@ b = 2.
 T = 1.
 plot_every = .25
 show_plots = True
-save_plots = False
+save_plots = True
 save_npys = True
 plot_exact = False
 

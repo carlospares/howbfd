@@ -7,16 +7,19 @@ from equation import Equation
 from functionH import FunH
 
 
-def odeint(nsteps, eqn, arg0, arg1, arg2, arg3):
-    if nsteps == 4:
-        #return adamsbashforth4(eqn, arg0, arg1, arg2, arg3)
+def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3):
+    if nsteps == 4 and multmeth == 'AM':
         return adamsmoulton4(eqn, arg0, arg1, arg2, arg3)
-    elif nsteps == 6:
-        #return adamsbashforth6(eqn, arg0, arg1, arg2, arg3)
+    elif nsteps == 4 and multmeth == 'AB':
+        return adamsbashforth4(eqn, arg0, arg1, arg2, arg3)
+    elif nsteps == 6 and multmeth == 'AM':
         return adamsmoulton6(eqn, arg0, arg1, arg2, arg3)
-    elif nsteps == 8:
-        #return adamsbashforth8(eqn, arg0, arg1, arg2, arg3)
+    elif nsteps == 6 and multmeth == 'AB':
+        return adamsbashforth6(eqn, arg0, arg1, arg2, arg3)
+    elif nsteps == 8 and multmeth == 'AM' :
         return adamsmoulton8(eqn, arg0, arg1, arg2, arg3)
+    elif nsteps == 8 and multmeth == 'AB' :
+        return adamsbashforth8(eqn, arg0, arg1, arg2, arg3)
 
 def adamsbashforth4(eqn, Hx, u, x, i):
     nsteps= 4

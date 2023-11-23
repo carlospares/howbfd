@@ -49,7 +49,7 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, eqn, gw, dx):
-        nsteps = 8
+        nsteps = 4
         nvars = eqn.dim()
         N = len(x)-2*gw
         fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
@@ -59,7 +59,7 @@ class UpwindGF(NumericalMethod):
         for i in range(N+min(2*gw-nsteps,0)):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
 
-            sumSHx=odi.odeint(nsteps, eqn, Hx, u, x, iOff)
+            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, u, x, iOff)
             fstar[:,iOff] = fstar[:,iOff-1] + dx*sumSHx
 
         if nsteps< 2*gw :
