@@ -7,8 +7,8 @@ Created on Sun Apr 28 12:10:50 2019
 import numpy as np
 from eq_factory import equation_factory
 from boundary import BoundaryCond
-from numflux import Flux
-from functionH import FunH
+#from numflux import Flux
+#from functionH import FunH
 
 
 

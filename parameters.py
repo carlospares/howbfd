@@ -6,7 +6,7 @@ from equation import Equation
 from functionH import FunH
 from eq_sw import SWEquation
 from boundary import BoundaryCond
-from numflux import Flux
+#from numflux import Flux
 from timest import TimeStepping
 import importlib
 
