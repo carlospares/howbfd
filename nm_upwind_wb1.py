@@ -17,14 +17,14 @@ class UpwindWB1(NumericalMethod):
     def __init__(self, cf):
         self.order = cf.order
 
-    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
+    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc):
         nvars = eqn.dim()
         N = len(x)
         xGhost = np.zeros(N+2*gw)
         bdry.x_expand_with_bcs(xGhost, x, gw) 
         uGhost = np.zeros((nvars, N+2*gw)) 
-        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
-        usteadyGhost = eqn.steady(funH.H(xGhost),xGhost)
+        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
+        usteadyGhost = eqn.steady(funH.H(xGhost, tloc),xGhost)
         tend = np.zeros((nvars,N))
         fl = np.zeros((nvars,N+3))
 
@@ -39,14 +39,14 @@ class UpwindWB1(NumericalMethod):
             fl[:,i+1] += np.dot(eqn.Piplus(uGhost[:,mid], uGhost[:,mid+1]), Gr)
         
         for i in range(N):
-            tend[:,i] = -(fl[:,i+2] - fl[:,i+1])/dx+  (eqn.S(u[:,i]) - eqn.S(usteadyGhost[:,i+gw]))*funH.Hx(x[i])
+            tend[:,i] = -(fl[:,i+2] - fl[:,i+1])/dx+  (eqn.S(u[:,i]) - eqn.S(usteadyGhost[:,i+gw]))*funH.Hx(x[i], tloc)
             
         if cf.funh==FunH.DISC:
             ind = np.where(x>=0)[0][0]
 #            Ssing=  .5*(eqn.S(u[:,ind-1]) + eqn.S(u[:,ind]))*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
             Si = eqn.S(.5*(u[:,ind-1] + u[:,ind]))
             Sistar =  eqn.S(.5*(usteadyGhost[:,ind+gw-1] + usteadyGhost[:,ind+ gw]))
-            Ssing=  (Si - Sistar)*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+            Ssing=  (Si - Sistar)*(funH.H(x[ind], tloc)- funH.H(x[ind-1], tloc))/dx
             Ssingp = np.dot(eqn.Piplus(u[:,ind-1], u[:,ind]), Ssing)
             Ssingm = np.dot(eqn.Piminus(u[:,ind-1], u[:,ind]), Ssing)
             tend[:,ind-1] += Ssingm

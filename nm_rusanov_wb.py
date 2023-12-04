@@ -17,7 +17,7 @@ class RusanovWB(NumericalMethod):
     def __init__(self, cf):
         self.order = cf.order
 
-    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
+    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc):
         nvars = eqn.dim()
         N = len(x)
         tend = np.zeros((nvars,N))
@@ -26,7 +26,7 @@ class RusanovWB(NumericalMethod):
         bdry.x_expand_with_bcs(xGhost, x, gw) 
         uGhost = np.zeros((nvars, N+2*gw)) 
 
-        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
+        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         
         alpha = np.amax(np.abs(eqn.eig_of_dF(uGhost)))
         fails = 0
@@ -34,12 +34,12 @@ class RusanovWB(NumericalMethod):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
-            (Gl, Gr, fail) = self.flux(u_st, x_st, funH.H(x_st), eqn)
+            (Gl, Gr, fail) = self.flux(u_st, x_st, funH.H(x_st, tloc), eqn)
             fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
                 print 'fails at ', x[i]
-                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
+                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
         if fails>0:
             print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
         return tend

@@ -32,12 +32,12 @@ class RusanovGWBCons(NumericalMethod):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
-            (Gl, Gr, fail) = self.flux(u_st, x_st, funH.H(x_st), alpha, eqn)
+            (Gl, Gr, fail) = self.flux(u_st, x_st, funH.H(x_st, tloc), alpha, eqn)
             fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
                 print 'fails at ', x[i]
-                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
+                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
         if fails>0:
             print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
         return tend

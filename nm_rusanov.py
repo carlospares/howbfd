@@ -17,24 +17,24 @@ class Rusanov(NumericalMethod):
     def __init__(self, cf):
         self.order = cf.order
 
-    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf):
+    def tend(self, x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, cf, tloc):
         nvars = eqn.dim()
         N = len(x)
         xGhost = np.zeros(N+2*gw)
         bdry.x_expand_with_bcs(xGhost, x, gw) 
         uGhost = np.zeros((nvars, N+2*gw)) 
-        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost)  # apply BC to u
+        bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         tend = np.zeros((nvars,N))        
         for i in range(N):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
             (Gl, Gr) = self.flux(u_st, x_st, eqn)
-            tend[:,i] = -(Gr - Gl)/dx + eqn.S(u[:,i])*funH.Hx(x[i])
+            tend[:,i] = -(Gr - Gl)/dx + eqn.S(u[:,i])*funH.Hx(x[i], tloc)
         
         if cf.funh==FunH.DISC:
             ind = np.where(x>=0)[0][0]
-            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind])- funH.H(x[ind-1]))/dx
+            Ssing=  eqn.S(u[:,ind-1])*(funH.H(x[ind], tloc)- funH.H(x[ind-1], tloc))/dx
             Ssingp = Ssing
             Ssingm = 0
             tend[:,ind-1] += Ssingm

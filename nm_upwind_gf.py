@@ -35,8 +35,6 @@ class UpwindGF(NumericalMethod):
             iOff = i+gw # i with offset for {u,x}Ghost
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
             fstar_st = fstar[:,iOff-gw:iOff+gw+1]
-            #if i==2:
-            #    print i,iOff-gw, iOff+gw+1,u_st,fstar_st
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
             (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, eqn)
             #fails += fail
@@ -49,23 +47,54 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, eqn, gw, dx, tloc):
-        nsteps = 4
+        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
-        fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
 
-        fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
+        #fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
+        fstar = np.zeros((nvars, N+2*gw)) 
 
-        for i in range(N+min(2*gw-nsteps,0)):
+        if nsteps > gw :
+            uloc = np.zeros((nvars,nsteps+N+gw))
+            xloc = np.zeros((nsteps+N+gw))
+            uloc[:,nsteps-gw:nsteps] =  u[:,0:gw] ### local extended u for the ode
+            xloc[nsteps-gw:nsteps] =  x[0:gw] ### local extended u for the ode
+            k=1
+            for i in reversed(range(nsteps-gw)):
+                uloc[:,i] = np.exp(x[0]-k*dx)  #Ugly hack for convergence in steady case
+                #uloc[:,i] = u[:,0] 
+                xloc[i] = x[0]-k*dx
+                k +=1
+            uloc[:,nsteps:]=u[:,gw:]    
+            xloc[nsteps:]=x[gw:]    
+        elif gw == nsteps:
+            uloc = np.zeros((nvars,N+2*gw))
+            xloc = np.zeros((N+2*gw))
+            uloc[:,:] =  u[:,:] ### initatilization of the multistep method
+            xloc[:] =  x[:] ### initatilization of the multistep method
+        else:
+            uloc = np.zeros((nvars,N+nsteps+gw))
+            xloc = np.zeros(N+nsteps+gw)
+            iOff=gw-nsteps
+            uloc[:,0:nsteps] =  u[:,gw-nsteps:nsteps+iOff] ### initatilization of the multistep method
+            xloc[0:nsteps] =  x[gw-nsteps:nsteps+iOff] ### initatilization of the multistep method
+            uloc[:,nsteps:] = u[:,gw:]
+            xloc[nsteps:] = x[gw:]
+
+        #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
+        fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
+
+        #print np.size(fstar),N+min(2*gw-nsteps,0)
+        #for i in range(N+min(2*gw-nsteps,0)):
+        for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
+            sumSHx=odi.odeint(nsteps,'AM', eqn, Hx, uloc, xloc, iOff, tloc)
+            fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
+            #fstar[:,i+1] = fstar[:,i] + dx*sumSHx
 
-            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, u, x, iOff, tloc)
-            fstar[:,iOff] = fstar[:,iOff-1] + dx*sumSHx
-
-        if nsteps< 2*gw :
-            fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
+        #if nsteps< 2*gw :
+        #    fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
     
-        
         return fstar
 
     def flux(self, u, x, H, fstar, eqn):
