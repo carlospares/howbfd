@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Carlos Parés Pulido, 2019
 
-eps = 1e-10
+eps = 1.e-10#1e-10
 
 def wenorec(order, args):
     """ Wrapper for WENO reconstructions

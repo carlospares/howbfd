@@ -46,7 +46,7 @@ class FunH:
             H = (1 + x)*(x <= 1) + (2+x)*(x > 1)
         elif self.funH==self.IDpSIN:
             A = 0.1
-            alfa = 100
+            alfa = 25#100
             H = x+ A*np.sin(alfa*x)
         elif self.funH == self.BUMP2:
             H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
@@ -78,7 +78,7 @@ class FunH:
             Hx = np.ones_like(x)
         elif self.funH == self.IDpSIN:
             A = 0.1
-            alfa = 100
+            alfa = 25#100
             Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
         elif self.funH == self.BUMP2:
             Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)

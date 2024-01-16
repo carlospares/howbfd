@@ -53,6 +53,7 @@ for level in range(0, config.refinements+1):
     dx = x[1]-x[0]
 #    print '[', 0,',', np.sum(u[0])*dx, '],'
     # Deal with possible plot at t=0
+    uin = u
     io_manager.io_if_appropriate(x, u, H, t, config)
 
     ### Main loop
@@ -62,6 +63,7 @@ for level in range(0, config.refinements+1):
         u = timest.update(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, config, t)
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
+        #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
@@ -81,6 +83,11 @@ for level in range(0, config.refinements+1):
     io_manager.reset_timer() # otherwise only level=0 will plot
 tfin = clock()
 print 'CPU Time: ' + str(tfin-tini)
+
+
+for i in range(N):
+    print x[i],uin[0,i],u[0,i]
+
 
 if config.refinements > 0:
     io_manager.plot_eoc(dxs, errors, timest.order())

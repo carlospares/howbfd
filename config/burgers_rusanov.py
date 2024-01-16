@@ -9,20 +9,20 @@ from timest import TimeStepping
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.BURGERS
-init = InitCond.MMSburg#STEADY
-funh = FunH.MMSburg#IDENT
+init = InitCond.STEADY#MMSburg
+funh = FunH.IDpSIN#MMSburg#IDENT
 H_noise_factor = 0.0
-perturb_init = InitCond.PERT_NONE #PERT_GAUSS
+perturb_init = InitCond.PERT_NONE#GAUSS
 boundary = BoundaryCond.FORCE_STEADY_INIT
-nummeth = NumericalMethod.UPWIND #RUSANOV #UPWIND
+nummeth = NumericalMethod.UPWIND#RUSANOV #UPWIND
 timest = TimeStepping.TVDRK3
-order = 9
+order = 3
 N = 30
-cfl = 0.01
-a = 0#-1
-b = 15#1
-T = 2.0#8
-plot_every = 2.5
+cfl = 0.5
+a = -1#0
+b = 1#15
+T = 1.0#2.0
+plot_every = 0.1
 show_plots = True
 save_plots = False
 save_npys = False

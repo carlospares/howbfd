@@ -21,10 +21,38 @@ def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4):
         return adamsmoulton8(eqn, arg0, arg1, arg2, arg3, arg4)
     elif nsteps == 8 and multmeth == 'AB' :
         return adamsbashforth8(eqn, arg0, arg1, arg2, arg3, arg4)
+    elif nsteps == 2 and multmeth == 'AM':
+        return adamsmoulton2(eqn, arg0, arg1, arg2, arg3, arg4)
+    elif nsteps == 3 and multmeth == 'AM':
+        return adamsmoulton3(eqn, arg0, arg1, arg2, arg3, arg4)
+    elif nsteps == 2 and multmeth == 'AB':
+        return adamsbashforth2(eqn, arg0, arg1, arg2, arg3, arg4)
+    elif nsteps == 3 and multmeth == 'AB':
+        return adamsbashforth3(eqn, arg0, arg1, arg2, arg3, arg4)
+
+def adamsbashforth2(eqn, Hx, u, x, i, t):
+    nsteps= 2
+    ab_coeff=[-1./2., 3./2]
+
+    sumSHx = 0.
+    for j in [-2, -1]:
+        sumSHx += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+
+    return sumSHx
+
+def adamsbashforth3(eqn, Hx, u, x, i, t):
+    nsteps= 3
+    ab_coeff=[5./12., -16./12., 23./12.]
+
+    sumSHx = 0.
+    for j in [-3, -2, -1]:
+        sumSHx += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+
+    return sumSHx
 
 def adamsbashforth4(eqn, Hx, u, x, i, t):
     nsteps= 4
-    ab_coeff=[-9./24., 37./24., -59./24., 55./24]
+    ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
 
     sumSHx = 0.
     for j in [-4, -3, -2, -1]:
@@ -49,6 +77,26 @@ def adamsbashforth8(eqn, Hx, u, x, i, t):
     sumSHx = 0.
     for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
         sumSHx += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    return sumSHx
+
+def adamsmoulton2(eqn, Hx, u, x, i, t):
+    nsteps= 2
+    ab_coeff=[1./1., 1./2.]
+
+    sumSHx = 0.
+    for j in [-1, 0]:
+        sumSHx += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    return sumSHx
+
+def adamsmoulton3(eqn, Hx, u, x, i, t):
+    nsteps= 3
+    ab_coeff=[-1./12., 8./12., 5./12.]
+
+    sumSHx = 0.
+    for j in [-2, -1, 0]:
+        sumSHx += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
 
     return sumSHx
 
