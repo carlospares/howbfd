@@ -139,19 +139,24 @@ class SWEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
-        # # Water at rest solution: [h, q](x) = [eta + H(x), 0]
-        # arbitrary_eta = 1
-        # U0 = np.zeros((2, len(x)))
-        # U0[0,:] = arbitrary_eta + self.H(x)
-        # return U0
+# # Water at rest solution: [h, q](x) = [eta + H(x), 0]
+        #arbitrary_eta = 1
+        #U0 = np.zeros((2, len(x)))
+        #U0[0,:] = arbitrary_eta + self.H(x)
+        #return U0
 # BUMP2
-        HConst = 0.
-        qConst = 2.5
-        hConst = 2.
+#        HConst = 0.
+#        qConst = 2.5
+#        hConst = 2.
         
 #        HConst = 0.13
 #        qConst = 1.
 #        hConst = 1.
+
+#BUMPS
+        HConst = 0.
+        qConst = 24.
+        hConst = 2.
         
 #BUMPD  
 #        HConst = -.5

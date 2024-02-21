@@ -55,7 +55,25 @@ class InitCond:
         elif self.initCond==InitCond.RAREFACTION:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
         elif self.initCond==InitCond.WATER_AT_REST:
-            U0[0] = 2 + H
+            xx = []
+            N=len(x)
+            if N == 25:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_25.dat', 'r')
+            elif N== 50:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_50.dat', 'r')
+            elif N== 100:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_100.dat', 'r')
+            elif N== 200:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_200.dat', 'r')
+            elif N== 400:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_400.dat', 'r')
+            elif N== 800:
+                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_800.dat', 'r')
+            for y in file_in.read().split('\n'):
+                #if y.isdigit():
+                xx.append(float(y))
+            U0[0] = xx#2 + H
+            U0[1] = U0[1]+24.0
         elif self.initCond==InitCond.WATER_MASS:
             U0[0]= 1 + H + 1.*(x>9)*(x < 11)
         elif self.initCond==InitCond.ORDER_TEST:

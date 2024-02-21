@@ -50,6 +50,7 @@ for level in range(0, config.refinements+1):
     t = 0.0
     H = funH.H(x, t)
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
+    
     dx = x[1]-x[0]
 #    print '[', 0,',', np.sum(u[0])*dx, '],'
     # Deal with possible plot at t=0
@@ -67,12 +68,14 @@ for level in range(0, config.refinements+1):
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
     
     # io_manager.statistics(x, u, funH.H(x), eqn)
-    exact = eqn.exact(x, t, H, config)
+    #exact = eqn.exact(x, t, H, config)
+    exact = uin
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
-    errors[level] = np.sum(np.abs(exact - u))*dx
+    #errors[level] = np.sum(np.abs(exact - u))*dx
     
-    
+    errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
+    #print exact[0,:],u[0,:]
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print "Error at N={} is {}".format(N, errors[level])
     if level > 0:
@@ -85,8 +88,9 @@ tfin = clock()
 print 'CPU Time: ' + str(tfin-tini)
 
 
-for i in range(N):
-    print x[i],uin[0,i],u[0,i]
+#for i in range(N):
+#    #print x[i],uin[0,i],u[0,i]
+#    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 
 if config.refinements > 0:

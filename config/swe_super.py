@@ -10,20 +10,20 @@ from timest import TimeStepping
 
 equation = Equation.SW
 init = InitCond.WATER_AT_REST#STEADY #WATER_AT_REST
-funh = FunH.BUMP#D# BUMP
+funh = FunH.BUMPS#D# BUMP
 H_noise_factor = 0
 perturb_init = InitCond.PERT_NONE#PERT_WB #PERT_NONE
-boundary = BoundaryCond.FORCE_STEADY_INIT#IN_OUT #FORCE_STEADY_INIT
+boundary = BoundaryCond.IN_OUT #FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB #UPWINDGF
 timest = TimeStepping.TVDRK3
 order = 7
-N = 100
+N = 25
 a = 0#-3 #0
 b = 25 #3 #25
 cfl = 0.5
-T = 0.2#0.1
+T = 5.0#0.1
 plot_exact = False
-plot_every = .5
+plot_every = 30.5
 show_plots = True
 save_plots = False
 save_npys = True

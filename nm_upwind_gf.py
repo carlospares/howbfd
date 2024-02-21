@@ -28,6 +28,8 @@ class UpwindGF(NumericalMethod):
         tend = np.zeros((nvars,N))
         fstar = self.gf(uGhost, xGhost, funH.Hx, eqn, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
+        #print fstar[1,:]
+        #return
 
         fails = 0
         fail = 0
@@ -47,14 +49,13 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, eqn, gw, dx, tloc):
-        nsteps = 2
+        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
 
         #fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
         fstar = np.zeros((nvars, N+2*gw)) 
 
-        #print nsteps,gw
         if nsteps > gw :
             uloc = np.zeros((nvars,nsteps+N+gw))
             xloc = np.zeros((nsteps+N+gw))
@@ -63,9 +64,8 @@ class UpwindGF(NumericalMethod):
             k=1
             for i in reversed(range(nsteps-gw)):
                 #uloc[:,i] = np.exp(x[0]-k*dx)  #Ugly hack for convergence in steady case
-                uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                #print i
-                #uloc[:,i] = u[:,0] 
+                #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
+                uloc[:,i] = u[:,0] 
                 xloc[i] = x[0]-k*dx
                 k +=1
             #print uloc    
@@ -92,10 +92,11 @@ class UpwindGF(NumericalMethod):
 
         #print np.size(fstar),N+min(2*gw-nsteps,0)
         #for i in range(N+min(2*gw-nsteps,0)):
-        for i in range(N):#+gw):
+        for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
             #print i,iOff,np.size(uloc)
-            sumSHx=odi.odeint(nsteps,'AM', eqn, Hx, uloc, xloc, iOff, tloc)
+            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, uloc, xloc, iOff, tloc)
+
             fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
             #fstar[:,i+1] = fstar[:,i] + dx*sumSHx
 

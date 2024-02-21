@@ -39,6 +39,7 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.IN_OUT:
 #            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
+            #uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[-gw:], tloc), xGhost[-gw:])
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):

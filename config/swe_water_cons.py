@@ -3,7 +3,7 @@ from equation import Equation
 from functionH import FunH
 from eq_sw import SWEquation
 from boundary import BoundaryCond
-from numflux import Flux
+from nummeth import NumericalMethod
 from timest import TimeStepping
 
 # For a detailed explanation, see howbfd_config
@@ -14,11 +14,9 @@ funh = FunH.BUMP
 H_noise_factor = 0
 perturb_init = InitCond.PERT_NONE
 boundary = BoundaryCond.WALL
-numflux = Flux.RUSANOVG
+nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB
 timest = TimeStepping.TVDRK3
 order = 5
-well_balanced = False
-is_conservative = False
 N = 200
 a = 0
 b = 20
