@@ -7,6 +7,7 @@ from scipy.optimize import *
 
 class InitCond:
     # Identifiers for initial condition
+    READ_FROM_FILE = 0
     SIN = 500
     SHOCK = 501
     STEADY = 502 # use eqn-dependent steady state
@@ -54,7 +55,7 @@ class InitCond:
             U0[0] = np.ones_like(x)
         elif self.initCond==InitCond.RAREFACTION:
             U0[0] = 1.0*(x <= 0) + 2.0*(x>0)
-        elif self.initCond==InitCond.WATER_AT_REST:
+        elif self.initCond==InitCond.READ_FROM_FILE:
             xx = []
             N=len(x)
             if N == 25:
@@ -74,6 +75,11 @@ class InitCond:
                 xx.append(float(y))
             U0[0] = xx#2 + H
             U0[1] = U0[1]+24.0
+        elif self.initCond==InitCond.WATER_AT_REST:
+            xx = []
+            N=len(x)
+            U0[0] = 2.0 + H
+            U0[1] = 0.0
         elif self.initCond==InitCond.WATER_MASS:
             U0[0]= 1 + H + 1.*(x>9)*(x < 11)
         elif self.initCond==InitCond.ORDER_TEST:
