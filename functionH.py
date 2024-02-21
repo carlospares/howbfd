@@ -92,6 +92,6 @@ class FunH:
         elif self.funH == self.BUMPS:
             Hx =-0.05*np.cos(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))+0.1*np.sin(x-12.5)*(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))
         elif self.funH == self.MMSburg:
-            Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))
+            Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))        
         return Hx
 

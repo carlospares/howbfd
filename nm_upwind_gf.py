@@ -26,7 +26,7 @@ class UpwindGF(NumericalMethod):
         uGhost = np.zeros((nvars, N+2*gw)) 
         bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         tend = np.zeros((nvars,N))
-        fstar = self.gf(uGhost, xGhost, funH.Hx, eqn, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
+        fstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
         #print fstar[1,:]
         #return
@@ -41,6 +41,7 @@ class UpwindGF(NumericalMethod):
             (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, eqn)
             #fails += fail
             tend[:,i] = -(Gr - Gl)/dx
+            
             if fail==1:
                 print 'fails at ', x[i]
                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
@@ -48,8 +49,8 @@ class UpwindGF(NumericalMethod):
             print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
         return tend
     
-    def gf(self, u, x, Hx, eqn, gw, dx, tloc):
-        nsteps = 8
+    def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
+        nsteps = 2
         nvars = eqn.dim()
         N = len(x)-2*gw
 
@@ -90,12 +91,15 @@ class UpwindGF(NumericalMethod):
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
         fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
+
+ 
         #print np.size(fstar),N+min(2*gw-nsteps,0)
         #for i in range(N+min(2*gw-nsteps,0)):
         for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
             #print i,iOff,np.size(uloc)
-            sumSHx=odi.odeint(nsteps,'AB', eqn, Hx, uloc, xloc, iOff, tloc)
+            sumSHx=odi.odeint(nsteps,'AM', eqn, Hx, H, uloc, xloc, iOff, tloc)
+            
 
             fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
             #fstar[:,i+1] = fstar[:,i] + dx*sumSHx
