@@ -58,17 +58,17 @@ class InitCond:
             xx = []
             N=len(x)
             if N == 25:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_25.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_25.dat', 'r')
             elif N== 50:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_50.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_50.dat', 'r')
             elif N== 100:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_100.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_100.dat', 'r')
             elif N== 200:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_200.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_200.dat', 'r')
             elif N== 400:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_400.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_400.dat', 'r')
             elif N== 800:
-                file_in = open('/home/maria/Documents/MATLAB/analytical_sw/initial_sub_800.dat', 'r')
+                file_in = open('initial_data/analytical_sw/initial_sub_800.dat', 'r')
             for y in file_in.read().split('\n'):
                 #if y.isdigit():
                 xx.append(float(y))
