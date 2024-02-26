@@ -67,9 +67,10 @@ for level in range(0, config.refinements+1):
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
     
-    # io_manager.statistics(x, u, funH.H(x), eqn)
-    #exact = eqn.exact(x, t, H, config)
-    exact = uin
+    #io_manager.statistics(x, u, funH.H(x), eqn)
+    exact = eqn.exact(x, t, H, config)
+    #exact = uin
+
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
     #errors[level] = np.sum(np.abs(exact - u))*dx
