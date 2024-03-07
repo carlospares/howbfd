@@ -26,6 +26,7 @@ To do
 * With numerical  B'(x) show machine error Lake at rest 
 * With numerical B'(x) grid convergence for super/subcritical
 * perturbations of above and also super.sub critical
+* MS for shallow water
 
 * Then we will focus on trans critical with Carlos
 
