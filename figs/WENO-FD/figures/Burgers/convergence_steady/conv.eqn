@@ -1,0 +1,21 @@
+#!MC 1410
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{ew3}  = log10(v5)'
+$!ALTERDATA 
+  EQUATION = '{ew5}  = log10(v6)'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '

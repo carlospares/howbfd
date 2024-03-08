@@ -1,0 +1,772 @@
+#!MC 1410
+$!VarSet |LFDSFN1| = '"W3-conv.dat"'
+$!VarSet |LFDSVL1| = '"V1" "V2" "V3" "V4"'
+$!SETSTYLEBASE FACTORY
+$!PLOTOPTIONS 
+  SUBDIVIDEALLCELLS = NO
+$!GLOBALPAPER 
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    }
+$!PAGE 
+  NAME = 'Untitled'
+  PAPERATTRIBUTES
+    {
+    BACKGROUNDCOLOR = WHITE
+    ISTRANSPARENT = YES
+    ORIENTPORTRAIT = NO
+    SHOWGRID = YES
+    SHOWRULER = NO
+    SHOWPAPER = NO
+    PAPERSIZE = LETTER
+    RULERSPACING = ONEINCH
+    PAPERGRIDSPACING = HALFINCH
+    REGIONINWORKAREA
+      {
+      X1 = 1
+      Y1 = 0.25
+      X2 = 10
+      Y2 = 8.25
+      }
+    }
+### Frame Number 1 ###
+$!READDATASET  '|LFDSFN1|'
+  INITIALPLOTTYPE = XYLINE
+  INCLUDETEXT = NO
+  INCLUDEGEOM = NO
+  ASSIGNSTRANDIDS = YES
+  VARLOADMODE = BYNAME
+  VARNAMELIST = '|LFDSVL1|'
+$!REMOVEVAR |LFDSVL1|
+$!REMOVEVAR |LFDSFN1|
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +3 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +6 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +9 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +14 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +12'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +11'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.5'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.5'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.5'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +3.25'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +3.'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.25'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.35'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.3'
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +4.25'
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +8'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +10.75'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.3'
+$!ALTERDATA 
+  EQUATION = '{s33} = 3*{log10(h)} +2.6'
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  HEADERCOLOR = RED
+  XYPOS
+    {
+    X = 1
+    Y = 1.7868
+    }
+  WIDTH = 9
+  HEIGHT = 6.4632
+$!THREEDAXIS 
+  ASPECTRATIOLIMIT = 25
+  BOXASPECTRATIOLIMIT = 25
+$!PLOTTYPE  = XYLINE
+$!FRAMENAME  = 'Frame 001'
+$!GLOBALTIME 
+  SOLUTIONTIME = 0
+$!DELETELINEMAPS 
+$!ACTIVELINEMAPS  =  [1-8]
+$!GLOBALLINEPLOT 
+  DATALABELS
+    {
+    DISTANCESKIP = 5
+    }
+  LEGEND
+    {
+    SHOW = YES
+    SHOWTEXT = NO
+    BOX
+      {
+      BOXTYPE = NONE
+      }
+    ROWSPACING = 2
+    XYPOS
+      {
+      X = 75.973
+      Y = 55.089
+      }
+    }
+$!LINEMAP  [1]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 6
+    }
+  LINES
+    {
+    COLOR = RED
+    LINETHICKNESS = 0.3
+    }
+  SYMBOLS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  BARCHARTS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  ERRORBARS
+    {
+    COLOR = RED
+    }
+$!LINEMAP  [2]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 7
+    }
+  LINES
+    {
+    COLOR = CUSTOM7
+    LINETHICKNESS = 0.3
+    }
+  SYMBOLS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  BARCHARTS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  ERRORBARS
+    {
+    COLOR = GREEN
+    }
+$!LINEMAP  [3]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 8
+    }
+  LINES
+    {
+    COLOR = BLUE
+    LINETHICKNESS = 0.3
+    }
+  SYMBOLS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  BARCHARTS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  ERRORBARS
+    {
+    COLOR = BLUE
+    }
+$!LINEMAP  [4]
+  NAME = 'Map 3'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 9
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM1
+    FILLCOLOR = CUSTOM1
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM1
+    FILLCOLOR = CUSTOM1
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM1
+    }
+$!LINEMAP  [5]
+  NAME = 'Map 4'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 10
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM3
+    }
+$!LINEMAP  [6]
+  NAME = 'Map 5'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 11
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  BARCHARTS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  ERRORBARS
+    {
+    COLOR = PURPLE
+    }
+$!LINEMAP  [7]
+  NAME = 'Map 6'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 12
+    }
+  LINES
+    {
+    COLOR = GREEN
+    LINETHICKNESS = 0.3
+    }
+  SYMBOLS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  BARCHARTS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  ERRORBARS
+    {
+    COLOR = RED
+    }
+$!LINEMAP  [8]
+  NAME = 'Map 5'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 5
+    YAXISVAR = 13
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  BARCHARTS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  ERRORBARS
+    {
+    COLOR = PURPLE
+    }
+$!XYLINEAXIS 
+  DEPXTOYRATIO = 1
+  GRIDAREA
+    {
+    DRAWBORDER = YES
+    }
+  VIEWPORTPOSITION
+    {
+    X1 = 9.7801
+    X2 = 95.806
+    Y2 = 95.609
+    }
+  VIEWPORTTOPSNAPTARGET = 95.6086956522
+$!XYLINEAXIS 
+  XDETAIL 1
+    {
+    RANGEMIN = -2.8000000000000007105
+    RANGEMAX = -1.6000000000000003109
+    GRSPACING = 0.2
+    }
+$!XYLINEAXIS 
+  YDETAIL 1
+    {
+    RANGEMIN = -12
+    RANGEMAX = -2
+    GRSPACING = 2
+    TITLE
+      {
+      TITLEMODE = USETEXT
+      TEXT = 'log10(||e||)'
+      }
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 17.06915477497228
+    Y = 69.78967808905828
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 3'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 68.39248688864478
+    Y = 28.78426898885832
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'WENO3 '
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 16.77643615074983
+    Y = 49.57359924593163
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 6'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 16.77643615074983
+    Y = 24.57225867288235
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 8'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 68.78277838760809
+    Y = 46.719051597553
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'WENO3 GF-AM4'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 68.39248688864478
+    Y = 40.6049211627704
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'WENO3 GF-AM6'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 16.97158190023146
+    Y = 61.637504176014
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 4'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 68.39248688864478
+    Y = 34.76252985842306
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'WENO3 GF-AM8'
+$!FRAMECONTROL ACTIVATEBYNUMBER
+  FRAME = 1
+$!SETSTYLEBASE CONFIG

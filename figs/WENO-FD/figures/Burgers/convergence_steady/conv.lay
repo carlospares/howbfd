@@ -1,0 +1,516 @@
+#!MC 1410
+$!VarSet |LFDSFN1| = '"conv.dat"'
+$!VarSet |LFDSVL1| = '"V1" "V2" "V3" "V4" "V5" "V6"'
+$!SETSTYLEBASE FACTORY
+$!PLOTOPTIONS 
+  SUBDIVIDEALLCELLS = NO
+$!GLOBALPAPER 
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    }
+$!PAGE 
+  NAME = 'Untitled'
+  PAPERATTRIBUTES
+    {
+    BACKGROUNDCOLOR = WHITE
+    ISTRANSPARENT = YES
+    ORIENTPORTRAIT = NO
+    SHOWGRID = YES
+    SHOWRULER = NO
+    SHOWPAPER = NO
+    PAPERSIZE = LETTER
+    RULERSPACING = ONEINCH
+    PAPERGRIDSPACING = HALFINCH
+    REGIONINWORKAREA
+      {
+      X1 = 1
+      Y1 = 0.25
+      X2 = 10
+      Y2 = 8.25
+      }
+    }
+### Frame Number 1 ###
+$!READDATASET  '|LFDSFN1|'
+  INITIALPLOTTYPE = XYLINE
+  INCLUDETEXT = NO
+  INCLUDEGEOM = NO
+  ASSIGNSTRANDIDS = YES
+  VARLOADMODE = BYNAME
+  VARNAMELIST = '|LFDSVL1|'
+$!REMOVEVAR |LFDSVL1|
+$!REMOVEVAR |LFDSFN1|
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{ew3}  = log10(v5)'
+$!ALTERDATA 
+  EQUATION = '{ew5}  = log10(v6)'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{ew3}  = log10(v5)'
+$!ALTERDATA 
+  EQUATION = '{ew5}  = log10(v6)'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{ew3}  = log10(v5)'
+$!ALTERDATA 
+  EQUATION = '{ew5}  = log10(v6)'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{log10(h)} = log10(1/v1)'
+$!ALTERDATA 
+  EQUATION = '{ew34}  = log10(v2)'
+$!ALTERDATA 
+  EQUATION = '{ew36}  = log10(v3)'
+$!ALTERDATA 
+  EQUATION = '{ew38}  = log10(v4)'
+$!ALTERDATA 
+  EQUATION = '{ew3}  = log10(v5)'
+$!ALTERDATA 
+  EQUATION = '{ew5}  = log10(v6)'
+$!ALTERDATA 
+  EQUATION = '{s3} = 3*{log10(h)} +2.5'
+$!ALTERDATA 
+  EQUATION = '{s4} = 4*{log10(h)} +2 '
+$!ALTERDATA 
+  EQUATION = '{s6} = 6*{log10(h)} +2.75'
+$!ALTERDATA 
+  EQUATION = '{s8} = 8*{log10(h)} +2 '
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  HEADERCOLOR = RED
+  XYPOS
+    {
+    X = 0.9034
+    Y = 0.8208
+    }
+  WIDTH = 9
+  HEIGHT = 6.112
+$!THREEDAXIS 
+  ASPECTRATIOLIMIT = 25
+  BOXASPECTRATIOLIMIT = 25
+$!PLOTTYPE  = XYLINE
+$!FRAMENAME  = 'Frame 001'
+$!GLOBALTIME 
+  SOLUTIONTIME = 0
+$!DELETELINEMAPS 
+$!ACTIVELINEMAPS  =  [1-8]
+$!GLOBALLINEPLOT 
+  DATALABELS
+    {
+    DISTANCESKIP = 5
+    }
+  LEGEND
+    {
+    SHOW = YES
+    SHOWTEXT = NO
+    BOX
+      {
+      BOXTYPE = NONE
+      }
+    XYPOS
+      {
+      X = 70.607
+      Y = 36.449
+      }
+    }
+$!LINEMAP  [1]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 8
+    }
+  LINES
+    {
+    COLOR = RED
+    LINETHICKNESS = 0.2
+    }
+  SYMBOLS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  BARCHARTS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  ERRORBARS
+    {
+    COLOR = RED
+    }
+$!LINEMAP  [2]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 9
+    }
+  LINES
+    {
+    COLOR = PURPLE
+    LINETHICKNESS = 0.2
+    }
+  SYMBOLS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  BARCHARTS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  ERRORBARS
+    {
+    COLOR = GREEN
+    }
+$!LINEMAP  [3]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 10
+    }
+  LINES
+    {
+    COLOR = BLUE
+    LINETHICKNESS = 0.2
+    }
+  SYMBOLS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  BARCHARTS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  ERRORBARS
+    {
+    COLOR = BLUE
+    }
+$!LINEMAP  [4]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 13
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM1
+    FILLCOLOR = CUSTOM1
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM1
+    FILLCOLOR = CUSTOM1
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM1
+    }
+$!LINEMAP  [5]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 14
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM3
+    }
+$!LINEMAP  [6]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 15
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM3
+    }
+$!LINEMAP  [7]
+  NAME = '&DV&'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 16
+    SHOWINLEGEND = NEVER
+    }
+  LINES
+    {
+    COLOR = BLACK
+    LINEPATTERN = DOTTED
+    }
+  SYMBOLS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  BARCHARTS
+    {
+    COLOR = CUSTOM3
+    FILLCOLOR = CUSTOM3
+    }
+  ERRORBARS
+    {
+    COLOR = CUSTOM3
+    }
+$!LINEMAP  [8]
+  NAME = 'Map 7'
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 7
+    YAXISVAR = 11
+    }
+  LINES
+    {
+    COLOR = GREEN
+    LINETHICKNESS = 0.2
+    }
+  SYMBOLS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  BARCHARTS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  ERRORBARS
+    {
+    COLOR = GREEN
+    }
+$!XYLINEAXIS 
+  DEPXTOYRATIO = 1
+  GRIDAREA
+    {
+    DRAWBORDER = YES
+    LINETHICKNESS = 0.2
+    }
+  VIEWPORTPOSITION
+    {
+    X1 = 9.8777
+    X2 = 96.684
+    Y2 = 94.466
+    }
+  VIEWPORTTOPSNAPTARGET = 94.4655172414
+$!XYLINEAXIS 
+  XDETAIL 1
+    {
+    RANGEMIN = -2.6000000000000014211
+    RANGEMAX = -1.1999999999999999556
+    GRSPACING = 0.2
+    AXISLINE
+      {
+      SHOW = NO
+      }
+    }
+$!XYLINEAXIS 
+  YDETAIL 1
+    {
+    RANGEMIN = -25
+    RANGEMAX = 0
+    GRSPACING = 5
+    TITLE
+      {
+      TITLEMODE = USETEXT
+      TEXT = 'log10(||e||)'
+      }
+    AXISLINE
+      {
+      SHOW = NO
+      }
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 13.70581778265642
+    Y = 80.28928044210599
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 3'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 13.70581778265642
+    Y = 69.83357936838384
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 4'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 13.70581778265642
+    Y = 56.31237619390066
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 6'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 13.70581778265642
+    Y = 31.61881600363395
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'slope 8'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 62.44054152945474
+    Y = 19.16944244672396
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'WENO3'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 62.34296865471391
+    Y = 26.63376736439682
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'GFq-WENO3-AM6'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 62.34296865471391
+    Y = 22.9016049055604
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'GFq-WENO3-AM8'
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 62.44054152945476
+    Y = 30.25616033914986
+    }
+  TEXTSHAPE
+    {
+    ISBOLD = NO
+    }
+  TEXT = 'GFq-WENO3-AM4'
+$!FRAMECONTROL ACTIVATEBYNUMBER
+  FRAME = 1
+$!SETSTYLEBASE CONFIG
