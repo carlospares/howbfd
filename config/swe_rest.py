@@ -3,28 +3,27 @@ from equation import Equation
 from functionH import FunH
 from eq_sw import SWEquation
 from boundary import BoundaryCond
-from numflux import Flux
+from nummeth import NumericalMethod
 from timest import TimeStepping
 
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.SW
 init = InitCond.WATER_AT_REST
-funh = FunH.BUMP
-H_noise_factor = 0.1
+funh = FunH.BUMPS
+H_noise_factor = 0.0
 perturb_init = InitCond.PERT_NONE
-boundary = BoundaryCond.FORCE_STEADY_INIT
-numflux = Flux.RUSANOV
-timest = TimeStepping.EULER
+boundary = BoundaryCond.WALL#FORCE_STEADY_INIT
+nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB #UPWINDGF
+timest = TimeStepping.TVDRK3
 order = 3
-well_balanced = False
-is_conservative = True
 N = 100
 a = 0
-b = 20
+b = 25
 cfl = 0.5
-T = 8
-plot_every = 0.5
+T = 1
+plot_exact = False
+plot_every = 9.5
 show_plots = True
 save_plots = False
 save_npys = False

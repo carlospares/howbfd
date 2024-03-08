@@ -37,10 +37,17 @@ class BoundaryCond:
             uNew[:,:gw] = uOld[:,-gw:]
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
-#            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+            #-----IN_OUT
+##            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw]))
+#            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
+#            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+
+            #---transcritical 
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-            #uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[-gw:], tloc), xGhost[-gw:])
-            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+            uNew[0,:gw] =  uOld[0,gw:0:-1]
+
+            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[-gw:], tloc), xGhost[-gw:])
+            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1]
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])

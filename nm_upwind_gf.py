@@ -50,7 +50,7 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
-        nsteps = 8
+        nsteps = 4
         nvars = eqn.dim()
         N = len(x)-2*gw
 
@@ -65,11 +65,11 @@ class UpwindGF(NumericalMethod):
             k=1
             for i in reversed(range(nsteps-gw)):
                 #uloc[:,i] = np.exp(x[0]-k*dx)  #Ugly hack for convergence in steady case
-                #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                uloc[:,i] = u[:,0] 
+                uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
+                #uloc[:,i] = u[:,0] 
                 xloc[i] = x[0]-k*dx
                 k +=1
-            #print uloc    
+            #prin uloc    
             #print xloc
             #return    
             uloc[:,nsteps:]=u[:,gw:]    

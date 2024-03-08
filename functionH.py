@@ -18,6 +18,7 @@ class FunH:
     BUMP2 = 306
     BUMPD = 307
     BUMPS = 310
+    BUMPT = 311
     SLOPE = 308
     MMSburg   = 309
 
@@ -47,7 +48,7 @@ class FunH:
             H = (1 + x)*(x <= 1) + (2+x)*(x > 1)
         elif self.funH==self.IDpSIN:
             A = 0.1
-            alfa = 25#100
+            alfa = 100#25
             H = x+ A*np.sin(alfa*x)
         elif self.funH == self.BUMP2:
             H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
@@ -55,6 +56,9 @@ class FunH:
             H = -.25*(1 + np.cos(5*np.pi*(x+1.2)))*(x<-1)*(x>-1.4) + 1.*(x > 0)
         elif self.funH == self.BUMPS:
             H = -.05*np.sin(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))
+        elif self.funH == self.BUMPT:
+            #H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
+            H = -(0.2-0.05*pow((x-10),2))*(x<12)*(x>8)
         elif self.funH == self.SLOPE:
             H = x + 11
         if self.noise_amplit != 0:
@@ -81,7 +85,7 @@ class FunH:
             Hx = np.ones_like(x)
         elif self.funH == self.IDpSIN:
             A = 0.1
-            alfa = 25#100
+            alfa = 100#25
             Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
         elif self.funH == self.BUMP2:
             Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)

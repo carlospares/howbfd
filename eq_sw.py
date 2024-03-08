@@ -154,9 +154,19 @@ class SWEquation(Equation):
 #        hConst = 1.
 
 #BUMPS
+#        HConst = 0.
+#        qConst = 24.
+#        hConst = 2.
+#BUMPT
+        #----transcritical with shock 
+#        HConst = 0.
+#        qConst = 0.18
+#        hConst = 0.33
+
+        #----transcritical without shock 
         HConst = 0.
-        qConst = 24.
-        hConst = 2.
+        qConst = 1.53
+        hConst = 0.66
         
 #BUMPD  
 #        HConst = -.5
@@ -192,7 +202,6 @@ class SWEquation(Equation):
 #            U0[0,j] = hsuperc if j >= index else hsubc
 #            U0[1,j] = qConst
 #        return U0
-
 
     def twosteady(self,H,x):
         U0 = np.ones((self.dim(), len(H)))
