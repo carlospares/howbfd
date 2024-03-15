@@ -1,0 +1,158 @@
+
+\begin{frame}[t]{Setting: balance laws}
+\MyLogoa
+
+\vspace{0.5cm}
+
+We want to solve numerically  hyperbolic systems of balance laws
+
+\begin{equation}
+	\partial_tU+ \partial_x F(U)=  S(U)\partial_xH \nonumber
+\end{equation}
+ 
+\vspace{1.cm}
+
+Typical examples  
+
+
+\begin{itemize}
+\item Shallow water equations with topography/friction/Coriolis/etc
+%\only<2->{\item{\bf Shallow water equations with topography/friction/Coriolis/etc}}
+\item  Euler equations with gravity
+%\only<2->{\item  Euler equations with gravity  $\leftarrow$ {\it and  some preliminary results here}  }
+\item GPR model and hyperbolic reformulations of viscous/dispersive  systems 
+\item  etc. 
+\end{itemize}
+
+%\vspace{0.5cm}
+
+% \flushright{\underline{We  consider both 1D and Multi-D problems}}
+%\only<1>{\color{white}{\\[5pt] But for simplicity the discussion is done for the 1D case}}
+%\only<3>{\\[5pt]But for simplicity the discussion is done for the 1D case}
+\end{frame}
+ 
+
+\begin{frame}[t]{Setting: balance laws}
+\MyLogoa
+
+\vspace{0.5cm}
+
+We want to solve numerically  hyperbolic systems of balance laws
+
+\begin{equation}
+	\partial_tU+ \partial_x F(U)=  S(U)\partial_xH \nonumber
+\end{equation}
+ 
+ 
+ \vspace{0.5cm}
+
+Shopping list
+
+
+\begin{itemize}
+\item Arbitrary high order
+%\only<2->{\item{\bf Shallow water equations with topography/friction/Coriolis/etc}}
+\item  Possibly monotonicity/positivity preserving  
+%\only<2->{\item  Euler equations with gravity  $\leftarrow$ {\it and  some preliminary results here}  }
+\item Steady state preserving 
+
+\end{itemize}
+
+\vspace{0.2cm}
+
+  
+ \end{frame}
+
+
+
+\begin{frame}[t]{Objective}
+\MyLogoa
+
+\vspace{0.5cm}
+
+We want to solve numerically  hyperbolic systems of balance laws
+
+\begin{equation}
+	\partial_tU+ \partial_x F(U)=  S(U)\partial_xH \nonumber
+\end{equation}
+ 
+ 
+ \vspace{0.5cm}
+
+Steady state preserving: on a given mesh we want to the scheme embed in the discretization a
+
+\begin{description} 
+
+\vspace{0.2cm}
+
+\item[{\it Definition}] of    $\partial_x F_{\textrm{h}} = S_{\textrm{h}}$ such that data  verifying it is exactly preserved
+
+\vspace{0.2cm}
+
+\item[{\it Projection}]    operator 
+providing such data, possibly different from the scheme
+
+\vspace{0.2cm}
+
+\item [{\it Characterization}]  of the above projection: e.g  enhanced consistency, well posedness 
+\end{description}
+ 
+
+  
+ 
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}{Bibliography (incomplete) for 1D}
+\MyLogoa
+
+There are numberless approaches, and vast literature.
+Related work:
+
+\begin{enumerate}
+
+\vspace{0.5cm}
+
+\item Reconstruction/evolution of fluctuations wrt  discrete equilibria ({\bf approximate  full well balanced}):
+
+\begin{itemize}
+\item {\scriptsize    Castro \& Par\'es J.Sci.Comp. 2020,   G\'omez-Bueno et al, Appl.Math.Comp. 2021,   G\'omez-Bueno et al  Mathematics 2021,
+Guerrero Fern\'andez et al  Mathematics 2021,   G\'omez-Bueno et al, Appl.Num.Math.  2023, etc. etc.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+
+\item Well balanced via integration of the source term and  global fluxes 
+
+\begin{itemize}
+\item {\scriptsize   Gasc\'on  \& Corber\'an  JCP 2001,  Donat \& Martinez-Gavara   J.Sci.Comp. 2011, 
+Chertock et al JCP 2018, Cheng et al J.Sci.Comp. 2019, Mantri\&Noelle   JCP  2021,  
+Ciallella et al.   J.Sci.Comp. 2023,   Xu and Shu J.Sci.Comp. to appear, etc. etc.} 
+\end{itemize}
+
+\vspace{0.5cm}
+
+
+\item  Other approaches 
+
+\begin{itemize}
+\item 
+\end{itemize}
+
+
+\end{enumerate}
+
+
+\end{frame}
+ 
+ 
+
+
+
