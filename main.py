@@ -68,8 +68,8 @@ for level in range(0, config.refinements+1):
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
 
-        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
-        print "Time ",t," Error at N={} is {}".format(N, errors[level])
+#        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
+#        print "Time ",t," Error at N={} is {}".format(N, errors[level])
 
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
@@ -86,6 +86,8 @@ for level in range(0, config.refinements+1):
 
 #    #errors[level] = np.sum(np.abs(exact - u))*dx
     
+    print 'd\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx
+
     errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
     #print exact[0,:],u[0,:]
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
