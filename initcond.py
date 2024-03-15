@@ -31,6 +31,7 @@ class InitCond:
     PERT_MGAUSS = 605
     PERT_WB = 607
     PERT_WM = 608
+    PERT_DISC = 609
 
     C = 0 # average of sine perturbation
 
@@ -59,26 +60,28 @@ class InitCond:
             xx = []
             N=len(x)
             if N == 25:
-                file_in = open('initial_data/analytical_sw/initial_sub_25.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_25.dat', 'r')
             elif N== 50:
-                file_in = open('initial_data/analytical_sw/initial_sub_50.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
             elif N== 100:
-                file_in = open('initial_data/analytical_sw/initial_sub_100.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
             elif N== 200:
-                file_in = open('initial_data/analytical_sw/initial_sub_200.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_200.dat', 'r')
             elif N== 400:
-                file_in = open('initial_data/analytical_sw/initial_sub_400.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_400.dat', 'r')
             elif N== 800:
-                file_in = open('initial_data/analytical_sw/initial_sub_800.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_800.dat', 'r')
+            elif N== 5000:
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
             for y in file_in.read().split('\n'):
                 #if y.isdigit():
                 xx.append(float(y))
             U0[0] = xx#2 + H
             U0[1] = U0[1]+24.0
         elif self.initCond==InitCond.WATER_AT_REST:
-            xx = []
             N=len(x)
-            U0[0] = 2.0 + H
+            #U0[0] = 2.0 + H
+            U0[0] = 0.33 + H
             U0[1] = 0.0
         elif self.initCond==InitCond.WATER_MASS:
             U0[0]= 1 + H + 1.*(x>9)*(x < 11)
@@ -108,12 +111,18 @@ class InitCond:
             pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
             pert[0] = 0.1*np.exp(-200*(x+0.5)*(x+0.5))
+            #pert[0] = 0.005*np.exp(-200*(x+0.5)*(x+0.5))
+            #pert[0] = 0.001*np.exp(-200*(x-9.5)*(x-9.5))
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         elif self.pert ==InitCond.PERT_WB:
             pert[0] = .02*(x<=-.3)*(x>=-.4)
         elif self.pert == InitCond.PERT_WM:
             pert[0] = .5*(x<7.)*(x > 5.)
+        elif self.pert == InitCond.PERT_DISC:
+            pert[0] = 0.1*(x <=-0.5 )*(x > -0.7)
+            #pert[0] = 0.1*(x <=13.5 )*(x >= 11.5)
+            #pert[0] = 1.0*(x <=9.5 )*(x >= 7.5)
         return pert
     
 #    def trans(self,x, H):

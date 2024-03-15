@@ -37,6 +37,7 @@ io_manager = IoManager(eqn, config)
 dxs = np.zeros(config.refinements+1)
 errors = np.zeros(config.refinements+1)
 
+
 tini = clock()
 for level in range(0, config.refinements+1):
     N = config.N * (2**level)
@@ -51,6 +52,7 @@ for level in range(0, config.refinements+1):
     H = funH.H(x, t)
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
     
+
     dx = x[1]-x[0]
 #    print '[', 0,',', np.sum(u[0])*dx, '],'
     # Deal with possible plot at t=0
@@ -66,14 +68,18 @@ for level in range(0, config.refinements+1):
         io_manager.io_if_appropriate(x, u, H, t, config)
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
-    
+
     #io_manager.statistics(x, u, funH.H(x), eqn)
-    exact = eqn.exact(x, t, H, config)
-    #exact = uin
+#----exact solution and errors
+#    exact = eqn.exact(x, t, H, config)
+#    #exact = uin
+#
+#------read exact solution form file
+    exact=io_manager.steady_trans_form_file(H,x)
 
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
-    #errors[level] = np.sum(np.abs(exact - u))*dx
+#    #errors[level] = np.sum(np.abs(exact - u))*dx
     
     errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
     #print exact[0,:],u[0,:]
@@ -84,13 +90,15 @@ for level in range(0, config.refinements+1):
         print "Order: "+str(order)
     dxs[level] = dx
     
+
+
     io_manager.reset_timer() # otherwise only level=0 will plot
 tfin = clock()
 print 'CPU Time: ' + str(tfin-tini)
 
 
 #for i in range(N):
-#    #print x[i],uin[0,i],u[0,i]
+#    print x[i],uin[0,i],u[0,i]
 #    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 
