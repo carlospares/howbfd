@@ -195,18 +195,80 @@ For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{
 \begin{minipage}{0.5\textwidth}
 \centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_DISC_n150} 
 \end{minipage}
-} 
+}
+
 \only<7>{
-\begin{minipage}{0.4\textwidth}
-Supercritical flow on a smooth hump\\
-\centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/Subcritical/super-ini} 
-\end{minipage}\hfill
-\begin{minipage}{0.6\textwidth}
-\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/Subcritical/conv} 
-\end{minipage}
+	For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{[-0.7,-0.5]}$    \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_DISC_n150} 
+	\end{minipage}
 }
 
 \only<8>{
+	For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of Gaussian perturbation $\alpha=0.005$    \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_error_pert0p005} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_error_pert0p005} 
+	\end{minipage}
+}
+
+\only<9>{
+	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/initial} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv} 
+	\end{minipage}
+}
+
+\only<10>{
+	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv} 
+	\end{minipage}
+}
+
+
+\only<11>{
+	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/initial} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv} 
+	\end{minipage}
+} 
+ 
+\only<12>{
+\begin{minipage}{0.4\textwidth}
+Supercritical flow on a smooth hump\\
+\centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/Supercritical/super-ini} 
+\end{minipage}\hfill
+\begin{minipage}{0.6\textwidth}
+\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/Supercritical/conv} 
+\end{minipage}
+}
+
+\only<13>{
 \begin{minipage}{0.5\textwidth}
 \centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_ini}
 \end{minipage}\hfill
@@ -216,7 +278,7 @@ Supercritical flow on a smooth hump\\
 }
 
 
-\only<9>{
+\only<14>{
 \begin{minipage}{0.5\textwidth}
 \centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/initial_discbig}
 \end{minipage}\hfill
@@ -226,7 +288,18 @@ Supercritical flow on a smooth hump\\
 }
 
 
-\only<10>{
+\only<15>{
+	\begin{minipage}{0.4\textwidth}
+		Subcritical flow on a smooth hump\\
+		\centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/Subcritical/initial_con} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.6\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/Supercritical/conv} 
+	\end{minipage}
+}
+
+
+\only<16>{
 
 \vspace{0.5cm}
 

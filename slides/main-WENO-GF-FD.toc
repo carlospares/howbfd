@@ -1,4 +1,4 @@
 \babel@toc {english}{}
 \beamer@sectionintoc {1}{Objectives of this work}{2}{0}{1}
 \beamer@sectionintoc {2}{Global flux quadrature for WENO finite difference}{6}{0}{2}
-\beamer@sectionintoc {3}{Conclusion and perspectives}{21}{0}{3}
+\beamer@sectionintoc {3}{Conclusion and perspectives}{27}{0}{3}
