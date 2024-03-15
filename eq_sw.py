@@ -154,9 +154,16 @@ class SWEquation(Equation):
 #        hConst = 1.
 
 #BUMPS
+        #----supercritical
 #        HConst = 0.
 #        qConst = 24.
 #        hConst = 2.
+
+        #----subcritical
+        HConst = 0.
+        qConst = 4.42
+        hConst = 2.
+
 #BUMPT
         #----transcritical with shock 
 #        HConst = 0.
@@ -164,9 +171,9 @@ class SWEquation(Equation):
 #        hConst = 0.33
 
         #----transcritical without shock 
-        HConst = 0.
-        qConst = 1.53
-        hConst = 0.66
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 0.66
         
 #BUMPD  
 #        HConst = -.5

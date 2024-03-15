@@ -65,8 +65,8 @@ class UpwindGF(NumericalMethod):
             k=1
             for i in reversed(range(nsteps-gw)):
                 #uloc[:,i] = np.exp(x[0]-k*dx)  #Ugly hack for convergence in steady case
-                uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                #uloc[:,i] = u[:,0] 
+                #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
+                uloc[:,i] = u[:,0] 
                 xloc[i] = x[0]-k*dx
                 k +=1
             #prin uloc    

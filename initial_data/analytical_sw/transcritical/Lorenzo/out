@@ -1,0 +1,12 @@
+11c11
+< q0=4.42
+---
+> q0=24.
+178c178
+<         h=hvec[0]
+---
+>         h=hvec[1]
+193c193
+< f=open("subcriticalsmooth.dat","w+")
+---
+> f=open("supercriticalsmooth.dat","w+")

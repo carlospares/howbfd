@@ -57,8 +57,8 @@ class FunH:
         elif self.funH == self.BUMPS:
             H = -.05*np.sin(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))
         elif self.funH == self.BUMPT:
-            #H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
-            H = -(0.2-0.05*pow((x-10),2))*(x<12)*(x>8)
+            H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
+            #H = -(0.2-0.05*pow((x-10),2))*(x<12)*(x>8)
         elif self.funH == self.SLOPE:
             H = x + 11
         if self.noise_amplit != 0:

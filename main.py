@@ -61,21 +61,26 @@ for level in range(0, config.refinements+1):
 
     ### Main loop
     while t < config.T:
+        up=u
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
 #        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
         u = timest.update(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, config, t)
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
+
+        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
+        print "Time ",t," Error at N={} is {}".format(N, errors[level])
+
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
 
     #io_manager.statistics(x, u, funH.H(x), eqn)
 #----exact solution and errors
 #    exact = eqn.exact(x, t, H, config)
-#    #exact = uin
+    exact = uin
 #
 #------read exact solution form file
-    exact=io_manager.steady_trans_form_file(H,x)
+#    exact=io_manager.steady_trans_form_file(H,x)
 
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
@@ -97,9 +102,9 @@ tfin = clock()
 print 'CPU Time: ' + str(tfin-tini)
 
 
-#for i in range(N):
+for i in range(N):
 #    print x[i],uin[0,i],u[0,i]
-#    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
+    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 
 if config.refinements > 0:
