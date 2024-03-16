@@ -50,7 +50,7 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
-        nsteps = 6
+        nsteps = 4
         nvars = eqn.dim()
         N = len(x)-2*gw
 
