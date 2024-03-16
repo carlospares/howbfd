@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2024.3.15)  15 MAR 2024 20:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2024.3.15)  16 MAR 2024 14:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1396,40 +1396,40 @@ Package pdftex.def Info: circle1.png  used on input line 87.
 ]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [11
 
 ]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [12
 
 ]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [13
 
 ]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 <../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno3.png, id=197,
  1027.84pt x 698.61pt>
@@ -1437,7 +1437,7 @@ File: ../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno3.png Gra
 phic file (type png)
 <use ../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno3.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/convergence_steady/con
-vburg-weno3.png  used on input line 328.
+vburg-weno3.png  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 107.1961pt.
 <../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno5.png, id=198,
  1027.84pt x 698.61pt>
@@ -1445,11 +1445,11 @@ File: ../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno5.png Gra
 phic file (type png)
 <use ../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno5.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/convergence_steady/con
-vburg-weno5.png  used on input line 328.
+vburg-weno5.png  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 107.1961pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [14
 
@@ -1458,7 +1458,7 @@ py)> <../figs/WENO-FD/figures/Burgers/convergence_steady/convburg-weno5.png (PN
 G copy)>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/oscillation.png, id=209, 557.924
 4pt x 420.6114pt>
@@ -1466,7 +1466,7 @@ File: ../figs/WENO-FD/figures/Burgers/perturbations/oscillation.png Graphic fil
 e (type png)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/oscillation.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/oscillat
-ion.png  used on input line 328.
+ion.png  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.89995pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_stationary_n150.pdf, id
 =210, 421.575pt x 316.18124pt>
@@ -1475,11 +1475,11 @@ f Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_stationary_n150.pdf
 >
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM
-_stationary_n150.pdf  used on input line 328.
+_stationary_n150.pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [15
 
@@ -1487,7 +1487,7 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 FD/figures/Burgers/perturbations/weno3_AM_stationary_n150.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150.pdf, id=2
 37, 421.575pt x 316.18124pt>
@@ -1495,7 +1495,7 @@ File: ../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150.pdf
 Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/initial_
-cond_DISC_n150.pdf  used on input line 328.
+cond_DISC_n150.pdf  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.28784pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_DISC_n150.pdf, id=238, 
 421.575pt x 316.18124pt>
@@ -1503,11 +1503,11 @@ File: ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_DISC_n150.pdf Grap
 hic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_DISC_n150.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM
-_DISC_n150.pdf  used on input line 328.
+_DISC_n150.pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [16
 
@@ -1515,13 +1515,13 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 /figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_DISC_n150.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: ../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150.pdf 
 Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/initial_cond_DISC_n150.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/initial_
-cond_DISC_n150.pdf  used on input line 328.
+cond_DISC_n150.pdf  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.28784pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_DISC_n150.pdf, id=278, 
 414.54875pt x 321.2pt>
@@ -1529,40 +1529,40 @@ File: ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_DISC_n150.pdf Grap
 hic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_DISC_n150.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM
-_DISC_n150.pdf  used on input line 328.
+_DISC_n150.pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 129.84023pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [17
 
  <../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_DISC_n150.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_error_pert0p005.pdf, id
-=304, 421.575pt x 316.18124pt>
+=303, 421.575pt x 316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_error_pert0p005.pd
 f Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM_error_pert0p005.pdf
 >
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/weno3_AM
-_error_pert0p005.pdf  used on input line 328.
+_error_pert0p005.pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 <../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_error_pert0p005.pdf, id
-=305, 421.575pt x 316.18124pt>
+=304, 421.575pt x 316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_error_pert0p005.pd
 f Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_error_pert0p005.pdf
 >
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM
-_error_pert0p005.pdf  used on input line 328.
+_error_pert0p005.pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [18
 
@@ -1570,26 +1570,26 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 ../figs/WENO-FD/figures/Burgers/perturbations/weno5_AM_error_pert0p005.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
-<../figs/WENO-FD/figures/Burgers/MMS/initial.png, id=352, 462.528pt x 346.896pt
+<../figs/WENO-FD/figures/Burgers/MMS/initial.png, id=351, 462.528pt x 346.896pt
 >
 File: ../figs/WENO-FD/figures/Burgers/MMS/initial.png Graphic file (type png)
 <use ../figs/WENO-FD/figures/Burgers/MMS/initial.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/initial.png  used 
-on input line 328.
+on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.28712pt.
-<../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv.pdf, id=353, 421.575pt x
+<../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv.pdf, id=352, 421.575pt x
  316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv.pdf Graphic file (t
 ype pdf)
 <use ../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv.
-pdf  used on input line 328.
+pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [19
 
@@ -1597,27 +1597,27 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 gers/MMS/weno3_AM_MMS_conv.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
-<../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv.pdf, id=368, 421.575pt x
+<../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv.pdf, id=367, 421.575pt x
  316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv.pdf Graphic file (t
 ype pdf)
 <use ../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv.
-pdf  used on input line 328.
+pdf  used on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.28784pt.
-<../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv.pdf, id=369, 421.575pt x
+<../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv.pdf, id=368, 421.575pt x
  316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv.pdf Graphic file (t
 ype pdf)
 <use ../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv.
-pdf  used on input line 328.
+pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [20
 
@@ -1625,51 +1625,51 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 igures/Burgers/MMS/weno5_AM_MMS_conv.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: ../figs/WENO-FD/figures/Burgers/MMS/initial.png Graphic file (type png)
 <use ../figs/WENO-FD/figures/Burgers/MMS/initial.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/initial.png  used 
-on input line 328.
+on input line 336.
 (pdftex.def)             Requested size: 157.71713pt x 118.28712pt.
-<../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.pdf, id=384, 421.575pt x
+<../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.pdf, id=383, 421.575pt x
  316.18124pt>
 File: ../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.pdf Graphic file (t
 ype pdf)
 <use ../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.
-pdf  used on input line 328.
+pdf  used on input line 336.
 (pdftex.def)             Requested size: 167.57503pt x 125.68385pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [21
 
  <../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
-<../figs/WENO-FD/figures/SW/Supercritical/super-ini.png, id=398, 270.2898pt x 1
+<../figs/WENO-FD/figures/SW/Supercritical/super-ini.png, id=397, 270.2898pt x 1
 96.0926pt>
 File: ../figs/WENO-FD/figures/SW/Supercritical/super-ini.png Graphic file (type
  png)
 <use ../figs/WENO-FD/figures/SW/Supercritical/super-ini.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/Supercritical/super-ini.png
-  used on input line 328.
+  used on input line 336.
 (pdftex.def)             Requested size: 157.71413pt x 114.42197pt.
-<../figs/WENO-FD/figures/SW/Supercritical/conv.png, id=399, 1027.84pt x 738.76p
+<../figs/WENO-FD/figures/SW/Supercritical/conv.png, id=398, 1027.84pt x 738.76p
 t>
 File: ../figs/WENO-FD/figures/SW/Supercritical/conv.png Graphic file (type png)
 
 <use ../figs/WENO-FD/figures/SW/Supercritical/conv.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/Supercritical/conv.png  use
-d on input line 328.
+d on input line 336.
 (pdftex.def)             Requested size: 189.26248pt x 136.02591pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [22
 
@@ -1677,29 +1677,29 @@ Package pdftex.def Info: circle1.png  used on input line 328.
 res/SW/Supercritical/conv.png (PNG copy)>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 <../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_ini.pd
-f, id=411, 421.575pt x 316.0608pt>
+f, id=410, 421.575pt x 316.0608pt>
 File: ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_i
 ni.pdf Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_in
 i.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DIS
-Csmall_n100_error_ini.pdf  used on input line 328.
+Csmall_n100_error_ini.pdf  used on input line 336.
 (pdftex.def)             Requested size: 177.4299pt x 133.02434pt.
 <../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_h.pdf,
- id=412, 421.575pt x 316.0608pt>
+ id=411, 421.575pt x 316.0608pt>
 File: ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_h
 .pdf Graphic file (type pdf)
 <use ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_h.
 pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DIS
-Csmall_n100_error_h.pdf  used on input line 328.
+Csmall_n100_error_h.pdf  used on input line 336.
 (pdftex.def)             Requested size: 177.4299pt x 133.02434pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [23
 
@@ -1713,27 +1713,27 @@ s/weno3_sup_DISCsmall_n100_error_h.pdf): PDF inclusion: multiple pdfs with page
 >]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
-<../figs/WENO-FD/figures/SW/perturbations/initial_discbig.pdf, id=435, 391.2216
+<../figs/WENO-FD/figures/SW/perturbations/initial_discbig.pdf, id=434, 391.2216
 pt x 300.1614pt>
 File: ../figs/WENO-FD/figures/SW/perturbations/initial_discbig.pdf Graphic file
  (type pdf)
 <use ../figs/WENO-FD/figures/SW/perturbations/initial_discbig.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/initial_discb
-ig.pdf  used on input line 328.
+ig.pdf  used on input line 336.
 (pdftex.def)             Requested size: 177.4299pt x 136.12938pt.
-<../figs/WENO-FD/figures/SW/perturbations/weno3_evolution_upAM61.pdf, id=436, 3
+<../figs/WENO-FD/figures/SW/perturbations/weno3_evolution_upAM61.pdf, id=435, 3
 90.25798pt x 302.5704pt>
 File: ../figs/WENO-FD/figures/SW/perturbations/weno3_evolution_upAM61.pdf Graph
 ic file (type pdf)
 <use ../figs/WENO-FD/figures/SW/perturbations/weno3_evolution_upAM61.pdf>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/weno3_evoluti
-on_upAM61.pdf  used on input line 328.
+on_upAM61.pdf  used on input line 336.
 (pdftex.def)             Requested size: 177.4299pt x 137.56355pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [24
 
@@ -1746,45 +1746,76 @@ luded in a single page
 >]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
-<../figs/WENO-FD/figures/SW/Subcritical/initial_con.png, id=459, 462.528pt x 34
+<../figs/WENO-FD/figures/SW/Subcritical/initial_con.png, id=458, 462.528pt x 34
 6.896pt>
 File: ../figs/WENO-FD/figures/SW/Subcritical/initial_con.png Graphic file (type
  png)
 <use ../figs/WENO-FD/figures/SW/Subcritical/initial_con.png>
 Package pdftex.def Info: ../figs/WENO-FD/figures/SW/Subcritical/initial_con.png
-  used on input line 328.
+  used on input line 336.
 (pdftex.def)             Requested size: 157.71413pt x 118.28712pt.
-File: ../figs/WENO-FD/figures/SW/Supercritical/conv.png Graphic file (type png)
-
-<use ../figs/WENO-FD/figures/SW/Supercritical/conv.png>
-Package pdftex.def Info: ../figs/WENO-FD/figures/SW/Supercritical/conv.png  use
-d on input line 328.
-(pdftex.def)             Requested size: 189.26248pt x 136.02591pt.
+<../figs/WENO-FD/figures/SW/Subcritical/weno3_AM_sub_conv.pdf, id=459, 421.575p
+t x 316.18124pt>
+File: ../figs/WENO-FD/figures/SW/Subcritical/weno3_AM_sub_conv.pdf Graphic file
+ (type pdf)
+<use ../figs/WENO-FD/figures/SW/Subcritical/weno3_AM_sub_conv.pdf>
+Package pdftex.def Info: ../figs/WENO-FD/figures/SW/Subcritical/weno3_AM_sub_co
+nv.pdf  used on input line 336.
+(pdftex.def)             Requested size: 189.26248pt x 141.94734pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
  [25
 
- <../figs/WENO-FD/figures/SW/Subcritical/initial_con.png>]
+ <../figs/WENO-FD/figures/SW/Subcritical/initial_con.png> <../figs/WENO-FD/figu
+res/SW/Subcritical/weno3_AM_sub_conv.pdf>]
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
-Package pdftex.def Info: inr_logo_noir.pdf  used on input line 328.
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
+(pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
+<../figs/WENO-FD/figures/SW/perturbations/initial_big_sub.png, id=474, 462.528p
+t x 346.896pt>
+File: ../figs/WENO-FD/figures/SW/perturbations/initial_big_sub.png Graphic file
+ (type png)
+<use ../figs/WENO-FD/figures/SW/perturbations/initial_big_sub.png>
+Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/initial_big_s
+ub.png  used on input line 336.
+(pdftex.def)             Requested size: 177.4299pt x 133.07103pt.
+<../figs/WENO-FD/figures/SW/perturbations/weno3_sub_DISCbig_eta.pdf, id=475, 42
+1.575pt x 316.18124pt>
+File: ../figs/WENO-FD/figures/SW/perturbations/weno3_sub_DISCbig_eta.pdf Graphi
+c file (type pdf)
+<use ../figs/WENO-FD/figures/SW/perturbations/weno3_sub_DISCbig_eta.pdf>
+Package pdftex.def Info: ../figs/WENO-FD/figures/SW/perturbations/weno3_sub_DIS
+Cbig_eta.pdf  used on input line 336.
+(pdftex.def)             Requested size: 177.4299pt x 133.07503pt.
+File: circle1.png Graphic file (type png)
+<use circle1.png>
+Package pdftex.def Info: circle1.png  used on input line 336.
+(pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
+ [26
+
+ <../figs/WENO-FD/figures/SW/perturbations/initial_big_sub.png> <../figs/WENO-F
+D/figures/SW/perturbations/weno3_sub_DISCbig_eta.pdf>]
+File: inr_logo_noir.pdf Graphic file (type pdf)
+<use inr_logo_noir.pdf>
+Package pdftex.def Info: inr_logo_noir.pdf  used on input line 336.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
 File: circle1.png Graphic file (type png)
 <use circle1.png>
-Package pdftex.def Info: circle1.png  used on input line 328.
+Package pdftex.def Info: circle1.png  used on input line 336.
 (pdftex.def)             Requested size: 8.5359pt x 8.59079pt.
- [26
+ [27
 
 ])
 File: inr_logo_noir.pdf Graphic file (type pdf)
 <use inr_logo_noir.pdf>
 Package pdftex.def Info: inr_logo_noir.pdf  used on input line 247.
 (pdftex.def)             Requested size: 28.45274pt x 9.99683pt.
- [27
+ [28
 
 ]
 \tf@nav=\write7
@@ -1808,10 +1839,10 @@ Package rerunfilecheck Info: File `main-WENO-GF-FD.out' has not changed.
 (rerunfilecheck)             Checksum: 2E1DC2B0C95133127BED79E7CC5BB4AA;204.
  ) 
 Here is how much of TeX's memory you used:
- 24972 strings out of 479304
- 472295 string characters out of 5869779
- 905694 words of memory out of 5000000
- 41442 multiletter control sequences out of 15000+600000
+ 24997 strings out of 479304
+ 473692 string characters out of 5869779
+ 907876 words of memory out of 5000000
+ 41461 multiletter control sequences out of 15000+600000
  424214 words of font info for 93 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  112i,15n,116p,419b,570s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1838,10 +1869,10 @@ fb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0600.pfb></usr/share/texmf
 /fonts/type1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts/type1/public/
 cm-super/sfrm0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0900.pf
 b>
-Output written on main-WENO-GF-FD.pdf (27 pages, 1601372 bytes).
+Output written on main-WENO-GF-FD.pdf (28 pages, 1718014 bytes).
 PDF statistics:
- 583 PDF objects out of 1000 (max. 8388607)
- 479 compressed objects within 5 object streams
- 58 named destinations out of 1000 (max. 500000)
- 203 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 615 PDF objects out of 1000 (max. 8388607)
+ 505 compressed objects within 6 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 218 words of extra memory for PDF output out of 10000 (max. 10000000)
 

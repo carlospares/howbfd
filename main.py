@@ -59,6 +59,7 @@ for level in range(0, config.refinements+1):
     uin = u
     io_manager.io_if_appropriate(x, u, H, t, config)
 
+
     ### Main loop
     while t < config.T:
         up=u
@@ -79,9 +80,6 @@ for level in range(0, config.refinements+1):
 #    exact = eqn.exact(x, t, H, config)
     exact = uin
 #
-#------read exact solution form file
-#    exact=io_manager.steady_trans_form_file(H,x)
-
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
 #    #errors[level] = np.sum(np.abs(exact - u))*dx
