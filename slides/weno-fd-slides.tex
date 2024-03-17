@@ -97,11 +97,11 @@ $ \overline{R}_i =R_{i-1/2}^+ - \sum_q \omega_q  \int_{x_{i-1/2}}^{x_q} S({\colo
 	\vspace{0.25cm}
 \end{equation}}
 
-\only<4-6>{\begin{equation}
+\only<4-11>{\begin{equation}
 	\partial_tU+\partial_x \dfrac{U^2}{2}=  S(U) \partial_xH     \nonumber
 	\vspace{0.25cm}
 \end{equation}}
-\only<7->{\begin{equation}
+\only<12->{\begin{equation}
 	\partial_t\bigg[\begin{array}{c} h\\hu\end{array}\bigg]+\partial_x\bigg[\begin{array}{c} hu\\hu^2 + gh^2/2\end{array}\bigg]=  - \bigg[\begin{array}{c} 0\\h\end{array}\bigg] b'(x)   \nonumber
 %	\vspace{0.25cm}
 \end{equation}}
@@ -160,8 +160,51 @@ If $U(F)$ is a one to one mapping,    $U^*(x)$
 \end{flushright}
 } 
 
- \only<4>{
-For $S(U)=U^2$ and $H(x)=x$ exact steady state $u=e^x$ \\[10pt]
+
+
+\only<4>{
+	Moving solution (safety check):   $S(U)=U-C$ and $H(x,t)=e^{-(x-x_0-Ct)^2}$, $U_{\text{ex}}=H(x,t)$  \\[5pt] %The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/initial} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+%		 \begin{flushright}
+		 For WENOn-ABm or  
+		 WENOn-AMn \\[5pt] we expect  convergence rates $$\epsilon = \Delta x^{\min(m,n)}$$  
+%		 \end{flushright}
+	\end{minipage}
+	}
+
+\only<5>{
+	Moving solution (safety check):   $S(U)=U-C$ and $H(x,t)=e^{-(x-x_0-Ct)^2}$, $U_{\text{ex}}=H(x,t)$  \\[5pt] %The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv} 
+	\end{minipage}
+}
+
+
+\only<6>{
+	Moving solution (safety check):   $S(U)=U-C$ and $H(x,t)=e^{-(x-x_0-Ct)^2}$, $U_{\text{ex}}=H(x,t)$   \\[5pt] %The wave is centered at $x_0=0.5$.   \\[5pt]
+	
+	
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv} 
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv} 
+	\end{minipage}
+} 
+ 
+
+
+ \only<7>{
+Steady state: $S(U)=U^2$ and $H(x)=x$, exact solution  $U_{\text{ex}}(x)=e^x$ \\[10pt]
 
 
 \begin{minipage}{0.5\textwidth}
@@ -172,8 +215,8 @@ For $S(U)=U^2$ and $H(x)=x$ exact steady state $u=e^x$ \\[10pt]
 \end{minipage}
 } 
 
-\only<5>{
-For $s(U)=U^2$ and $\varphi=x+100\sin x$   \\[5pt]
+\only<8>{
+Steady state: $s(U)=U^2$ and $\varphi=x+100\sin x$\\[5pt]
 
 
 \begin{minipage}{0.5\textwidth}
@@ -185,8 +228,8 @@ For $s(U)=U^2$ and $\varphi=x+100\sin x$   \\[5pt]
 } 
 
 
-\only<6>{
-For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{[-0.7,-0.5]}$    \\[5pt]
+\only<9>{
+Perturbed steady state: $s(U)=U^2$ and $\varphi=x+100\sin x$ + top hat  $\delta u=0.2\chi_{[-0.7,-0.5]}$    \\[5pt]
 
 
 \begin{minipage}{0.5\textwidth}
@@ -197,8 +240,8 @@ For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{
 \end{minipage}
 }
 
-\only<7>{
-	For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{[-0.7,-0.5]}$    \\[5pt]
+\only<10>{
+	Perturbed steady state: $s(U)=U^2$ and $\varphi=x+100\sin x$ + top hat  $\delta u=0.2\chi_{[-0.7,-0.5]}$    \\[5pt]
 	
 	
 	\begin{minipage}{0.5\textwidth}
@@ -209,8 +252,8 @@ For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{
 	\end{minipage}
 }
 
-\only<8>{
-	For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of Gaussian perturbation $\alpha=0.005$    \\[5pt]
+\only<11>{
+Perturbed steady state: $s(U)=U^2$ and $\varphi=x+100\sin x$ +   Gaussian with amplitude $\alpha=0.005$    \\[5pt]
 	
 	
 	\begin{minipage}{0.5\textwidth}
@@ -221,43 +264,8 @@ For $S(U)=u^2$ and $H=x+100\sin x$ + top hat of perturbation $\delta u=0.2\chi_{
 	\end{minipage}
 }
 
-\only<9>{
-	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
-	
-	
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/initial} 
-	\end{minipage}\hfill
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno3_AM_MMS_conv} 
-	\end{minipage}
-}
-
-\only<10>{
-	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
-	
-	
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AB_MMS_conv} 
-	\end{minipage}\hfill
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno5_AM_MMS_conv} 
-	\end{minipage}
-}
 
 
-\only<11>{
-	For $S(U)=u-1$ and $H(x)=e^{-(x-x_0-ct)^2}$, $u(x)=e^{-(x-x_0-ct)^2}.$ The wave is centered at $x_0=0.5$.   \\[5pt]
-	
-	
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/initial} 
-	\end{minipage}\hfill
-	\begin{minipage}{0.5\textwidth}
-		\centering\includegraphics[width=0.85\textwidth]{../figs/WENO-FD/figures/Burgers/MMS/weno7_AM_MMS_conv} 
-	\end{minipage}
-} 
- 
 \only<12>{
 \begin{minipage}{0.4\textwidth}
 Supercritical flow on a smooth hump\\
