@@ -265,8 +265,61 @@ Perturbed steady state: $s(U)=U^2$ and $\varphi=x+100\sin x$ +   Gaussian with a
 }
 
 
-
 \only<12>{
+Lake at rest on a parabolic hump. Out of the box method\\
+\begin{minipage}{0.5\textwidth}
+\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/lake_at_rest/weno5_N250_eta} 
+\end{minipage}\hfill
+\begin{minipage}{0.5\textwidth}
+\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/lake_at_rest/weno5_N250_q} 
+\end{minipage}
+}
+
+
+\only<13>{
+Method modification (with both AB and AM):
+$$
+\hat b(x) = \sum_{m}L_{m}(x) b(x_m)
+$$
+with  $\{x_m\}$ the points generating the AMm method. We  proceed as  follows  
+
+$$
+\int_{x_i}^{x_{i+1}}gh b'(x) dx \approx  
+\int_{x_i}^{x_{i+1}}g\eta \hat b'(x) dx  - \int_{x_i}^{x_{i+1}} g \bigg( \dfrac{\hat b^2}{2}\bigg)'dx = g \sum_m \omega_m \eta_m \hat b'(x_m) - g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg)
+$$
+
+}
+
+
+\only<14>{
+For lake at rest:
+$$
+\begin{aligned}
+F_{i+1} - F_i +   g \sum_m \omega_m \eta_m \hat b'(x_m) - g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg) &=\\ 
+g\bigg( \dfrac{ h^2_{i+1}}{2}-\dfrac{ h^2_{i}}{2} \bigg)  
++g \eta_0 \sum_m \omega_m \hat b'(x_m)- g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg) &=\\
+ g\bigg( \dfrac{ (\eta_0-b_{i+1})^2}{2}-\dfrac{ (\eta_0-b_i)^2}{2} \bigg)  +g \eta_0 \int_{x_i}^{x_{i+1}} \hat b'(x)dx - g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg) &=\\
+ -g\eta_0(b_{i+1}-b_i)+   g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg)+   g\eta_0(b_{i+1}-b_i) - g\bigg( \dfrac{ b^2_{i+1}}{2}-\dfrac{ b^2_{i}}{2} \bigg) &= 0
+\end{aligned}
+$$
+
+
+}
+
+\only<15>{
+Lake at rest perturbation\\
+\begin{minipage}{0.4\textwidth}
+\centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/perturbations/weno3_lake_initial} 
+\end{minipage}\hfill
+\begin{minipage}{0.6\textwidth}
+\centering\includegraphics[width=0.8\textwidth]{../figs/WENO-FD/figures/SW/perturbations/weno3_lake_t1p5-1} 
+\end{minipage}
+}
+
+
+
+
+\only<16>{
 \begin{minipage}{0.4\textwidth}
 Supercritical flow on a smooth hump\\
 \centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/Supercritical/super-ini} 
@@ -276,7 +329,7 @@ Supercritical flow on a smooth hump\\
 \end{minipage}
 }
 
-\only<13>{
+\only<17>{
 \begin{minipage}{0.5\textwidth}
 \centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/weno3_sup_DISCsmall_n100_error_ini}
 \end{minipage}\hfill
@@ -286,7 +339,7 @@ Supercritical flow on a smooth hump\\
 }
 
 
-\only<14>{
+\only<18>{
 \begin{minipage}{0.5\textwidth}
 \centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/initial_discbig}
 \end{minipage}\hfill
@@ -296,7 +349,7 @@ Supercritical flow on a smooth hump\\
 }
 
 
-\only<15>{
+\only<19>{
 	\begin{minipage}{0.4\textwidth}
 		Subcritical flow on a smooth hump\\
 		\centering\includegraphics[width=\textwidth]{../figs/WENO-FD/figures/SW/Subcritical/initial_con} 
@@ -306,7 +359,7 @@ Supercritical flow on a smooth hump\\
 	\end{minipage}
 }
 
-\only<16>{
+\only<20>{
 	\begin{minipage}{0.5\textwidth}
 		\centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/initial_sub_disc_small}
 	\end{minipage}\hfill
@@ -315,7 +368,7 @@ Supercritical flow on a smooth hump\\
 	\end{minipage}
 }
 
-\only<17>{
+\only<21>{
 	\begin{minipage}{0.5\textwidth}
 		\centering\includegraphics[width=0.9\textwidth]{../figs/WENO-FD/figures/SW/perturbations/initial_big_sub}
 	\end{minipage}\hfill
@@ -324,7 +377,7 @@ Supercritical flow on a smooth hump\\
 	\end{minipage}
 }
 
-\only<18>{
+\only<22>{
 
 \vspace{0.5cm}
 
