@@ -1,4 +1,4 @@
-itype="P2"#"PGL4" #P1, B2, P2, P3, B3, B4, P4, PGL1, PGL2, PGL3, PGL4
+itype="P1"#"PGL4" #P1, B2, P2, P3, B3, B4, P4, PGL1, PGL2, PGL3, PGL4
 n_el=100#16
 #print("Parameters of the test chosen")
 #-----------------------------------------------------------------------------
@@ -67,6 +67,7 @@ class element:
 
 print("Defining the mesh")
 dx = L/n_el #length of the element
+x0 = dx/2;
 #print(dx)
 
 mesh=[]
@@ -179,7 +180,7 @@ indi=1
 
 for elem in mesh: #loop over the cells
     for indc in range(1,nDoFs): #loop over the coordinates apart from the first
-        x=elem.coor[indc]
+        x=elem.coor[indc]+x0
         xfinal[indi]=x
         b=bathymetry(x)
         #Newton

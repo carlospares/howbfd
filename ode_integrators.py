@@ -5,8 +5,10 @@
 import numpy as np
 from equation import Equation
 from functionH import FunH
+from howbfd_io import IoManager, parse_command_line
 
-
+### Get config file from command line, or load default:
+config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
 def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4, arg5):
     nvars = eqn.dim()
@@ -382,14 +384,34 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsmoulton4(eqn, Hx, H, u, x, i, t):
+def adamsmoulton4(eqn, Hx, H, u, x, i, t, ):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+
     nvars = eqn.dim()
     nsteps= 4
     ab_coeff=[1./24., -5./24., 19./24., 9./24]
 
     sumSHx = np.zeros(nvars)
-    for j in [-3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    if(d_index==None or i <= d_index or i>= d_index + nsteps):
+        print x[i], 'normal'
+        for j in [-3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    elif i == d_index+1:
+        print x[i], 'jump'
+        aver=0.5*(u[:,i-1]+u[:,i])
+        slin= 0.5*(pow(u[:,i-1],2)-pow(u[:,i],2))/(np.log(u[:,i-1])-np.log(u[:,i]))
+        sumSHx[nvars-1] += slin*H(x[i],t)-H(x[i-1],t)
+    elif(i > d_index+1 and i< d_index+1 + nsteps):
+        print x[i], 'after jump'
+        if i == d_index+1 + 2:
+            sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
+        elif i == d_index+1 + 1: 
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+        else:
+            sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i], t)
 
     return sumSHx
 

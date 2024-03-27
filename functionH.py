@@ -33,6 +33,13 @@ class FunH:
             Hnoise = self.noise_amplit*np.random.rand(len(xNeeded))
             self.Hnoiseinterp = InterpolatedUnivariateSpline(xNeeded, Hnoise, k=1) # faster than interp1d!
 
+    def find_disc(self,x,threshold):
+        for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
+            if x[i] * x[i + 1] < 0:
+                return i
+            elif abs(x[i + 1] - x[i]) > threshold:
+                return i
+        return -1  # Return -1 if no discontinuity is found
 
     def H(self, x, t):
         """ Initial condition """
@@ -42,6 +49,7 @@ class FunH:
             H = np.copy(x)
         elif self.funH==self.DISC:
             H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
+            #H = np.exp(0.1*x)*(x <= 0) + np.exp(.9 +x)*(x > 0)
         elif self.funH == self.BUMP:
             H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.funH==self.DISC_BOT:
@@ -79,6 +87,7 @@ class FunH:
             Hx = np.ones_like(x)
         elif self.funH==FunH.DISC:
             Hx = .1*(x <= 0) + 1.*(x > 0)
+            #Hx = 0.1*np.exp(0.1*x)*(x <= 0) + np.exp(0.9+x)*(x > 0)
         elif self.funH == self.BUMP:
             Hx= 0.1*(x-10)*(x>=8)*(x<=12)
         elif self.funH==self.DISC_BOT:
@@ -95,6 +104,8 @@ class FunH:
             Hx =  1.25*np.pi*np.sin(5*np.pi*(x+1.2))*(x<-1)*(x>-1.4)
         elif self.funH == self.BUMPS:
             Hx =-0.05*np.cos(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))+0.1*np.sin(x-12.5)*(x-12.5)*np.exp(1-(x-12.5)*(x-12.5))
+        elif self.funH == self.BUMPT:
+            Hx = -.2*((2.0*(x-10.0)/25.0)/((1-pow(x-10,2)/25)*(1-pow(x-10,2)/25)))*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
         elif self.funH == self.MMSburg:
             Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))        
         return Hx
