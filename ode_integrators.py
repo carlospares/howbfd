@@ -390,22 +390,23 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t, ):
     if config.funh == FunH.DISC:
         d_index=funH.find_disc(x,1.0) #check again for the threshold
 
+    dx = x[2] - x[1]
     nvars = eqn.dim()
     nsteps= 4
     ab_coeff=[1./24., -5./24., 19./24., 9./24]
 
     sumSHx = np.zeros(nvars)
     if(d_index==None or i <= d_index or i>= d_index + nsteps):
-        print x[i], 'normal'
+        #print x[i], 'normal'
         for j in [-3, -2, -1, 0]:
             sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
     elif i == d_index+1:
-        print x[i], 'jump'
-        aver=0.5*(u[:,i-1]+u[:,i])
-        slin= 0.5*(pow(u[:,i-1],2)-pow(u[:,i],2))/(np.log(u[:,i-1])-np.log(u[:,i]))
-        sumSHx[nvars-1] += slin*H(x[i],t)-H(x[i-1],t)
+        delta = 0.5*u[:,i-1]*u[:,i-1]*( np.exp( 2*(H(x[i],t)-H(x[i-1],t))) - 1. )
+        sumSHx[nvars-1] += delta/dx
+        sumSHx[nvars-1] += u[:,i-1]*u[:,i-1]*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += u[:,i]*u[:,i]*Hx(x[i],t)*0.5
     elif(i > d_index+1 and i< d_index+1 + nsteps):
-        print x[i], 'after jump'
+        #print x[i], 'after jump'
         if i == d_index+1 + 2:
             sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
         elif i == d_index+1 + 1: 
