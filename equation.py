@@ -52,7 +52,7 @@ class Equation:
 #            Required for upwind """
 #        raise NotImplementedError
 
-    def discH_jumpF(self, ui, uip1, i, H, x, t):
+    def discH_jumpF(self, ui, uip1, i, dH, x, t):
         """ Return jump .
 
             Required for discontinuous data """

@@ -401,10 +401,32 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         for j in [-3, -2, -1, 0]:
             sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
     elif i == d_index+1:
-        delta = eqn.discH_jumpF(u[:,i-1], u[:,i], i, H, x, t)
+        dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t )
+        
+        # Left extrapolation of the solution and jump computation
+        #A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
+        xx = [ x[i-4]  ,x[i-3] ,x[i-2] , x[i-1]]
+        uu =  [ u[0,i-4]  ,u[0,i-3] ,u[0,i-2] , u[0,i-1]]
+        
+        LL = Lbasis(4,xx,x[i-1]+ 0.5*dx)
+        uleft = 0.0
+        for p in range(0,4):
+            uleft += LL[p]*uu[p]
+            
+        delta = eqn.discH_jumpF( uleft, u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
+        #Left integration
+        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 4, xx, uu, Hx, t)
+        #sumSHx[nvars-1] += Ix/dx
         sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+                
+        #Right integration
+        xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
+        uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
+        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  4, xx, uu, Hx, t)
+        #sumSHx[nvars-1] += Ix/dx
         sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        
     elif(i > d_index+1 and i< d_index+1 + nsteps):
         #print x[i], 'after jump'
         if i == d_index+1 + 2:
@@ -568,3 +590,85 @@ def Lprime(m, xx, y):
         LL[l] = num/den
 
     return LL
+    
+def Lbasis(m, xx, y):
+
+    LL = np.zeros(m)
+    
+    for l in range(0, m):
+        den = 1.0
+        for j in range(0, m):
+            if j!=l:
+                den = den*(xx[l]-xx[j])
+                
+        num = 1.0
+        for j in range(0, m):
+            if j!=l:
+                num = num*(y-xx[j])
+        
+        LL[l] = num/den
+
+    return LL
+    
+def disc_int(eqn, xi, xip1, m, xx, uu, Hx, t):
+ 
+    Ix = 0
+    dx = xip1-xi
+    
+    # 6 points Gauss-Legendre formula
+     # Point 1
+    s = 0.238619186083197 ;
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w = 0.5*0.467913934572691
+    
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+
+   
+    # Point 2
+    s = -0.238619186083197
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w = 0.5*0.467913934572691
+
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+     
+     # Point 3
+    s = 0.661209386466265
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w = 0.5*0.360761573048139
+
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+        
+     # Point 4
+    s = -0.661209386466265
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w = 0.5*0.360761573048139
+    
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+
+     # Point 5
+    s = 0.932469514203152
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w =  0.5*0.171324492379170
+
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+        
+     # Point 6
+    s = -0.932469514203152
+    y = ( 1.0 - s )*0.5*xi + ( 1.0 + s )*0.5*xip1
+    w =  0.5*0.171324492379170
+    
+    LL = Lbasis(m,xx,y)
+    for q in range(0,m):
+        Ix += w*dx*LL[q]*Hx(xx[q],t)*eqn.S(uu[q])
+    
+    return Ix
