@@ -384,7 +384,7 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsmoulton4(eqn, Hx, H, u, x, i, t, ):
+def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
     funH = FunH(x, config)
     d_index = None
     if config.funh == FunH.DISC:
@@ -401,10 +401,10 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t, ):
         for j in [-3, -2, -1, 0]:
             sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
     elif i == d_index+1:
-        delta = 0.5*u[:,i-1]*u[:,i-1]*( np.exp( 2*(H(x[i],t)-H(x[i-1],t))) - 1. )
+        delta = eqn.discH_jumpF(u[:,i-1], u[:,i], i, H, x, t)
         sumSHx[nvars-1] += delta/dx
-        sumSHx[nvars-1] += u[:,i-1]*u[:,i-1]*Hx(x[i-1],t)*0.5
-        sumSHx[nvars-1] += u[:,i]*u[:,i]*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
     elif(i > d_index+1 and i< d_index+1 + nsteps):
         #print x[i], 'after jump'
         if i == d_index+1 + 2:

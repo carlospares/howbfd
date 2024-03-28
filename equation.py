@@ -52,7 +52,12 @@ class Equation:
 #            Required for upwind """
 #        raise NotImplementedError
 
+    def discH_jumpF(self, ui, uip1, i, H, x, t):
+        """ Return jump .
 
+            Required for discontinuous data """
+        raise NotImplementedError
+        
     def steady(self, x):
         """ Returns an arbitrary steady state for the equation.
             Input: 

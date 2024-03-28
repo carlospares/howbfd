@@ -34,6 +34,11 @@ class BurgersEquation(Equation):
         return U*U # std burger's case
         #return U # std burger's case
         #return (U - 1.0)# MMSburg case
+        
+    def discH_jumpF(self, ui, uip1, i, H, x, t):
+        # depends on S
+        delta = 0.5*ui*ui*( np.exp( 2*(H(x[i],t)-H(x[i-1],t))) - 1. )
+        return delta
 
     def Piplus(self,ui, uip1):
         uip12 = .5*(ui + uip1)
