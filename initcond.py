@@ -125,7 +125,7 @@ class InitCond:
         elif self.pert == InitCond.PERT_PATCH:
             pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
-            pert[0] = 0.1*np.exp(-200*(x+0.5)*(x+0.5))
+            pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))
             #pert[0] = 0.005*np.exp(-200*(x+0.5)*(x+0.5))
             #pert[0] = 0.001*np.exp(-200*(x-9.5)*(x-9.5))
         elif self.pert == InitCond.PERT_MGAUSS:

@@ -417,22 +417,32 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         sumSHx[nvars-1] += delta/dx
         #Left integration
         Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 4, xx, uu, Hx, t)
-        #sumSHx[nvars-1] += Ix/dx
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += Ix/dx
+        #sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
                 
         #Right integration
         xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
         uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
         Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  4, xx, uu, Hx, t)
-        #sumSHx[nvars-1] += Ix/dx
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += Ix/dx
+        #sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
         
     elif(i > d_index+1 and i< d_index+1 + nsteps):
         #print x[i], 'after jump'
         if i == d_index+1 + 2:
-            sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
-        elif i == d_index+1 + 1: 
-            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+        #Integration using first 4 good points
+            xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
+            uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
+            Ix = disc_int(eqn, x[i-1], x[i],  4, xx, uu, Hx, t)
+            sumSHx[nvars-1] += Ix/dx
+            #sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
+        elif i == d_index+1 + 1:
+        #Integration using first 4 good points
+            xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
+            uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
+            Ix = disc_int(eqn, x[i-1], x[i],  4, xx, uu, Hx, t)
+            sumSHx[nvars-1] += Ix/dx
+            #sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
         else:
             sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i], t)
 
@@ -507,25 +517,40 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
         delta = eqn.discH_jumpF( uleft, u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
         #Left integration
-        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 4, xx, uu, Hx, t)
-        #sumSHx[nvars-1] += Ix/dx
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 6, xx, uu, Hx, t)
+        sumSHx[nvars-1] += Ix/dx
+        #sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
 
         #Right integration
-        xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
-        uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
-        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  4, xx, uu, Hx, t)
-        #sumSHx[nvars-1] += Ix/dx
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3], x[i+4], x[i+5]]
+        uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3], u[0,i+4], u[0,i+5]]
+        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  6, xx, uu, Hx, t)
+        sumSHx[nvars-1] += Ix/dx
+        #sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
 
     elif(i > d_index+1 and i< d_index+1 + nsteps):
         #print x[i], 'after jump'
         if i == d_index+1 + 2:
-            sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
+        # integration using the first 6 good points
+            xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3], x[i+4], x[i+5]]
+            uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3], u[0,i+4], u[0,i+5]]
+            Ix = disc_int(eqn, x[i-1], x[i],  6, xx, uu, Hx, t)
+            sumSHx[nvars-1] += Ix/dx
+            #sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
         elif i == d_index+1 + 1:
-            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+        # integration using the first 6 good points
+            xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3], x[i+4], x[i+5]]
+            uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3], u[0,i+4], u[0,i+5]]
+            Ix = disc_int(eqn, x[i-1], x[i],  6, xx, uu, Hx, t)
+            sumSHx[nvars-1] += Ix/dx
+            #sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
         elif i == d_index+1 + 3 or i == d_index+1+ 4:
-            sumSHx[nvars-1] += adamsmoulton4(eqn, Hx, H, u, x, i, t)
+        # integration using the first 6 good points
+            xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3], x[i+4], x[i+5]]
+            uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3], u[0,i+4], u[0,i+5]]
+            Ix = disc_int(eqn, x[i-1], x[i],  6, xx, uu, Hx, t)
+            sumSHx[nvars-1] += Ix/dx
+            #sumSHx[nvars-1] += adamsmoulton4(eqn, Hx, H, u, x, i, t)
         else:
             print 'never', i,d_index
             sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i], t)
