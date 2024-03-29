@@ -514,7 +514,7 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
         for p in range(0,nsteps):
             uleft += LL[p]*uu[p]
 
-        delta = eqn.discH_jumpF( uleft, u[:,i], i, dH, x, t)
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
         #Left integration
         Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 6, xx, uu, Hx, t)
