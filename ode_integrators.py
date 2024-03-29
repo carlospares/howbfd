@@ -476,12 +476,59 @@ def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
 
 def adamsmoulton6(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+
+    dx = x[2] - x[1]
+    nvars = eqn.dim()
     nsteps= 6
     ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
 
     sumSHx = np.zeros(nvars)
-    for j in [-5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    if(d_index==None or i <= d_index or i>= d_index + nsteps):
+        #print x[i], 'normal'
+        for j in [-5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    elif i == d_index+1:
+        dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t )
+
+        # Left extrapolation of the solution and jump computation
+        #A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
+        xx = [ x[i-6], x[i-5], x[i-4]  ,x[i-3] ,x[i-2] , x[i-1]]
+        uu =  [ u[0,i-6], u[0,i-5], u[0,i-4]  ,u[0,i-3] ,u[0,i-2] , u[0,i-1]]
+
+        LL = Lbasis(nsteps,xx,x[i-1]+ 0.5*dx)
+        uleft = 0.0
+        for p in range(0,nsteps):
+            uleft += LL[p]*uu[p]
+
+        delta = eqn.discH_jumpF( uleft, u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+        #Left integration
+        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 4, xx, uu, Hx, t)
+        #sumSHx[nvars-1] += Ix/dx
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+
+        #Right integration
+        xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3]]
+        uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3]]
+        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  4, xx, uu, Hx, t)
+        #sumSHx[nvars-1] += Ix/dx
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+
+    elif(i > d_index+1 and i< d_index+1 + nsteps):
+        #print x[i], 'after jump'
+        if i == d_index+1 + 2:
+            sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
+        elif i == d_index+1 + 1:
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+        elif i == d_index+1 + 3 or i == d_index+1+ 4:
+            sumSHx[nvars-1] += adamsmoulton4(eqn, Hx, H, u, x, i, t)
+        else:
+            print 'never', i,d_index
+            sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i], t)
 
     return sumSHx
 
