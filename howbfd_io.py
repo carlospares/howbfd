@@ -82,6 +82,8 @@ class IoManager:
                 plt.show()
             if cf.save_npys:
                 np.save("npys/{}{}.npy".format(tag,t), u)
+                table=np.column_stack([x,u[0]])
+                np.savetxt("npys/{}{}.txt".format(tag,t),table)
             self.plot_counter += 1
             
     def reset_timer(self):
