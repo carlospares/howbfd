@@ -103,8 +103,8 @@ tfin = clock()
 print 'CPU Time: ' + str(tfin-tini)
 
 
-for i in range(N):
-    print x[i],uin[0,i],u[0,i],H[i]
+#for i in range(N):
+#    print x[i],uin[0,i],u[0,i],H[i]
 #    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 

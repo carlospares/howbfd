@@ -25,7 +25,7 @@ T = 0.7#0.0037157669102204603
 plot_every = 0.1 
 show_plots = True
 save_plots = False
-save_npys = False
+save_npys = True
 plot_exact = True
 
 print "Loaded config/burgers_upwind_gf.py!"
