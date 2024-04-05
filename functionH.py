@@ -21,6 +21,7 @@ class FunH:
     BUMPT = 311
     SLOPE = 308
     MMSburg   = 309
+    STEP   = 312
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -67,6 +68,8 @@ class FunH:
         elif self.funH == self.BUMPT:
             H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
             #H = -(0.2-0.05*pow((x-10),2))*(x<12)*(x>8)
+        elif self.funH == self.STEP:
+            H = -.2*(abs(x-10)<5)
         elif self.funH == self.SLOPE:
             H = x + 11
         if self.noise_amplit != 0:
