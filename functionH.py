@@ -69,7 +69,9 @@ class FunH:
             H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
             #H = -(0.2-0.05*pow((x-10),2))*(x<12)*(x>8)
         elif self.funH == self.STEP:
-            H = -.2*(abs(x-10)<5)
+            #H = -.2*(abs(x-10)<5)
+            #H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5) - 0.1*(x>10)*(x<12)
+            H = -.05*np.sin(x-12.5)*np.exp(1-(x-12.5)*(x-12.5)) - 0.1*(x>14)*(x<15)
         elif self.funH == self.SLOPE:
             H = x + 11
         if self.noise_amplit != 0:

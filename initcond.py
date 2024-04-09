@@ -95,8 +95,8 @@ class InitCond:
             U0[1] = U0[1]+4.42#1.53#24.0
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
-            #U0[0] = 2.0 + H
-            U0[0] = 0.66 + H
+            U0[0] = 2.0 + H
+            #U0[0] = 0.66 + H
             U0[1] = 0.0
         elif self.initCond==InitCond.WATER_MASS:
             U0[0]= 1 + H + 1.*(x>9)*(x < 11)
