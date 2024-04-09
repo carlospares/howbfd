@@ -35,12 +35,25 @@ class FunH:
             self.Hnoiseinterp = InterpolatedUnivariateSpline(xNeeded, Hnoise, k=1) # faster than interp1d!
 
     def find_disc(self,x,threshold):
-        for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
-            if x[i] * x[i + 1] < 0:
-                return i
-            elif abs(x[i + 1] - x[i]) > threshold:
-                return i
-        return -1  # Return -1 if no discontinuity is found
+        Y=self.get_disc_points(x)
+        d_index = np.zeros(len(Y))
+        if self.funH==self.DISC:
+            for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
+                dx = x[i + 1] - x[i]
+                if ( x[i] - dx/1000000. ) * x[i + 1] < 0:
+                    d_index[1] = i
+
+        return d_index  # Return -1 if no discontinuity is found
+        
+    def get_disc_points(self, x):
+        Y=np.zeros_like([1])
+        Y[0] = x[0]
+        
+        if self.funH==self.DISC:
+            Y=np.ones_like([1,2])
+            Y[1] = 0
+        
+        return Y
 
     def H(self, x, t):
         """ Initial condition """
