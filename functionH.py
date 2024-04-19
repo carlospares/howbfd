@@ -36,22 +36,30 @@ class FunH:
 
     def find_disc(self,x,threshold):
         Y=self.get_disc_points(x)
-        d_index = np.zeros(len(Y))
+        dx=x[2]-x[1]
+#        d_index = np.zeros(len(Y))
         if self.funH==self.DISC:
-            for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
-                dx = x[i + 1] - x[i]
-                if ( x[i] - dx/1000000. ) * x[i + 1] < 0:
-                    d_index[1] = i
+#            for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
+#                dx = x[i + 1] - x[i]
+#                if ( x[i] - dx/1000000. ) * x[i + 1] < 0:
+#                    d_index[0] = i
+
+            d_index = []
+            for pos in Y:
+                for i, xx in enumerate(x):
+                    if pos-xx < dx and pos-xx >=0.:
+                        d_index.append(i)
 
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        Y=np.zeros_like([1])
-        Y[0] = x[0]
+        #Y=[0]
+        #Y=np.zeros_like([1,2])
+        Y= [0, 0.505]
         
-        if self.funH==self.DISC:
-            Y=np.ones_like([1,2])
-            Y[1] = 0
+#        if self.funH==self.DISC:
+#            Y=np.ones_like([1,2])
+#            Y[1] = 0
         
         return Y
 
@@ -62,7 +70,8 @@ class FunH:
         elif self.funH==self.IDENT:
             H = np.copy(x)
         elif self.funH==self.DISC:
-            H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
+            #H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
+            H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))
             #H = np.exp(0.1*x)*(x <= 0) + np.exp(.9 +x)*(x > 0)
         elif self.funH == self.BUMP:
             H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))

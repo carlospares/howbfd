@@ -14,18 +14,18 @@ funh = FunH.DISC#IDENT
 H_noise_factor = 0.0
 perturb_init = InitCond.PERT_GAUSS#NONE
 boundary = BoundaryCond.FORCE_STEADY_INIT
-nummeth = NumericalMethod.UPWINDWB#GF
+nummeth = NumericalMethod.UPWINDGF
 timest = TimeStepping.TVDRK3
-order = 7 
+order = 3 
 N = 20
 cfl = 0.75
 a = -1
 b = 1
-T = 0.5#0.0037157669102204603
-plot_every = 0.3 
-show_plots = False 
+T = 0.7#0.0037157669102204603
+plot_every = 0.05 
+show_plots = True 
 save_plots = False
-save_npys = True
+save_npys = False
 plot_exact = True
 
 print "Loaded config/burgers_upwind_gf.py!"
