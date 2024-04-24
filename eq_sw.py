@@ -96,6 +96,19 @@ class SWEquation(Equation):
 #        """
 #        print "[ERROR] Upwind only implemented for scalar equations!"
 #        raise NotImplementedError
+
+    def discH_jumpF(self, ui, uip1, i, dH, x, t):
+        # depends on S
+        hbar   = 0.5*( ui[0] + uip1[0] )
+        hubar  = 0.5*( ui[1] + uip1[1] )
+        ratio  = hubar*hubar/( self.g*(ui[0]*uip1[0])*(ui[0]*uip1[0]))
+        num    = ratio*( hbar*hbar - ui[0]*uip1[0] )
+        den    = 1.0 - ratio*hbar
+        htilde = hbar + num/den
+        
+        
+        delta = self.g*htilde*dH
+        return delta
         
     def Piplus(self, ui, uip1):
         hl = ui[0]

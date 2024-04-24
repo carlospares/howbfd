@@ -416,7 +416,7 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
         dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
         if(abs(dH) <= 0.000001):
-            dH = H(x[i-1]+ 0.5*dx + dx/2, t ) - H(x[i-1]+ 0.5*dx - dx/2, t ) #if the disc is on the face 
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
             #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
             
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
