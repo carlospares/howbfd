@@ -10,9 +10,9 @@ from timest import TimeStepping
 
 equation = Equation.BURGERS
 init = InitCond.STEADY
-funh = FunH.DISC#IDENT
+funh = FunH.DISC#PAR#DISC#IDENT
 H_noise_factor = 0.0
-perturb_init = InitCond.PERT_GAUSS#NONE
+perturb_init = InitCond.PERT_NONE#PERT_GAUSS#NONE
 boundary = BoundaryCond.FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDGF#WB#GF
 timest = TimeStepping.TVDRK3
@@ -22,7 +22,7 @@ cfl = 0.75
 a = -1
 b = 1
 T = 0.7#0.0037157669102204603
-plot_every = 0.3
+plot_every = 0.1
 show_plots = True 
 save_plots = False
 save_npys = False

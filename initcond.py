@@ -50,6 +50,7 @@ class InitCond:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
             U0 = self.eqn.steady(H,x)
+            #U0 = np.exp(x**2)
         elif self.initCond==InitCond.PWPOLY:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.initCond==InitCond.FLAT:

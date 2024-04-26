@@ -22,6 +22,7 @@ class FunH:
     SLOPE = 308
     MMSburg   = 309
     STEP   = 312
+    PAR   = 313
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -49,13 +50,14 @@ class FunH:
                 for i, xx in enumerate(x):
                     if pos-xx < dx and pos-xx >=0.:
                         d_index.append(i)
+            #d_index=None            
 
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        #Y=[0]
+        Y=[0.0]
         #Y=np.zeros_like([1,2])
-        Y= [0, 0.505]
+        #Y= [0, 0.505]
         
 #        if self.funH==self.DISC:
 #            Y=np.ones_like([1,2])
@@ -70,9 +72,10 @@ class FunH:
         elif self.funH==self.IDENT:
             H = np.copy(x)
         elif self.funH==self.DISC:
-            #H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
-            H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))
-            #H = np.exp(0.1*x)*(x <= 0) + np.exp(.9 +x)*(x > 0)
+            ##H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
+            #H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))
+            ##H = np.exp(0.1*x)*(x <= 0) + np.exp(.9 +x)*(x > 0)
+            H = x*x +0.1*(x>0)
         elif self.funH == self.BUMP:
             H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.funH==self.DISC_BOT:
@@ -100,6 +103,8 @@ class FunH:
             H += self.Hnoiseinterp(x)
         elif self.funH==self.MMSburg:
             H = np.exp(-(x-5.0-t)*(x-5.0-t))
+        elif self.funH==self.PAR:
+            H= x*x
         return H
     
     def Hx(self, x, t):
@@ -113,8 +118,9 @@ class FunH:
         elif self.funH==FunH.IDENT:
             Hx = np.ones_like(x)
         elif self.funH==FunH.DISC:
-            Hx = .1*(x <= 0) + 1.*(x > 0)
-            #Hx = 0.1*np.exp(0.1*x)*(x <= 0) + np.exp(0.9+x)*(x > 0)
+            #Hx = .1*(x <= 0) + 1.*(x > 0)
+            ##Hx = 0.1*np.exp(0.1*x)*(x <= 0) + np.exp(0.9+x)*(x > 0)
+            Hx=2.0*x 
         elif self.funH == self.BUMP:
             Hx= 0.1*(x-10)*(x>=8)*(x<=12)
         elif self.funH==self.DISC_BOT:
@@ -135,5 +141,7 @@ class FunH:
             Hx = -.2*((2.0*(x-10.0)/25.0)/((1-pow(x-10,2)/25)*(1-pow(x-10,2)/25)))*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5)
         elif self.funH == self.MMSburg:
             Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))        
+        elif self.funH == self.PAR:
+            Hx=2.0*x 
         return Hx
 

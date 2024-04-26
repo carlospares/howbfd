@@ -71,15 +71,14 @@ def AM4Dirac(a,b,N,f0, S, Hx,jumpH):
         f[k] = sqrt(psi)
 
         if(abs(x[k-1])) < h/4.0: 
-            dH = H(x[k],jumpH)-H(x[k-1],jumpH)
-            #print 'jump',k
-            f[k] = delta(f[k-1],dH)/h
-            kjump=k
-        elif(k<kjump+3 and k>kjump):
-            #print 'AM2',k
+            dH = H(x[k-1]+0.0000001,jumpH)-H(x[k-1]-0.00000001,jumpH)
+            f[k]= sqrt(f[k-1]**2 *exp(2*dH)**2)
+            kjump=k-1
+        elif(k<kjump+3 and k>=kjump+1):
+            print 'AM2',k,k-1
             beta2 = [1./2., 1./2.]
-            psi1 = 0.5*f[k-1]*f[k-1] + h*(beta[1]*S(f[k-1])*Hx(x[k-1]))
-            den  = 0.5 - h*beta[0]*Hx(x[k])
+            psi1 = 0.5*f[k-1]*f[k-1] + h*(beta2[1]*S(f[k-1])*Hx(x[k-1]))
+            den  = 0.5 - h*beta2[0]*Hx(x[k])
             psi  = psi1/den
             f[k] = sqrt(psi)
 
@@ -89,7 +88,7 @@ def AM4Dirac(a,b,N,f0, S, Hx,jumpH):
 
 
 def delta(f, dH):
-    return 0.5*f*f*(np.exp(dH)-1.0)
+    return sqrt(f**2 *exp(2*dH)**2)
 
 def S(f):
     result = f*f
@@ -121,7 +120,7 @@ plt.figure('AM4 continuous')
 print('AM4. H continuous')
 print('#################')
 
-jumpH = 1
+jumpH = 0.1
 
 for N in mesh:
     #(x,f) = AM4smooth(a,b,N, 1, S,Hx,jumpH)
@@ -138,6 +137,9 @@ plt.plot(x,exacta(x,jumpH))
 plt.legend(leg)
 plt.show()
 
+plt.figure('H')
+plt.plot(x,H(x,jumpH))
+plt.show()
 ###################  AB3 continuous Discontinuous H
 
 

@@ -399,11 +399,12 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
     ab_coeff=[1./24., -5./24., 19./24., 9./24]
     
     indicator = 'normal'
-    for num in d_index:
-        if num + 1 == i:
-            indicator = 'jump'
-        elif i >= num+1+1 and i<=num + 1 + nsteps:
-            indicator='AM2'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
 
 #    for j in range (0,len(Y)):
 #        if ( i > d_index[j]  and i <= d_index[j]+1  ):
@@ -418,7 +419,7 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         if(abs(dH) <= 0.000001):
             dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
             #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
-            
+        
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
 
