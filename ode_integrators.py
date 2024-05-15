@@ -152,13 +152,48 @@ def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
     return sumSHx
 
 def adamsbashforth4(eqn, Hx, H, u, x, i, t):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+        
+    dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 4
     ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
+    
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + nsteps:
+                indicator='AM2'
 
-    sumSHx = np.zeros(nvars)
-    for j in [-4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+    
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
 
     return sumSHx
 
@@ -198,13 +233,48 @@ def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     return sumSHx
 
 def adamsbashforth6(eqn, Hx, H, u, x, i, t):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+        
+    dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 6
     ab_coeff=[-475./1440., 2877./1440., -7298./1440., 9982./1440,  -7923./1440., 4277./1440.]
+    
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + nsteps:
+                indicator='AM2'
 
-    sumSHx = np.zeros(nvars)
-    for j in [-6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+    
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-6, -5, -4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
 
     return sumSHx
 
@@ -244,13 +314,56 @@ def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
     return sumSHx
 
 def adamsbashforth8(eqn, Hx, H, u, x, i, t):
+#    nvars = eqn.dim()
+#    nsteps= 8
+#    ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+#
+#    sumSHx = np.zeros(nvars)
+#    for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
+#        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+        
+    dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 8
     ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+    
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + nsteps:
+                indicator='AM2'
 
-    sumSHx = np.zeros(nvars)
-    for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+    
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-8, -7, -6, -5, -4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
 
     return sumSHx
 
