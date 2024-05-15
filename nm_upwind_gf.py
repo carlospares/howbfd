@@ -8,6 +8,14 @@ from nosteadyexc import NoSteadyError
 from nummeth import NumericalMethod
 from equation import Equation
 from functionH import FunH
+from howbfd_io import IoManager, parse_command_line
+
+### Get config file from command line, or load default:
+config = parse_command_line() # from howbdf_io, defaults to howbdf_config
+
+nsteps = config.steps
+multmeth = config.ode
+
 
 class UpwindGF(NumericalMethod):
     """ 1D scalar linear transport equation with mass term
@@ -50,7 +58,7 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
-        nsteps = 4
+#        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
 
@@ -64,9 +72,9 @@ class UpwindGF(NumericalMethod):
             xloc[nsteps-gw:nsteps] =  x[0:gw] ### local extended u for the ode
             k=1
             for i in reversed(range(nsteps-gw)):
-                uloc[:,i] = np.exp(x[0]-k*dx)**2  #Ugly hack for convergence in steady case
+                #uloc[:,i] = np.exp(x[0]-k*dx)**2  #Ugly hack for convergence in steady case
                 #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                #uloc[:,i] = u[:,0] 
+                uloc[:,i] = u[:,0] 
                 xloc[i] = x[0]-k*dx
                 k +=1
             #prin uloc    
@@ -98,7 +106,7 @@ class UpwindGF(NumericalMethod):
         for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
             #print i,iOff,np.size(uloc)
-            sumSHx=odi.odeint(nsteps,'AM', eqn, Hx, H, uloc, xloc, iOff, tloc)
+            sumSHx=odi.odeint(nsteps,multmeth, eqn, Hx, H, uloc, xloc, iOff, tloc)
             
 
             fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx

@@ -83,7 +83,7 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
-        Ustar[0] = uConstr*np.exp(H - HConstr)
+        Ustar[0] = uConstr*np.exp(H-HConstr)
         return Ustar
 
     def prepare_plot(self,x,u,H,t):

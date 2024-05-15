@@ -58,6 +58,9 @@ class Parameters:
         self.a = cf.a
         self.b = cf.b 
         self.T = cf.T
+        self.steps = cf.steps
+        self.ode = cf.ode
+        self.system = cf.system
         self.plot_every = cf.plot_every
         self.show_plots = cf.show_plots
         self.save_plots = cf.save_plots

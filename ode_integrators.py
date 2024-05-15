@@ -12,56 +12,52 @@ config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
 def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4, arg5):
     nvars = eqn.dim()
-    if nsteps == 4 and multmeth == 'AM':
-        if nvars == 1:
-            return adamsmoulton4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsmoulton4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 4 and multmeth == 'AB':
-        if nvars == 1:
-            return adamsbashforth4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsbashforth4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 6 and multmeth == 'AM':
-        if nvars == 1:
-            return adamsmoulton6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsmoulton6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 6 and multmeth == 'AB':
-        if nvars == 1:
-            return adamsbashforth6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsbashforth6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 8 and multmeth == 'AM' :
-        if nvars == 1:
-            return adamsmoulton8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsmoulton8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 8 and multmeth == 'AB' :
-        if nvars == 1:
-            return adamsbashforth8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsbashforth8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 2 and multmeth == 'AM':
-        if nvars == 1:
-            return adamsmoulton2(eqn, arg0, arg1, arg2, arg3, arg4, arg5)# MARIO!!!!
-        elif nvars ==2:
-            return adamsmoulton2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)# MARIO!!!!
-    elif nsteps == 3 and multmeth == 'AM':
-        if nvars == 1:
-            return adamsmoulton3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsmoulton3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-    elif nsteps == 2 and multmeth == 'AB':
-        if nvars == 1:
-            return adamsbashforth2(eqn, arg0, arg1, arg2, arg3, arg4, arg5)# MARIO!!!!
-        elif nvars ==2:
-            return adamsbashforth2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)# MARIO!!!!
-    elif nsteps == 3 and multmeth == 'AB':
-        if nvars == 1:
-            return adamsbashforth3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
-        elif nvars ==2:
-            return adamsbashforth3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+    if config.system == 'No':
+        if multmeth == 'AM':
+            if nsteps == 2 :
+                return adamsmoulton2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsmoulton3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsmoulton4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsmoulton6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsmoulton8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+        elif multmeth == 'AB':
+            if nsteps == 2 :
+                return adamsbashforth2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsbashforth3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsbashforth4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsbashforth6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsbashforth8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+    elif config.system == 'SW':
+        if multmeth == 'AM':
+            if nsteps == 2 :
+                return adamsmoulton2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsmoulton3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsmoulton4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsmoulton6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsmoulton8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+        elif multmeth == 'AB':
+            if nsteps == 2 :
+                return adamsbashforth2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsbashforth3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsbashforth4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsbashforth6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsbashforth8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
         
 def adamsbashforth2(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
@@ -406,12 +402,8 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
             elif i >= num+1+1 and i<=num + 1 + nsteps:
                 indicator='AM2'
 
-#    for j in range (0,len(Y)):
-#        if ( i > d_index[j]  and i <= d_index[j]+1  ):
-#            print i,d_index[j],d_index[j+1] 
     if ( indicator == 'AM2'):
             sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
-#        elif i == d_index[j] + 1:
     elif (indicator == 'jump'):
         #print i, 'hello'
         #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
@@ -431,50 +423,6 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
     else :
         for k in [-3, -2, -1, 0]:
             sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
-#        else :
-#            for k in [-3, -2, -1, 0]:
-#                sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
-    
-#    if( d_index==None  or i <= d_index or i>= d_index + nsteps):
-#        #print x[i], 'normal'
-#        for j in [-3, -2, -1, 0]:
-#            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
-#    elif i == d_index+1:
-#        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1]  - 0.0000000001, t )
-#        #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t )
-#
-#        # Left extrapolation of the solution and jump computation
-#        xx = x[i-nsteps:i-1 +1]
-#        uu=u[:,i-nsteps:i-1 +1]
-#
-##        LL = Lbasis(4,xx,x[i-1]+ 0.5*dx)
-##        uleft = 0.0
-##        for p in range(0,4):
-##            uleft += LL[p]*uu[:,p]
-#
-#        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
-#        sumSHx[nvars-1] += delta/dx
-#
-#        #Left integration
-#        #Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 4, xx, uu, Hx, t)
-#        #sumSHx[nvars-1] += Ix/dx
-#        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
-#
-#        #Right integration
-#        xx= x[i:i+nsteps]
-#        uu = u[:,i:i+nsteps]
-#        #Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  4, xx, uu, Hx, t)
-#        #sumSHx[nvars-1] += Ix/dx
-#        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
-#
-#    elif(i > d_index+1 and i< d_index+1 + nsteps):
-#        if i == d_index+1 + 2 or d_index+1 :
-#        #Integration using first 4 good points
-#            xx= x[i:i+nsteps]
-#            uu = u[:,i:i+nsteps]
-#            #Ix = disc_int(eqn, x[i-1], x[i],  4, xx, uu, Hx, t)
-#            #sumSHx[nvars-1] += Ix/dx
-#            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
 
     return sumSHx
 
@@ -523,52 +471,38 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
 
     dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 6
     ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
 
-    sumSHx = np.zeros(nvars)
-    if(d_index==None or i <= d_index or i>= d_index + nsteps):
-        #print x[i], 'normal'
-        for j in [-5, -4, -3, -2, -1, 0]:
-            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
-    elif i == d_index+1:
-        dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t )
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
 
-        # Left extrapolation of the solution and jump computation
-
-        xx = x[i-nsteps:i-1 +1]
-        uu=u[:,i-nsteps:i-1 +1]
-
-        LL = Lbasis(nsteps,xx,x[i-1]+ 0.5*dx)
-        uleft = 0.0
-        for p in range(0,nsteps):
-            uleft += LL[p]*uu[:,p]
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
 
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
+
         #Left integration
-        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 6, xx, uu, Hx, t)
-        sumSHx[nvars-1] += Ix/dx
-        #sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
 
         #Right integration
-        xx= x[i:i+nsteps] #i:i+5+1
-        uu = u[:,i:i+nsteps]
-        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  6, xx, uu, Hx, t)
-        sumSHx[nvars-1] += Ix/dx
-        #sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
-
-    elif(i > d_index+1 and i< d_index+1 + nsteps):
-        #print x[i], 'after jump'
-        if i >= d_index+1 + 1 or i<=d_index+1 + 4:
-        # integration using the first 6 good points
-            #xx = [ x[i]  ,x[i+1] ,x[i+2] , x[i+3], x[i+4], x[i+5]]
-            #uu =  [ u[0,i]  ,u[0,i+1] ,u[0,i+2] , u[0,i+3], u[0,i+4], u[0,i+5]]
-            xx= x[i:i+nsteps] #i:i+5+1
-            uu = u[:,i:i+nsteps]
-            Ix = disc_int(eqn, x[i-1], x[i],  6, xx, uu, Hx, t)
-            sumSHx[nvars-1] += Ix/dx
-            #sumSHx[nvars-1] += adamsmoulton3(eqn, Hx, H, u, x, i, t)
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
 
     return sumSHx
 
@@ -618,51 +552,40 @@ def adamsmoulton8(eqn, Hx, H, u, x, i, t):
 
     dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 8
     ab_coeff=[1375./120960., -11351./120960., 41499./120960.,  -88547./120960., 123133./120960., -121797./120960, 139849./120960., 36799/120960.]
 
 
-    sumSHx = np.zeros(nvars)
-    if(d_index==None or i <= d_index or i>= d_index + nsteps):
-        #print x[i], 'normal'
-        for j in [-7, -6, -5, -4, -3, -2, -1, 0]:
-            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
-    elif i == d_index+1:
-        dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t )
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
 
-        # Left extrapolation of the solution and jump computation
-        #A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
-        xx = x[i-nsteps:i-1 +1]
-        uu=u[:,i-nsteps:i-1 +1]
-
-        LL = Lbasis(nsteps,xx,x[i-1]+ 0.5*dx)
-        uleft = 0.0
-        for p in range(0,nsteps):
-            uleft += LL[p]*uu[:,p]
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
 
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
+
         #Left integration
-        Ix = disc_int(eqn, x[i-1], x[i-1]+0.5*dx, 8, xx, uu, Hx, t)
-        sumSHx[nvars-1] += Ix/dx
-        #sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
 
         #Right integration
-        xx= x[i:i+nsteps] #i:i+5+1
-        uu = u[:,i:i+nsteps]
-        Ix = disc_int(eqn, x[i-1]+0.5*dx, x[i],  8, xx, uu, Hx, t)
-        sumSHx[nvars-1] += Ix/dx
-        #sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-7, -6, -5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
 
-    elif(i > d_index+1 and i< d_index+1 + nsteps):
-        #print x[i], 'after jump'
-        if i >= d_index+1 + 1 or i<=d_index+1 + 6:
-        # integration using the first 8 good points
-            xx= x[i:i+nsteps] #i:i+5+1
-            uu = u[:,i:i+nsteps]
-            Ix = disc_int(eqn, x[i-1], x[i],  8, xx, uu, Hx, t)
-            sumSHx[nvars-1] += Ix/dx
-            #sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
     return sumSHx
 
 def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
