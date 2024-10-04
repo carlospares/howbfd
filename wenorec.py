@@ -71,6 +71,7 @@ def weno5_rec(phim2, phim1, phi0, phip1, phip2):
     alpha0 = 0.1 /(beta0 + eps)/(beta0 + eps)
     alpha1 = 0.6 /(beta1 + eps)/(beta1 + eps)
     alpha2 = 0.3 /(beta2 + eps)/(beta2 + eps)
+
 #    alpha0 = 0.1
 #    alpha1= 0.6
 #    alpha2 = 0.3

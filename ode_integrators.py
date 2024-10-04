@@ -540,47 +540,90 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
     return sumSHx
 
 def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC or config.funh == FunH.STEP:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+
+
+    dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 4
     ab_coeff=[1./24., -5./24., 19./24., 9./24]
 
     ddx = x[i] - x[i-1]
     g = 9.812
 
-    # Collect:
-    # - stencil nodes
-    # - eta values (REMARK: really specific to gravity source !!!!)
-    # - bathymetry and bathymetry derivatives values
-    xx  = np.zeros(nsteps)
-    eta = np.zeros(nsteps)
-    bb  = np.zeros(nsteps)
-    for l in range(0,nsteps):
-        xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+    if ( indicator == 'AM2'):
+        #sumSHx[nvars-1] += adamsmoulton2SW(eqn, Hx, H, u, x, i, t)
+        sumSHx=adamsmoulton2SW(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        print 'jump'
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+        
+#        #Left integration
+#        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+#    
+#        #Right integration
+#        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+
+    else:
+        # Collect:
+        # - stencil nodes
+        # - eta values (REMARK: really specific to gravity source !!!!)
+        # - bathymetry and bathymetry derivatives values
+        xx  = np.zeros(nsteps)
+        eta = np.zeros(nsteps)
+        bb  = np.zeros(nsteps)
+        for l in range(0,nsteps):
+            xx[l] = x[i-nsteps+l+1]
+            eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+            bb[l] = H(x[i-nsteps+l+1],t)
+
+        Bx = np.zeros(nsteps)
+        for q in range(0,nsteps):
+            Bx[q] = 0.0
+            LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+            for p in range(0,nsteps):
+                Bx[q] = Bx[q] + LL[p]*bb[p]
 
     # Compute integrated source
 
-    sumSHx = np.zeros(nvars)
-    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-    for j in [-3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        sumSHx = np.zeros(nvars)
+        sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+        for j in [-3, -2, -1, 0]:
+            #sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Hx(x[i+j],t)
+
 
     return sumSHx
 
 def adamsmoulton6(eqn, Hx, H, u, x, i, t):
-    nvars = eqn.dim()
     funH = FunH(x, config)
     d_index = None
     if config.funh == FunH.DISC:
         d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
 
     dx = x[2] - x[1]
     nvars = eqn.dim()
@@ -620,39 +663,72 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
     return sumSHx
 
 def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC: #or config.funh == FunH.STEP:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+
+    Y = funH.get_disc_points(x)
+
+
+    dx = x[2] - x[1]
     nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
     nsteps= 6
     ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
-
 
     ddx = x[i] - x[i-1]
     g = 9.812
 
-    # Collect:
-    # - stencil nodes
-    # - eta values (REMARK: really specific to gravity source !!!!)
-    # - bathymetry and bathymetry derivatives values
-    xx  = np.zeros(nsteps)
-    eta = np.zeros(nsteps)
-    bb  = np.zeros(nsteps)
-    for l in range(0,nsteps):
-        xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+    if ( indicator == 'AM2'):
+        #sumSHx[nvars-1] += adamsmoulton2SW(eqn, Hx, H, u, x, i, t)
+        sumSHx=adamsmoulton2SW(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print 'jump'
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
 
-    # Compute integrated source
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+    else:
 
-    sumSHx = np.zeros(nvars)
-    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-    for j in [-5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        # Collect:
+        # - stencil nodes
+        # - eta values (REMARK: really specific to gravity source !!!!)
+        # - bathymetry and bathymetry derivatives values
+        xx  = np.zeros(nsteps)
+        eta = np.zeros(nsteps)
+        bb  = np.zeros(nsteps)
+        for l in range(0,nsteps):
+            xx[l] = x[i-nsteps+l+1]
+            eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+            bb[l] = H(x[i-nsteps+l+1],t)
+
+        Bx = np.zeros(nsteps)
+        for q in range(0,nsteps):
+            Bx[q] = 0.0
+            LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+            for p in range(0,nsteps):
+                Bx[q] = Bx[q] + LL[p]*bb[p]
+
+        # Compute integrated source
+
+        sumSHx = np.zeros(nvars)
+        sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+        for j in [-5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
 
     return sumSHx
 

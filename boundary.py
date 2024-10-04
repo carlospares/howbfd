@@ -53,9 +53,9 @@ class BoundaryCond:
 #            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
             # ---subcritical
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-            uNew[0,:gw] =  uOld[0,gw:0:-1]
+            uNew[0,:gw] =  uOld[0,gw:0:-1] #bc on the left
 
-            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])  #bc on the right
             uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
 
         elif self.bc==BoundaryCond.LIN_EXTRAP:

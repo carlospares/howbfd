@@ -62,7 +62,7 @@ for level in range(0, config.refinements+1):
 
     ### Main loop
     while t < config.T:
-        print level,t
+#        print level,t
         up=u
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
 #        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
@@ -70,8 +70,8 @@ for level in range(0, config.refinements+1):
         t += dt
         io_manager.io_if_appropriate(x, u, H, t, config)
 
-#        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
-#        print "Time ",t," Error at N={} is {}".format(N, errors[level])
+        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
+        print "Time ",t," Error at N={} is {}".format(N, errors[level])
 
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
@@ -104,8 +104,8 @@ print 'CPU Time: ' + str(tfin-tini)
 
 
 for i in range(N):
-    print x[i],uin[0,i],u[0,i],H[i]
-#    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
+#    print x[i],uin[0,i],u[0,i],H[i]
+    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 
 if config.refinements > 0:

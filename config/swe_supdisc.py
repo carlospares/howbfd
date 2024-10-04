@@ -9,24 +9,27 @@ from timest import TimeStepping
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.SW
-init = InitCond.STEADY
-funh = FunH.BUMPD
+init = InitCond.READ_FROM_FILE
+funh = FunH.BUMPS
 H_noise_factor = 0
-perturb_init = InitCond.PERT_WB
+perturb_init = InitCond.PERT_NONE#WB
 boundary = BoundaryCond.IN_OUT
 nummeth = NumericalMethod.UPWIND
 timest = TimeStepping.TVDRK3
-order = 5
-N = 300
-a = -3
-b = 3
+order = 3
+N = 100
+a = 0
+b = 25
 cfl = 0.5
-T = .2
+T = 20.0
+steps = 4
+ode = 'AM'
+system ='SW'
 plot_exact = False
-plot_every = .2
+plot_every = 200.5
 show_plots = True
 save_plots = False
-save_npys = True
+save_npys = False
 
 
 

@@ -61,7 +61,7 @@ class IoManager:
         plots (x,u) if at this timestep, t passed get_next_plot_time()
         """
         if t >= self.get_next_plot_time():
-#            print t
+#            print '-----',t
             (nvars, N) = u.shape
             plt.clf()
             self.eqn.prepare_plot(x, u, H, t)
@@ -82,7 +82,8 @@ class IoManager:
                 plt.show()
             if cf.save_npys:
                 np.save("npys/{}{}.npy".format(tag,t), u)
-                table=np.column_stack([x,u[0]])
+                table=np.column_stack([x,u[0],u[1],H])
+                #table=np.column_stack([x,u[0],H])
                 np.savetxt("npys/{}{}.txt".format(tag,t),table)
             self.plot_counter += 1
             

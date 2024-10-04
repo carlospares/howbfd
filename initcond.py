@@ -61,39 +61,41 @@ class InitCond:
             xx = []
             N=len(x)
             if N == 25:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_25.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_25.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_25.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_25.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_25.dat', 'r')
             elif N== 50:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_50.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_50.dat', 'r')
             elif N== 100:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_100.dat', 'r')
-                #U0=exact=self.steady_form_file(x)
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_100.dat', 'r')
+                U0=exact=self.steady_form_file(x)
             elif N== 200:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_200.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_200.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_200.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_200.dat', 'r')
+                U0=exact=self.steady_form_file(x)
             elif N== 400:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_400.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_400.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_400.dat', 'r')
             elif N== 800:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_800.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_800.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_800.dat', 'r')
             elif N== 5000:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
-            for y in file_in.read().split('\n'):
-                #if y.isdigit():
-                xx.append(float(y))
-            U0[0] = xx#2 + H
-            U0[1] = U0[1]+4.42#1.53#24.0
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
+#            for y in file_in.read().split('\n'):
+#                #if y.isdigit():
+#                xx.append(float(y))
+#            U0[0] = xx#2 + H
+#            U0[1] = U0[1]+4.42#1.53#24.0
+
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
             U0[0] = 2.0 + H
@@ -165,14 +167,14 @@ class InitCond:
 #        U0[0] = xx#2 + H
 #        #print U0[0]
 #        U0[1] = 1.53#U0[1]+24.0
-        with open('subcritical_sw/Weno3_AM4/out100.txt', 'r') as file:
+        with open('initial_data/analytical_sw/subcritical_step/weno3_am6_sub_200.txt', 'r') as file:
              # Initialize empty lists for each column
             column1 = []
             column2 = []
             column3 = []
             column4 = []
-            column5 = []
-            column6 = []
+#            column5 = []
+#            column6 = []
 
             # Iterate over each line in the file
             for line in file:
@@ -184,18 +186,18 @@ class InitCond:
                 column2.append(float(elements[1]))
                 column3.append(float(elements[2]))
                 column4.append(float(elements[3]))
-                column5.append(float(elements[4]))
-                column6.append(float(elements[5]))
+#                column5.append(float(elements[4]))
+#                column6.append(float(elements[5]))
         # Convert lists to numpy arrays
         column1 = np.array(column1)
         column2 = np.array(column2)
         column3 = np.array(column3)
         column4 = np.array(column4)
-        column5 = np.array(column5)
-        column6 = np.array(column6)
+#        column5 = np.array(column5)
+#        column6 = np.array(column6)
 
-        U0[0]=column4
-        U0[1]=column5
+        U0[0]=column2
+        U0[1]=column3
 
         return U0
 

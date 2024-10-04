@@ -345,7 +345,8 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        plt.plot(x, -H, 'b', label='-H')
+#        plt.plot(x, -H, 'b', label='-H')
+        plt.plot(x, -H, 'b', label='b')
         plt.plot(x, u[0]-H, 'g', label='$\eta$')
 #        plt.plot(x, u[0], 'r', label='h')
         plt.legend()
