@@ -21,9 +21,9 @@ N = 20
 cfl = 0.75
 a = -1
 b = 1
-T = 0.8#0.0037157669102204603
+T = 0.7#0.0037157669102204603
 steps=6
-ode='AB'
+ode='AM'
 system='No'
 plot_every = 0.1
 show_plots = True 
@@ -31,4 +31,4 @@ save_plots = False
 save_npys = False
 plot_exact = True
 
-print "Loaded config/burgers_upwind_gf.py!"
+print ("Loaded config/burgers_upwind_gf.py!")

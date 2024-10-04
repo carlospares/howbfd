@@ -36,10 +36,10 @@ class FluxSplitWB(NumericalMethod):
             fails += fail
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
-                print 'fails at ', x[i]
+                print ('fails at ', x[i])
                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i])
         if fails>0:
-            print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
+            print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend
     
     def flux(self, u, x, H, eqn):
@@ -56,7 +56,7 @@ class FluxSplitWB(NumericalMethod):
             ustar = eqn.steady_constraint(H[i], u[:,i], H,x, u)
             phip = eqn.Fp(u) - eqn.Fp(ustar)   # phi plus
             phim = eqn.Fm(u) - eqn.Fm(ustar)  # phi minus
-        except NoSteadyError, e: # no steady state exists! Default to basic WENO
+        except (NoSteadyError, e): # no steady state exists! Default to basic WENO
             #print "NoSteadyError triggered: {}".format(str(e))
             phip = eqn.Fp(u)  # phi plus
             phim = eqn.Fm(u) # phi minus

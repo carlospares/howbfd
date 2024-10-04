@@ -17,7 +17,11 @@ def equation_factory(cf):
         return SWEquation()
     elif eqn == Equation.SW_WAR:
         return SWEquationWAR()
+   # elif eqn == Equation.EulerGrav:
+   #     return EuGravEquation()
+   # elif eqn == Equation.EulerSec:
+   #     return EuSecEquation()
     else:
-        print "[ERROR] Equation not recognized!!"
-        print "	...Returning generic Equation object, but nothing will work."
+        print ("[ERROR] Equation not recognized!!")
+        print ("	...Returning generic Equation object, but nothing will work.")
         return Equation()

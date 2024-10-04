@@ -11,10 +11,11 @@ from equation import Equation
 from nosteadyexc import NoSteadyError
 
 class SWEquation(Equation):
-    """ 1D shallow water equation, vars [h,q=hu] 
+    """ 1D Euler  equation, vars [rho,q=rho u, rho E],  E = rho e + rho u^2/2 = p/(gm-1)  + rho u^2/2
 
-        h_t +  q_x               = 0
-        q_t + (q^2/h + gh^2/2)_x = gh H_x
+        rho_t +  q_x               = 0
+        q_t + (q^2/rho + p)_x = -rho H_x
+        E_t + (uE + pu/rho)_x = -rho u Hx
 
     """
     

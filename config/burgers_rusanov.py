@@ -28,4 +28,4 @@ save_plots = False
 save_npys = False
 plot_exact = True
 
-print "Loaded config/burgers_rusanov.py!"
+print ("Loaded config/burgers_rusanov.py!")

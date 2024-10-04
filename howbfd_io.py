@@ -103,7 +103,7 @@ class IoManager:
         Probably obsolete with equation.exact() and EOC...
         """
         uSteady = eqn.steady(H)
-        print "L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uSteady),1))
+        print ("L1 distance to steady solution: {}".format((x[1]-x[0])*np.sum(np.abs(u-uSteady),1)))
         
     def plot_eoc(self, dxs, errors, order=None):
         """

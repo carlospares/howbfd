@@ -57,6 +57,6 @@ def nummeth_factory(cf):
     elif nm == NumericalMethod.RUSANOVGWB1:
         return RusanovGWB1(cf)
     else:
-        print "[ERROR] Equation not recognized!!"
-        print "	...Returning generic Numerical Method object, but nothing will work."
+        print ("[ERROR] Equation not recognized!!")
+        print ("	...Returning generic Numerical Method object, but nothing will work.")
         return NumericalMethod()

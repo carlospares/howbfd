@@ -29,4 +29,4 @@ show_plots = True
 save_plots = False
 save_npys = False
 
-print "Loaded config/swe_flat.py!"
+print ("Loaded config/swe_flat.py!")

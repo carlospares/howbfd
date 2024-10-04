@@ -11,7 +11,8 @@ from functionH import FunH
 from boundary import BoundaryCond
 from timest import TimeStepping
 from howbfd_io import IoManager, parse_command_line#, safe_name
-from time import clock
+#from time import clock
+from datetime import datetime
 import os
 
 
@@ -37,12 +38,12 @@ io_manager = IoManager(eqn, config)
 dxs = np.zeros(config.refinements+1)
 errors = np.zeros(config.refinements+1)
 
-
-tini = clock()
+tini = datetime.now()
+#tini = clock()
 for level in range(0, config.refinements+1):
     N = config.N * (2**level)
 #    N = config.N
-    print "Starting simulation with N={}...".format(N)
+    print ("Starting simulation with N={}...".format(N))
     interfaces = np.linspace(config.a,config.b,N+1) # we won't really use them
     x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
     xGhost = np.zeros(N+2*gw) # storage for x with ghost cells
@@ -62,7 +63,7 @@ for level in range(0, config.refinements+1):
 
     ### Main loop
     while t < config.T:
-        print level,t
+        print (level,t)
         up=u
         dt = min(config.cfl*dx/eqn.max_vel(u), io_manager.get_next_plot_time() - t)
 #        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
@@ -85,26 +86,27 @@ for level in range(0, config.refinements+1):
 
 #    #errors[level] = np.sum(np.abs(exact - u))*dx
     
-    print 'd\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx
+    print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx)
 
     errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
     #print exact[0,:],u[0,:]
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
-    print "Error at N={} is {}".format(N, errors[level])
+    print ("Error at N={} is {}".format(N, errors[level]))
     if level > 0:
         order = (np.log(errors[level-1]) -np.log(errors[level]))/np.log(2.)
-        print "Order: "+str(order)
+        print ("Order: "+str(order))
     dxs[level] = dx
     
 
 
     io_manager.reset_timer() # otherwise only level=0 will plot
-tfin = clock()
-print 'CPU Time: ' + str(tfin-tini)
+#tfin = clock()
+tfin = datetime.now()
+#print ('CPU Time: ' + str(tfin-tini))
 
 
-for i in range(N):
-    print x[i],uin[0,i],u[0,i],H[i]
+#for i in range(N):
+ #   print (x[i],uin[0,i],u[0,i],H[i])
 #    print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 

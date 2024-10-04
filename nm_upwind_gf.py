@@ -51,10 +51,10 @@ class UpwindGF(NumericalMethod):
             tend[:,i] = -(Gr - Gl)/dx
             
             if fail==1:
-                print 'fails at ', x[i]
+                print ('fails at ', x[i])
                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
         if fails>0:
-            print "{}/{} stencils failed to find a steady state solution this timestep".format(fails, N)
+            print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend
     
     def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
@@ -124,6 +124,7 @@ class UpwindGF(NumericalMethod):
         Glm = np.zeros(nvars)
         Glp = np.zeros(nvars)
         i = (u.shape[1]-1)/2
+        i = int(i)
         phi = eqn.F(u) - fstar
   
         for var in range(nvars):

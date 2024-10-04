@@ -95,7 +95,7 @@ class Equation:
             (ie Pi(V)=V); but this makes the scheme lose conservativeness.
 
             Required for well-balanced solver to be conservative """
-        print "[WARNING] Using default Pi; this will lose conservativeness"
+        print ("[WARNING] Using default Pi; this will lose conservativeness")
         return V
     
     def Piplus(self, ui, uip1):
@@ -113,7 +113,7 @@ class Equation:
             This heavily depends on the parameters.
             If not implemented, call this function so zeros are returned
             with a printed warning """
-        print "[WARNING] exact for these parameters not implemented. Returning zero!"
+        print ("[WARNING] exact for these parameters not implemented. Returning zero!")
         return np.zeros((self.dim(), len(x)))
 
     def Fp(self, U):
@@ -136,7 +136,7 @@ class Equation:
             eig[0,i] < eig[1,i] < ... for all i
 
             Strongly advised for Rusanov flux """
-        print "[WARNING] Using default (very slow) eigenvalue computation"
+        print ("[WARNING] Using default (very slow) eigenvalue computation")
         eig = np.zeros(U.shape)
         for i in range(U.shape[1]):
             # np.newaxis forces a shape (2,) numpy array to (2,1):
@@ -153,8 +153,8 @@ class Equation:
             as required 
 
             Suggested for nicer plotting """
-        print "[WARNING] Using default (unlabelled) plotting"
-        for var in u.shape[0]:    
+        print ("[WARNING] Using default (unlabelled) plotting")
+        for var in u.shape[0]:
             plt.plot(x,u[var])
             plt.legend()
             plt.title(t)

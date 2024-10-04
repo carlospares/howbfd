@@ -28,4 +28,4 @@ save_plots = False
 save_npys = False
 plot_exact = False
 
-print "Loaded config/swe_rest.py!"
+print ("Loaded config/swe_rest.py!")

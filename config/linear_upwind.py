@@ -28,4 +28,4 @@ save_plots = True
 save_npys = True
 plot_exact = False
 
-print "Loaded config/linear_upwind.py!"
+print ("Loaded config/linear_upwind.py!")

@@ -30,4 +30,4 @@ save_npys = True
 
 
 
-print "Loaded config/swe_rest.py!"
+print ("Loaded config/swe_rest.py!")
