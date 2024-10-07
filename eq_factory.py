@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 # Carlos Parés Pulido, 2019
 
 from equation import Equation

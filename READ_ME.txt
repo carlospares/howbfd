@@ -1,6 +1,6 @@
 How to run:
-* use python2
-* python2 main.py -c config/config_file.py -N=npts
+* use python3 (or 2 if it works)
+* pythonX main.py -c config/config_file.py -N=npts
 * atm only upwind flux is completed with the gf part, only for burgers
 * added time to a bunch of functions types (funH, euler, RKk, BCs,nm_upwing, odiintegrator etc) 
 * added MMS case to burgers !be careful: you have to change S in eq_burgers otherwise 
@@ -25,17 +25,17 @@ To do
 * Latex the above
 
 
-* With numerical  B'(x) show machine error Lake at rest 
-* With numerical B'(x) grid convergence for super/subcritical (check if what we have is with analytical or numerical)
-* perturbations of above and also super.sub critical (compare analytical and numerical b(x) )
-* MS for shallow water
-
-* discontinuous H: shallow water
 
 * Then we will focus on trans critical with Carlos
+* add friction? 
+* reversed flow case
 
-* Then friction
 
-* Then another system
+* Euler: check mismatches just to be able to run
+* Euler:  look into case of figure 4 in https://arxiv.org/pdf/2307.12089
+* Euler:  compute jumps to linearize with discontinuous section
+
+
+
 
 
