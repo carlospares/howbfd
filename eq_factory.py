@@ -5,6 +5,7 @@ from equation import Equation
 from eq_linear import LinearEquation
 from eq_burgers import BurgersEquation
 from eq_sw import SWEquation
+from eq_euler_grav import EulerEquationGRAV
 from eq_sw_war import SWEquationWAR
 
 def equation_factory(cf):
@@ -17,8 +18,8 @@ def equation_factory(cf):
         return SWEquation()
     elif eqn == Equation.SW_WAR:
         return SWEquationWAR()
-   # elif eqn == Equation.EulerGrav:
-   #     return EuGravEquation()
+    elif eqn == Equation.EulerGrav:
+        return EulerEquationGRAV()
    # elif eqn == Equation.EulerSec:
    #     return EuSecEquation()
     else:

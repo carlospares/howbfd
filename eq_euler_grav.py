@@ -10,7 +10,7 @@ from Funciones_salto_estacionario import phi
 from equation import Equation
 from nosteadyexc import NoSteadyError
 
-class SWEquation(Equation):
+class EulerEquationGRAV(Equation):
     """ 1D Euler  equation, vars [rho,q=rho u, rho E],  E = rho e + rho u^2/2 = p/(gm-1)  + rho u^2/2
 
         rho_t +  q_x               = 0

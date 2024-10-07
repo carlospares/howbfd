@@ -9,11 +9,11 @@ from timest import TimeStepping
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.SW
-init = InitCond.READ_FROM_FILE#STEADY #WATER_AT_REST
+init = InitCond.WATER_AT_REST#READ_FROM_FILE#STEADY #WATER_AT_REST
 funh = FunH.BUMPS#D# BUMP
 H_noise_factor = 0
 perturb_init = InitCond.PERT_NONE#DISC#NONE#PERT_WB #PERT_NONE
-boundary = BoundaryCond.SUBCR#IN_OUT #FORCE_STEADY_INIT
+boundary = BoundaryCond.IN_OUT#SUBCR#IN_OUT #FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB #UPWINDGF
 timest = TimeStepping.TVDRK3
 order = 3
