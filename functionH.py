@@ -85,7 +85,8 @@ class FunH:
             alfa = 100#25
             H = x+ A*np.sin(alfa*x)
         elif self.funH == self.BUMP2:
-            H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
+            #H = -.25*(1 + np.cos(5*np.pi*x))*(x<.2)*(x>-.2)
+            H = -.2*(np.cos(np.pi/2*(x-10)/2)*np.cos(np.pi/2*(x-10)/2)*np.cos(np.pi/2*(x-10)/2)*np.cos(np.pi/2*(x-10)/2))*(x<12)*(x>8)
         elif self.funH == self.BUMPD:
             H = -.25*(1 + np.cos(5*np.pi*(x+1.2)))*(x<-1)*(x>-1.4) + 1.*(x > 0)
         elif self.funH == self.BUMPS:
@@ -130,7 +131,8 @@ class FunH:
             alfa = 100#25
             Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
         elif self.funH == self.BUMP2:
-            Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
+            #Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
+            Hx = -0.628319*np.sin(pi*x/4)*np.sin(pi*x/4)*np.sin(pi*x/4)*np.cos(pi*x/4)*(x<12)*(x>8)
         elif self.funH == self.SLOPE:
             Hx = np.ones_like(x)
         elif self.funH == self.BUMPD:

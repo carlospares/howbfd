@@ -42,6 +42,7 @@ class InitCond:
         self.eqn = eqn
 
     def u0(self, x, H):
+        m1=0
         """ Initial condition """
         U0 = np.zeros((self.eqn.dim(), len(x)))
         if self.initCond==InitCond.SHOCK:
@@ -60,40 +61,52 @@ class InitCond:
         elif self.initCond==InitCond.READ_FROM_FILE:
             xx = []
             N=len(x)
+        #elif self.initCond==InitCond.RAREFACTION:
             if N == 25:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_25.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_25.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_25.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_25.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_25.dat', 'r')
             elif N== 50:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_50.dat', 'r')
+                file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
             elif N== 100:
-                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
-                #file_in = open('initial_data/analytical_sw/transcritical/trans_100.dat', 'r')
+                file_in = open('initial_data/analytical_sw/transcritical/trans_100_ex.dat', 'r')
                 #U0=exact=self.steady_form_file(x)
             elif N== 200:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_200.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_200.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_200.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_200.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_200.dat', 'r')
             elif N== 400:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_400.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_400.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_400.dat', 'r')
             elif N== 800:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_800.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_800.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_800.dat', 'r')
             elif N== 5000:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
+                #fO1 = open('./Grid_convergence_files/w50-t1-O1.dat', 'r')
+
+#            for line in file_in:
+#                line = line.strip()
+#                columns = line.split()
+#                print columns[1],m1
+#                #xO1[m1] = float(columns[0])
+#                #xx[m1]  = float(columns[4])
+#                m1 = m1 + 1
+#                #file_in.close()
             for y in file_in.read().split('\n'):
                 #if y.isdigit():
                 xx.append(float(y))
+
             U0[0] = xx#2 + H
-            U0[1] = U0[1]+4.42#1.53#24.0
+            U0[1] = U0[1]+ 1.53#4.42#1.53#24.0
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
             U0[0] = 2.0 + H
