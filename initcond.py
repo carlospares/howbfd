@@ -69,9 +69,9 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
                 file_in = open('initial_data/analytical_sw/transcritical/trans_50.dat', 'r')
             elif N== 100:
-                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
-                #file_in = open('initial_data/analytical_sw/transcritical/trans_100.dat', 'r')
+                file_in = open('initial_data/analytical_sw/transcritical/trans_100.dat', 'r')
                 #U0=exact=self.steady_form_file(x)
             elif N== 200:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_200.dat', 'r')
