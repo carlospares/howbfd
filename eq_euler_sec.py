@@ -16,9 +16,11 @@ class SWEquation(Equation):
         h_t +  Q_x               = 0
         Q_t + (Q^2/h + P)_x = -P A_x/A
         E_t + (uE + P u )_x = 0
+        
         h = rho*A(x)
         Q = h u
-        P = A p = (gm-1)E - (gm-1)(h u)^2/2 h
+        P = A p = (gm-1)h E - (gm-1)(h u)^2/2 h
+        
         H = ln( A(x) )
         E = A*E_euler
         S(U) = rho u ( 1 ; u ; H )^t
