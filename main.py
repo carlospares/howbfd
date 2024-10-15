@@ -88,7 +88,7 @@ for level in range(0, config.refinements+1):
 #    #errors[level] = np.sum(np.abs(exact - u))*dx
     
     #print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx)
-    print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx )
+   # print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx )
 
     errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
     #print exact[0,:],u[0,:]
