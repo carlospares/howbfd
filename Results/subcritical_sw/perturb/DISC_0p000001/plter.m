@@ -32,12 +32,12 @@ ylabel('$h-h_{in} $','Fontsize',18,'Interpreter','latex')
 legend('GF-AM8','GF-AM6')
 set(legend,'FontSize',10);
  str=['weno3_sub_DISCsmall_n100_eta'];
- savefig(str);
-      s=struct('Version',1,'Format','pdf','Width','800','Height','200','Units','points','Resolution','300');
-         %hgexport(gcf,str,s)
-         set(gcf,'Units','inches');
-         screenposition = get(gcf,'Position');
-         set(gcf,...
-        'PaperPosition',[0 0 screenposition(3:4)],...
-        'PaperSize',[screenposition(3:4)]);
-         print('-dpdf',str)
+% savefig(str);
+%      s=struct('Version',1,'Format','pdf','Width','800','Height','200','Units','points','Resolution','300');
+%         %hgexport(gcf,str,s)
+%         set(gcf,'Units','inches');
+%         screenposition = get(gcf,'Position');
+%         set(gcf,...
+%        'PaperPosition',[0 0 screenposition(3:4)],...
+%        'PaperSize',[screenposition(3:4)]);
+%         print('-dpdf',str)

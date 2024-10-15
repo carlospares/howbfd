@@ -1,0 +1,11 @@
+Subcritical flow for SW
+*.txt files contain
+x, eta_{initial}, q_{initial}, eta, q, H
+
+inside the folder perturb we have two perturbations of 10^{-6} and 1.0
+
+same form in the txt files
+
+ATTENTION: The eta_{ini} in ALL txt files in the folder perturn contain the pertrubation
+
+TO PLOT: check the python files in peturb/DISC_0p000001 and perturb/DISC_1p0

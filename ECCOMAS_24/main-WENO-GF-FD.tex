@@ -1,0 +1,283 @@
+% $Header: /cvsroot/latex-beamer/latex-beamer/solutions/conference-talks/conference-ornate-20min.en.tex,v 1.6 2004/10/07 20:53:08 tantau Exp $
+
+\documentclass[aspectratio=169,9pt,mathserif]{beamer}
+
+\graphicspath{{../}}
+%\mode<presentation>
+%{
+% 
+\usetheme{Darmstadt}
+%  \usetheme[compress,mathserif]{Hannover}%Dresden}%
+  % or ...
+\usefonttheme{structurebold} 
+
+\setbeamertemplate{Hannover}{sidebar your definition}
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+    \definecolor{mblue1}{rgb}{0., 0.1, 0.95}
+%        \definecolor{mblue1}{rgb}{0.5, 0.5, 0.7}
+    \definecolor{mblue}{rgb}{0.35, 0.7, 0.7}%        \definecolor{mblue}{rgb}{0.55, 0.85, 0.85}
+%                \definecolor{mblue}{rgb}{0.4, 0.55, 0.9}
+    \definecolor{mgrey}{rgb}{0.7421875,0.7421875,0.7421875} 
+
+  \usecolortheme{dove}
+
+  \usenavigationsymbolstemplate{}
+ % \logo{\includegraphics[width=.2\textwidth]{logo-inria-bordeaux.eps}}
+ \setbeamercolor*{title}{fg=mblue1, bg=white} 
+  \setbeamercolor*{frametitle}{fg=mblue1, bg=white} 
+%   \setbeamercolor{normal text}{fg=mblue} 
+     \setbeamercolor{structure}{fg=mblue1} 
+     \setbeamercolor{block}{fg=mblue1}
+\setbeamercolor{block title alerted}{fg=mblue1}
+
+\usepackage[subdued]{mathastext}
+\MTfamily{augie}
+\Mathastext[augie]
+
+\setbeamerfont{author}{size=\fontsize{10pt}{12pt}}
+
+\setbeamerfont{institute}{size=\fontsize{8pt}{10pt}}
+%   \setbeamercolor{navigation symbols}{fg=mblue} 
+%   \setbeamercolor{section in sidebar shaded}{fg=mblue}
+%   \setbeamercolor{palette sidebar secondary}{fg=mblue}   
+\makeatletter
+%   \setbeamertemplate{sidebar canvas \beamer@sidebarside}%
+%                  [vertical shading][top=mblue1,bottom=mblue1]
+\makeatother
+%}
+
+\usepackage[absolute,overlay]{textpos}	
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+%\begin{textblock}{14}(66,60)%(113.4,0.7)
+%  \includegraphics[width=3.cm,angle=-90]{../honom-logo}
+% \end{textblock}
+% \begin{textblock}{14}(89,39.7)%(113.4,0.7)
+%  \includegraphics[width=1.7cm,angle=00]{./LOGOS_pack_bureautique/png/inr_logo_noir}
+% \end{textblock}
+
+}
+
+\newcommand{\hh}{\mathrm{h}}
+
+\newcommand{\MyLogoa}{%
+ \begin{textblock}{14}(0.65,83.)%(113.4,0.7)
+  \includegraphics[width=1cm,angle=00]{logos-Inria-UMA} 
+ \end{textblock}
+
+}
+
+
+
+\usepackage{graphicx,epsfig,media9,animate}
+\usepackage[normalem]{ulem}                             % testo barrato
+\newcommand{\stkout}[1]{\ifmmode\text{\sout{\ensuremath{#1}}}\else\sout{#1}\fi}
+\usepackage{amsmath,amsfonts,psfrag,amsthm,pstcol,soul,cancel,movie15}
+\usepackage{pgf}
+\usepackage{xcolor}
+\usepackage{wasysym,pifont}
+\definecolor{DarkGreen}{rgb}{0.,0.5,0.}
+
+\usepackage[english]{babel}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{tikz}
+
+
+\input{commands}
+
+
+
+
+\title[WENO-FD-GFq] % (optional, use only with long paper titles)
+{\textcolor{white}{mm}\\[-0.25cm] Discrete well-balanced WENO finite difference schemes: \\ global-flux quadrature method with multi-step ODE integrator weights} 
+
+
+
+\author[Kazolea, Par\'es, Ricchiuto]{Maria Kazolea$^*$, Carlos Par\'es$^+$, Mario Ricchiuto$^*$\vspace{0.1cm} }
+\institute[INRIA] % (optional, but mostly needed)
+{$^*$Team CARDAMOM,  Inria research center at University of Bordeaux (France)\\[5pt]
+$^+$ EDANYA Group, Universidad de M\'alaga (Spain)\\[100pt]
+\textcolor{white}{mm}} 
+
+
+\date{}
+ 
+
+%
+%\date[HONOM 2022] % (optional, should be abbreviation of conference name)
+%{HONOM22 \\   April  4th - 8th, 2022 Braga (Portugal)}
+
+
+	
+\subject{Applied Math}
+
+\newcommand\Figref[1]{figure~\ref{#1}} 
+\newcommand\secref[1]{\S\ref{#1}}
+\newcommand\Ltwo[1]{\| #1 \|_{L^{2}(\Omega)}}
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diver}{div}
+\DeclareMathOperator{\diag}{diag}
+\newcommand{\id}{\mathrm{Id}}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\flux}{\boldsymbol{\mathcal{F}}}
+\newcommand{\source}{\boldsymbol{\mathcal{S}}}
+\newcommand{\vu}{\mathbf{u}}
+\newcommand{\vw}{\mathbf{w}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\vl}{\mathbf{l}}
+\newcommand{\vr}{\mathbf{r}}
+\newcommand{\vphi}{\boldsymbol{\phi}}
+\newcommand{\vbeta}{\boldsymbol{\beta}}
+\newcommand{\vPhi}{\boldsymbol{\Phi}}
+\newcommand{\vvarphi}{\boldsymbol{\varphi}}
+\newcommand{\eG}{\mathcal{G}}
+\newcommand{\eH}{\mathcal{H}}
+
+\newcommand{\speed}{\vec u}
+%
+%
+%
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}[proposition]{Remark}
+
+
+\begin{document}
+
+%Well balanced DG-SEM for systems of balance laws via global fluxes
+%
+%
+%We investigate the construction of well balanced methods based on the notion of a global flux.
+%This notion arises naturally in some discretization approaches as e.g. residual distribution,
+%and is inherent to some well balanced schemes based on  formulations including augmented
+%set of variables including external data (bathymetry for the shallow water equations,
+%gravitational potential for the Euler  equations, etc.). Explicit approximations of a global flux via
+%quadrature of the source term  have been recently proposed to enhance the well balanced character of
+%finite volume methods.   We review briefly this method and we propose a different formulation in the context of notal  DG-SEM methods.
+%The collocated nature of the method allows to simplify somewhat  the global flux formulation, while
+%still providing a considerable enhancement of the well balanced character of the method for non-trivial equilibria.
+%In the talk we discuss the basic formulation,  and provide  some ideas for enhancements including the exact preservation of some
+%steady states, and the preservation of and energy/entropy equality.
+%Examples for shallow water floes, and  Euler equations with gravitational potential are provided.
+
+
+%
+%
+% TITLE SLIDE........
+%
+%
+%\myBackround
+{
+ \usebackgroundtemplate{\includegraphics[width=\paperwidth, height=\paperheight]{Background 6.png}}  
+\begin{frame} 
+ 
+
+  \titlepage
+
+  \vspace{-2cm}
+  \MyLogo
+    \MyLogoa
+  
+  \vspace{-1.5cm}
+
+\textrm{ ECCOMAS 2024 \\
+\hspace{0.1mm}	Lisbon 03/06/2024}
+    
+%    \begin{flushright}
+%  \textrm{ ECCOMAS 2024\\
+%03/06/2024}
+%  \end{flushright}
+  
+\end{frame}
+}
+ 
+\section[Intro]{Objectives of this work}
+
+
+\input{honom-slides-batch1}
+
+
+\section[WENO GFq]{Global flux quadrature for WENO finite difference}
+
+
+\input{weno-fd-slides}
+ 
+      
+
+
+\section[End]{Conclusion and perspectives}
+
+  
+
+ \begin{frame}{} 
+\MyLogoa
+
+\vspace{0.2cm}
+\begin{block}{Take home message}
+\begin{itemize}
+\item GFq in 1D:  clever   quadrature of
+the source based on high order ODE integrators
+
+\vspace{0.1cm}
+
+\item Tremendous error reduction  at stady-state (super-covergence)
+
+\vspace{0.1cm}
+
+
+\item  In one dimension  discrete equilibria can be generated a-priori if necessary   with the ODE solver
+
+ 
+\end{itemize}
+\end{block} 
+
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Future}
+\begin{itemize}
+\item   Sonic points ? 
+
+\vspace{0.1cm}
+
+\item adaptive ODE weights
+
+\vspace{0.1cm}
+
+\item multiD 
+ \end{itemize}
+ \end{alertblock}
+ 
+\vspace{0.2cm}
+\begin{center}
+	\textit{Thank you!}
+\end{center}
+
+ \end{frame}
+
+
+
+ 
+
+%
+% \begin{frame} 
+%\MyLogoa
+%
+% 
+%\begin{flushright}
+%\testsf{\HUGE THX !}
+%%\includegraphics[width=0.3\textwidth]{spasibo}
+%\end{flushright}
+% 
+  
+%  \end{frame}
+
+  
+ 
+\end{document}
+
+

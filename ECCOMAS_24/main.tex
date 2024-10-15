@@ -1,0 +1,56 @@
+% beautiful title slides in Beamer
+% Model 6
+% latex-beamer.com
+
+\documentclass[aspectratio=169]{beamer}
+
+% Remove navigation bar
+\setbeamertemplate{navigation symbols}{}
+
+% Tikz package
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+
+\begin{document}
+
+% Title slide frame
+\begin{frame}[plain]
+
+\input{Title slide 6}
+    
+\end{frame}
+
+\section[Intro]{Objectives of this work}
+\begin{frame}[t]{Setting: balance laws}
+%	\MyLogoa
+	
+	\vspace{0.5cm}
+	
+	We want to solve numerically  hyperbolic systems of balance laws
+	
+	\begin{equation}
+		\partial_tU+ \partial_x F(U)=  S(U)\partial_xH \nonumber
+	\end{equation}
+	
+	\vspace{1.cm}
+	
+	Typical examples  that we will use here
+	
+	
+	\begin{itemize}
+		\item Burger's equations 
+		\vspace{0.2cm}
+		\item Shallow water equations with topography
+		%\only<2->{\item{\bf Shallow water equations with topography/friction/Coriolis/etc}}
+	\end{itemize}
+	
+	%\vspace{0.5cm}
+%	
+%	% \flushright{\underline{We  consider both 1D and Multi-D problems}}
+%	%\only<1>{\color{white}{\\[5pt] But for simplicity the discussion is done for the 1D case}}
+%	%\only<3>{\\[5pt]But for simplicity the discussion is done for the 1D case}
+\end{frame}
+
+
+\end{document}
