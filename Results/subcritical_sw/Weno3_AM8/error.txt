@@ -1,0 +1,5 @@
+Error at N=25 is 0.0118261115276
+Error at N=50 is 0.00213461511078
+Error at N=100 is 5.02295919219e-05
+Error at N=200 is 2.16650850093e-07
+Error ar N=400 is 4.98340049782e-10

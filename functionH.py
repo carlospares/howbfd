@@ -23,6 +23,7 @@ class FunH:
     MMSburg   = 309
     STEP   = 312
     PAR   = 313
+    EUL_SEC = 314
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -106,6 +107,9 @@ class FunH:
             H = np.exp(-(x-5.0-t)*(x-5.0-t))
         elif self.funH==self.PAR:
             H= x*x
+        elif self.funH==self.EUL_SEC:
+            Ax = -3.0/5.0*(1-(x+5.0)/5)*(x>-5)*(x<=0) +  -1.0/5.0*(1-(x+5.0)/5)*(x>0)*(x<=5)
+            H = Ax
         return H
     
     def Hx(self, x, t):
@@ -145,5 +149,7 @@ class FunH:
             Hx =  -2.0*(x-5-t)*np.exp(-(x-5.0-t)*(x-5.0-t))        
         elif self.funH == self.PAR:
             Hx=2.0*x 
+        elif self.funH==self.EUL_SEC:
+            Hx = 3.0/25.0*(x>-5)*(x<=0) +  1.0/25.0*(x>0)*(x<=5)
         return Hx
 

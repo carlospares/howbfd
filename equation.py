@@ -16,6 +16,8 @@ class Equation:
     BURGERS = 701  # eq_burgers.py
     SW = 702       # eq_sw.py
     SW_WAR = 703
+    EulerGRAV =704
+    EulerSEC =705
 
     SEED = 11235813 # seed for reproducibility
 

@@ -1,0 +1,21 @@
+
+Loaded config/burgers_upwind_gf.py!
+Starting simulation with N=30...
+Error at N=30 is 0.0391855930057
+Starting simulation with N=60...
+Error at N=60 is 0.0137030942553
+Order: 1.515821629172336
+Starting simulation with N=120...
+Error at N=120 is 0.000976349840142
+Order: 3.810959711726538
+Starting simulation with N=240...
+Error at N=240 is 6.25556263485e-05
+Order: 3.964186625201186
+Starting simulation with N=480...
+Error at N=480 is 3.93725147465e-06
+Order: 3.9898788820563835
+Starting simulation with N=960...
+Error at N=960 is 2.46634317507e-07
+Order: 3.99674340111778
+CPU Time: 11178.925701
+

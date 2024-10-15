@@ -6,6 +6,7 @@ from eq_linear import LinearEquation
 from eq_burgers import BurgersEquation
 from eq_sw import SWEquation
 from eq_euler_grav import EulerEquationGRAV
+from eq_euler_sec import EulerEquationSEC
 from eq_sw_war import SWEquationWAR
 
 def equation_factory(cf):
@@ -18,10 +19,10 @@ def equation_factory(cf):
         return SWEquation()
     elif eqn == Equation.SW_WAR:
         return SWEquationWAR()
-    elif eqn == Equation.EulerGrav:
+    elif eqn == Equation.EulerGRAV:
         return EulerEquationGRAV()
-   # elif eqn == Equation.EulerSec:
-   #     return EuSecEquation()
+    elif eqn == Equation.EulerSEC:
+        return EulerEquationSEC()
     else:
         print ("[ERROR] Equation not recognized!!")
         print ("	...Returning generic Equation object, but nothing will work.")

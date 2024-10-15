@@ -1,0 +1,19 @@
+
+Starting simulation with N=30...
+Error at N=30 is 0.139953401787
+Starting simulation with N=60...
+Error at N=60 is 0.00971957690775
+Order: 3.8479092292614983
+Starting simulation with N=120...
+Error at N=120 is 0.000205538102135
+Order: 5.563415747838556
+Starting simulation with N=240...
+Error at N=240 is 3.47172013033e-06
+Order: 5.887611400767243
+Starting simulation with N=480...
+Error at N=480 is 5.55802283074e-08
+Order: 5.96493507993024
+Starting simulation with N=960...
+Error at N=960 is 8.76617236149e-10
+Order: 5.986480904919983
+

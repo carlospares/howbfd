@@ -1,0 +1,13 @@
+Loaded config/burgers_rusanov.py!
+Starting simulation with N=20...
+Error at N=20 is 5.07341612271e-07
+Starting simulation with N=40...
+Error at N=40 is 5.63334365822e-09
+Order: 6.492822200392334
+Starting simulation with N=80...
+Error at N=80 is 4.57135371223e-11
+Order: 6.945226221675447
+Starting simulation with N=160...
+Error at N=160 is 1.25313648347e-13
+Order: 8.510934090573656
+

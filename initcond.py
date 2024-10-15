@@ -21,6 +21,7 @@ class InitCond:
     TWO_ST_SW = 510
     MMSburg  = 511
 #    SW_TRANS = 510
+    Eulersec = 512
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -128,6 +129,11 @@ class InitCond:
 #            U0 = self.trans(x,H)
         elif self.initCond==InitCond.MMSburg:
             U0 = np.exp(-(x-5.0)*(x-5.0))
+        elif self.initCond==InitCond.WATER_AT_REST:
+            N=len(x)
+            U0[0] = 0.0
+            U0[1] = 0.0
+            U0[2] = 0.0
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

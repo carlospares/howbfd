@@ -10,7 +10,7 @@ from Funciones_salto_estacionario import phi
 from equation import Equation
 from nosteadyexc import NoSteadyError
 
-class SWEquation(Equation):
+class EulerEquationSEC(Equation):
     """ 1D Euler  equation, vars [rho,q=rho u, rho E],
 
         h_t +  Q_x               = 0
@@ -23,7 +23,7 @@ class SWEquation(Equation):
         
         H = ln( A(x) )
         E = A*E_euler
-        S(U) = rho u ( 1 ; u ; H )^t
+        S(U) = (0 ,-P A', 0)^t
         H   = E + p = gm E - (gm-1)(rho u)^2/2 rho
 
     """
@@ -86,12 +86,12 @@ class SWEquation(Equation):
         gm = self.gamma
         DF = np.zeros((U.shape[1], self.dim(), self.dim()))
         for i in range(U.shape[1]):
-        rho = U[0,:]
-        q = U[1,:]
-        E = U[2,:]
-        p = ( gm - 1.0 )*( E - 0.5*q*q/rho )
+            rho = U[0,:]
+            q = U[1,:]
+            E = U[2,:]
+            p = ( gm - 1.0 )*( E - 0.5*q*q/rho )
         
-        DF[i] = np.array([[0,1,0],[  0.5*( gm - 3.0 )*q*q/(rho*rho), ( gm - 3.0 )*q/rho, gm - 1.0] [ ( gm - 1.0 )*q*q*q/(rho*rho*rho) - gm*q*E/(rho*rho), gm*E/rho - 1.5( gm - 1.)*q*q/(rho*rho),   gm*q/rho ] ])
+            DF[i] = np.array([[0,1,0],[  0.5*( gm - 3.0 )*q*q/(rho*rho), ( gm - 3.0 )*q/rho, gm - 1.0] [ ( gm - 1.0 )*q*q*q/(rho*rho*rho) - gm*q*E/(rho*rho), gm*E/rho - 1.5( gm - 1.)*q*q/(rho*rho),   gm*q/rho ] ])
         return DF
 
     def eig_of_dF(self, U):
@@ -119,7 +119,7 @@ class SWEquation(Equation):
         u = U[1]/U[0]
         E = U[2]
         p = ( gm - 1.0 )*( E - 0.5*u*u*rho )
-        return np.array([ -rho*u, -rho*u, -u*( E +p )])
+        return np.array([ 0, -p, 0])
 
 #    def upw_criterion(self, uStencil):
 #        """ Returns a pair (l,r) with the velocity for upwind criterion at

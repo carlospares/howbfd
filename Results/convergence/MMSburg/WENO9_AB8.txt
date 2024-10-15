@@ -1,0 +1,20 @@
+Starting simulation with N=30...
+Error at N=30 is 16.4626438053
+Starting simulation with N=60...
+Error at N=60 is 9.37772951249
+Order: 0.8118854705871916
+Starting simulation with N=120...
+Error at N=120 is 0.363438347743
+Order: 4.689456110254389
+Starting simulation with N=240...
+Error at N=240 is 0.0225573962628
+Order: 4.010038195564467
+Starting simulation with N=480...
+Error at N=480 is 5.43581470228e-06
+Order: 12.018816652728532
+Starting simulation with N=960...
+Error at N=960 is 1.50066906014e-10
+Order: 15.144602800380193
+CPU Time: 13228.259136
+
+The soltion is oscillatory

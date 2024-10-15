@@ -1,0 +1,17 @@
+Loaded config/swe_rest.py!
+Starting simulation with N=25...
+d\eta/dt 7.80131514943605e-12
+Error at N=25 is 0.0154301509305
+Starting simulation with N=50...
+d\eta/dt 1.1705997282618341e-11
+Error at N=50 is 0.00395878813227
+Order: 1.9626214098269792
+Starting simulation with N=100...
+d\eta/dt 2.0693988189712798e-11
+Error at N=100 is 0.00141203592619
+Order: 1.4872820634812947
+Starting simulation with N=200...
+d\eta/dt 1.7508425265155836e-12
+Error at N=200 is 0.00100733141119
+Order: 0.48723838842408573
+

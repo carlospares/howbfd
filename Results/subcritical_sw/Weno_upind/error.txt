@@ -1,0 +1,20 @@
+Starting simulation with N=25...
+d\eta/dt 7.702940507670064e-10
+Error at N=25 is 0.215721758436
+Starting simulation with N=50...
+d\eta/dt 2.1581181286478568e-11
+Error at N=50 is 0.0134974685547
+Order: 3.9984109381732775
+Starting simulation with N=100...
+d\eta/dt 1.2793655024267991e-12
+Error at N=100 is 0.00184012521629
+Order: 2.874813008904243
+Starting simulation with N=200...
+d\eta/dt 5.5067062021407764e-14
+Error at N=200 is 0.000230846620118
+Order: 2.994797426902675
+Starting simulation with N=400...
+d\eta/dt 1.408179128858933e-13
+Error at N=400 is 2.88250148825e-05
+Order: 3.0015413518258884
+

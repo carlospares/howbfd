@@ -1,0 +1,19 @@
+Starting simulation with N=25...
+('d\\eta/dt', 5.69133629113594e-11, 'dq/dt', 1.4129319936273532e-10)
+Error at N=25 is 0.0108640371864
+Starting simulation with N=50...
+('d\\eta/dt', 5.7769344863345395e-12, 'dq/dt', 1.0604850331219495e-11)
+Error at N=50 is 0.00191547796852
+Order: 2.5037839855382424
+Starting simulation with N=100...
+('d\\eta/dt', 6.689093723366568e-14, 'dq/dt', 1.4499512701604544e-13)
+Error at N=100 is 4.62042937218e-05
+Order: 5.373533695840697
+Starting simulation with N=200...
+('d\\eta/dt', 3.3306690738754696e-16, 'dq/dt', 0.0)
+Error at N=200 is 2.09211569069e-07
+Order: 7.786920483402794
+Starting simulation with N=400...
+('d\\eta/dt', 1.942890293094024e-16, 'dq/dt', 0.0)
+Error at N=400 is 4.94650639893e-10
+

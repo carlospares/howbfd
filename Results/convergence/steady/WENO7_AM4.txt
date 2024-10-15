@@ -1,0 +1,17 @@
+
+Starting simulation with N=20...
+Error at N=20 is 0.000115541015489
+Starting simulation with N=40...
+Error at N=40 is 7.66926259358e-06
+Order: 3.9131734014652793
+Starting simulation with N=80...
+Error at N=80 is 4.93984420769e-07
+Order: 3.956550419918568
+Starting simulation with N=160...
+Error at N=160 is 3.15509277787e-08
+Order: 3.9687112084791702
+Starting simulation with N=320...
+Error at N=320 is 1.97870824031e-09
+Order: 3.9950516209523994
+CPU Time: 1560.942515
+
