@@ -277,7 +277,7 @@ class SWEquation(Equation):
         Ustar = np.zeros((self.dim(), len(H)))
         (hi, qi, ui) = (uConstr[0], uConstr[1], uConstr[1]/uConstr[0])
         Hstar = self.critical_H(HConstr, qi, hi)
-        if np.min(H) < Hstar - 1.e-6:
+        if np.min(H) < Hstar - 1.e-4:
             print ('no existe solucion estacionaria')
             raise NoSteadyError("No steady state exists for constraint \
                                 (Hi={}, hi={}, ui={}), H={}"\
@@ -296,8 +296,8 @@ class SWEquation(Equation):
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
-            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-#            Ustar[0,j] = hsuperc if x[j] > -1.2 else hsubc  # transcritical stationary solution with critical point at x = 0
+#            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+            Ustar[0,j] = hsuperc if x[j] > 10. else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
 #        i = (U0.shape[1]-1)/2
 #        if x[i]== -1.05:
