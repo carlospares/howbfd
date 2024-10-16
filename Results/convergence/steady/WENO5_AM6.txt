@@ -1,15 +1,15 @@
 Starting simulation with N=20...
-Error at N=20 is 9.54189535049e-05
+Error at N=20 is 1.11757809368e-06
 Starting simulation with N=40...
-Error at N=40 is 3.06900986812e-05
-Order: 1.636502579171754
+Error at N=40 is 2.03135415877e-08
+Order: 5.781790046899834
 Starting simulation with N=80...
-Error at N=80 is 8.70084056091e-06
-Order: 1.8185465976169393
+Error at N=80 is 3.40871718352e-10
+Order: 5.8970690736003055
 Starting simulation with N=160...
-Error at N=160 is 2.35814092346e-06
-Order: 1.8835048449989413
+Error at N=160 is 5.48049314264e-12
+Order: 5.958779381036946
 Starting simulation with N=320...
-Error at N=320 is 6.13092579167e-07
-Order: 1.9434730893588221
+Error at N=320 is 1.43982048506e-16
+Order: 15.216129144802123
 
