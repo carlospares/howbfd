@@ -31,9 +31,9 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        return U*U # std burger's case
+        #return U*U # std burger's case
         #return U # std burger's case
-        #return (U - 1.0)# MMSburg case
+        return (U - 1.0)# MMSburg case
         
     def discH_jumpF(self, ui, uip1, i, dH, x, t):
         # depends on S
