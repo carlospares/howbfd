@@ -80,8 +80,8 @@ for level in range(0, config.refinements+1):
 
     #io_manager.statistics(x, u, funH.H(x), eqn)
 #----exact solution and errors
-#    exact = eqn.exact(x, t, H, config)
-    exact = uin
+    exact = eqn.exact(x, t, H, config)
+   # exact = uin
 #
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
