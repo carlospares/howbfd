@@ -1,6 +1,6 @@
 lake at rest test case for SW
 
 the *.txt files have 6 columns
-x eta_{initial} q_{initial} eta q H
+x h_{initial} q_{initial} h q H
 
 in the folder reconstructed_B the txt files DO NOT have the initial solution 
