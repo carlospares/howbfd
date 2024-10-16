@@ -5,6 +5,7 @@ How to run:
 * added time to a bunch of functions types (funH, euler, RKk, BCs,nm_upwing, odiintegrator etc) 
 * added MMS case to burgers !be careful: you have to change S in eq_burgers otherwise 
 
+* git ff conflict :   git config pull.rebase false 
 
 DONE
 * Grid convergence  with   MMS 
