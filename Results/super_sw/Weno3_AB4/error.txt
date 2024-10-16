@@ -12,4 +12,4 @@ Order: 3.9429229973059585
 Starting simulation with N=400...
 Error at N=400 is 3.99945408326e-06
 Order: 3.9847584047941345
-
+Error at N=800 is 0.000531683394738
