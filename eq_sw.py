@@ -121,6 +121,36 @@ class SWEquation(Equation):
         l2 = u + np.sqrt(self.g*h)
         s1 = .5*(1 + np.sign(l1))
         s2 = .5*(1 + np.sign(l2))
+        
+        l1l = ul - np.sqrt(self.g*hl)
+        l1r = ur - np.sqrt(self.g*hr)
+        
+        l2l = ul + np.sqrt(self.g*hl)
+        l2r = ur + np.sqrt(self.g*hr)
+        
+        if l1l < 0 < l1r :
+            s1 = ( l1r - l1 )/( l1r - l1l )
+            
+        if l2r < 0 < l2l :
+            s2 = (l2l - l2)/( l2l - l2r )
+            
+    
+        #h = .5*(hl + hr)
+        #u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
+        #l1 = u - np.sqrt(self.g*h)
+        #l2 = u + np.sqrt(self.g*h)
+        #s1 = .5*(1 + np.sign(l1))
+        #s2 = .5*(1 + np.sign(l2))
+        
+        #if min( np.abs(l1),np.abs(l2) ) < 1.e-3 :
+        #    smax = max(np.abs(l1),np.abs(l2) )
+        #    s1 =  0.5 + 0.5*l1/smax
+        #    s2 =  0.5 + 0.5*l2/smax
+        #    print('LW instead of UPW !')
+        #else:
+        #    s1 = .5*(1 + np.sign(l1))
+        #    s2 = .5*(1 + np.sign(l2))
+        
         A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
         return 1./(l2 - l1)*A
     
@@ -135,6 +165,36 @@ class SWEquation(Equation):
         l2 = u + np.sqrt(self.g*h)
         s1 = .5*(1 - np.sign(l1))
         s2 = .5*(1 - np.sign(l2))
+        
+        l1l = ul - np.sqrt(self.g*hl)
+        l1r = ur - np.sqrt(self.g*hr)
+        
+        l2l = ul + np.sqrt(self.g*hl)
+        l2r = ur + np.sqrt(self.g*hr)
+        
+        if l1l < 0 < l1r :
+            s1 = ( l1 - l1l )/( l1r - l1l )
+            
+        if l2r < 0 < l2l :
+            s2 = (l2 - l2r)/( l2l - l2r )
+        
+        
+        #h = .5*(hl + hr)
+        #u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
+        #l1 = u - np.sqrt(self.g*h)
+        #l2 = u + np.sqrt(self.g*h)
+        #s1 = .5*(1 - np.sign(l1))
+        #s2 = .5*(1 - np.sign(l2))
+        
+        #if min( np.abs(l1),np.abs(l2) ) < 1.e-3 :
+        #    smax = max(np.abs(l1),np.abs(l2) )
+        #    s1 =  0.5 - 0.5*l1/smax
+        #    s2 =  0.5 - 0.5*l2/smax
+        #    print('LW instead of UPW !')
+        #else:
+        #    s1 = .5*(1 - np.sign(l1))
+        #    s2 = .5*(1 - np.sign(l2))
+            
         A = np.array([[s1*l2 -l1*s2, -s1 + s2], [l1*l2*(s1 - s2), -l1*s1 + l2*s2]])
         return 1./(l2 - l1)*A
     
@@ -345,9 +405,10 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        plt.plot(x, -H, 'b', label='-H')
-        plt.plot(x, u[0]-H, 'g', label='$\eta$')
-#        plt.plot(x, u[0], 'r', label='h')
+      #  plt.plot(x, -H, 'b', label='-H') # MARIO
+      #  plt.plot(x, u[0]-H, 'g', label='$\eta$') #MARIO
+
+        plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)
         #plt.plot(x, u[1]/u[0], label='u')

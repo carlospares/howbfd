@@ -126,6 +126,7 @@ class UpwindGF(NumericalMethod):
         i = (u.shape[1]-1)/2
         i = int(i)
         phi = eqn.F(u) - fstar
+            
   
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-
