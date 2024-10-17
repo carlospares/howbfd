@@ -1,8 +1,9 @@
 Subcritical flow for SW
 *.txt files contain
-x, eta_{initial}, q_{initial}, eta, q, H
+x, h_{initial}, q_{initial}, h, q, H
 
-inside the folder perturb we have two perturbations of 10^{-6} and 1.0
+inside the folder perturb we have three perturbations of 10^{-6}, 1.0 and a riemann state .
+The perturbations are placed on top of the sationary solution (of each scheme)
 
 same form in the txt files
 

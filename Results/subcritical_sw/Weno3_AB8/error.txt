@@ -1,0 +1,9 @@
+Starting simulation with N=25...
+Error at N=25 is 0.155897334069
+Error at N=50 is 0.0423201800308
+Order: 1.8811785875311737
+Error at N=100 is 0.000869687435909
+Order: 5.604704962362303
+Error at N=200 is 8.77515863998e-06
+Order: 6.630927974769752
+
