@@ -120,6 +120,10 @@ class EulerEquationSEC(Equation):
         E = U[2]
         p = ( gm - 1.0 )*( E - 0.5*u*u*rho )
         return np.array([ 0, -p, 0])
+        
+    def sigma(self, U):
+        """ Return sigma(U) """
+        return np.array([ 0, 0, 0 ])
 
 #    def upw_criterion(self, uStencil):
 #        """ Returns a pair (l,r) with the velocity for upwind criterion at

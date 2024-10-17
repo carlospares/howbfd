@@ -37,7 +37,7 @@ class Upwind(NumericalMethod):
             fl[:,i+1] += np.dot(eqn.Piplus(uGhost[:,mid], uGhost[:,mid+1]), Gr)
         
         for i in range(N):
-            tend[:,i] = -(fl[:,i+2] - fl[:,i+1])/dx+ eqn.S(u[:,i])*funH.Hx(x[i], tloc)
+            tend[:,i] = -(fl[:,i+2] - fl[:,i+1])/dx+ eqn.S(u[:,i])*funH.Hx(x[i], tloc) - eqn.sigma(u[:,i]) 
             
         if cf.funh==FunH.DISC:
             ind = np.where(x>=0)[0][0]

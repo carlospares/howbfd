@@ -35,6 +35,10 @@ class BurgersEquation(Equation):
         #return U # std burger's case
         return (U - 1.0)# MMSburg case
         
+    def sigma(self, U):
+        """ Return sigma(U) """
+        return 0.
+        
     def discH_jumpF(self, ui, uip1, i, dH, x, t):
         # depends on S
         delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. )

@@ -90,6 +90,10 @@ class EulerEquationGRAV(Equation):
     def S(self, U):
         """ Return S(U) """
         return np.array([ 0, self.g*U[0] ])
+        
+    def sigma(self, U):
+        """ Return sigma(U) """
+        return np.array([ 0, self.fcoeff*U[1] ])
 
 #    def upw_criterion(self, uStencil):
 #        """ Returns a pair (l,r) with the velocity for upwind criterion at
