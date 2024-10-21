@@ -12,4 +12,5 @@ Order: 5.833242346964502
 Starting simulation with N=480...
 Error at N=480 is 1.2172087413e-06
 Order: 5.955381248029537
+Error at N=960 is 1.9053284162e-08
 
