@@ -36,7 +36,7 @@ class UpwindWB(NumericalMethod):
             tend[:,i] = -(Gr - Gl)/dx
             if fail==1:
                 print ('fails at ', x[i])
-                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
+                tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc) - eqn.sigma(u[:,i])
         if fails>0:
             print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend

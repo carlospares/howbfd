@@ -66,7 +66,7 @@ def adamsbashforth2(eqn, Hx, H, u, x, i, t):
     
     sumSHx = np.zeros(nvars)
     for j in [-2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - eqn.sigma(u[:,i+j]) )
     return sumSHx
     
 def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
@@ -100,7 +100,8 @@ def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        FF = eqn.sigma(u[j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
         
     return sumSHx
 
@@ -111,7 +112,7 @@ def adamsbashforth3(eqn, Hx, H, u, x, i, t):
 
     sumSHx = np.zeros(nvars)
     for j in [-3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - sigma(u[:,i+j]))
 
     return sumSHx
     
@@ -147,7 +148,8 @@ def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        FF = eqn.sigma(u[j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
 
     return sumSHx
 
@@ -187,13 +189,13 @@ def adamsbashforth4(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-4,-3, -2, -1 ]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*( eqn.S(u[:,i+k])*Hx(x[i+k],t) - eqn.sigma(u[:,i+k]) )
 
     return sumSHx
 
@@ -228,7 +230,8 @@ def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        FF = eqn.sigma(u[j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
 
     return sumSHx
 
@@ -268,13 +271,13 @@ def adamsbashforth6(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-6, -5, -4,-3, -2, -1 ]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*( eqn.S(u[:,i+k])*Hx(x[i+k],t) - eqn.sigma(u[:,i+k]) )
 
     return sumSHx
 
@@ -309,7 +312,8 @@ def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        FF = eqn.sigma(u[j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
 
     return sumSHx
 
@@ -357,13 +361,13 @@ def adamsbashforth8(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-8, -7, -6, -5, -4,-3, -2, -1 ]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*( eqn.S(u[:,i+k])*Hx(x[i+k],t) - eqn.sigma(u[:,i+k]))
 
     return sumSHx
 
@@ -409,7 +413,7 @@ def adamsmoulton2(eqn, Hx, H, u, x, i, t):
 
     sumSHx = np.zeros(nvars)
     for j in [-1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) - eqn.sigma(u[:,i+j]) )
 
     return sumSHx
 
@@ -438,7 +442,8 @@ def adamsmoulton2SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        FF = eqn.sigma(u[j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] -  FF[1] )
 
     return sumSHx
 
@@ -451,7 +456,7 @@ def adamsmoulton3(eqn, Hx, H, u, x, i, t):
 
     sumSHx = np.zeros(nvars)
     for j in [-2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) - eqn.sigma(u[:,i+j]) )
 
     return sumSHx
 
@@ -488,7 +493,7 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -eqn.sigma(u[j+nsteps-1]) )
         
 
     return sumSHx
@@ -529,13 +534,13 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-3, -2, -1, 0]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*( eqn.S(u[:,i+k])*Hx(x[i+k], t) - eqn.sigma(u[:,i+k]) )
 
     return sumSHx
 
@@ -571,7 +576,7 @@ def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - eqn.sigma(u[j+nsteps-1]) )
 
     return sumSHx
 
@@ -609,13 +614,13 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
 
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-5, -4, -3, -2, -1, 0]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*( eqn.S(u[:,i+k])*Hx(x[i+k], t) - eqn.sigma(u[:,i+k]) )
 
     return sumSHx
 
@@ -652,7 +657,8 @@ def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        FF = eqn.sigma( u[j+nsteps-1] )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - FF[1] )
 
     return sumSHx
 
@@ -691,13 +697,13 @@ def adamsmoulton8(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
 
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
     else :
         for k in [-7, -6, -5, -4, -3, -2, -1, 0]:
-            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*( eqn.S(u[:,i+k])*Hx(x[i+k], t) - eqn.sigma(u[:,i+k]) )
 
     return sumSHx
 
@@ -733,7 +739,7 @@ def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-7, -6, -5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - eqn.sigma(u[j+nsteps-1]) )
 
     return sumSHx
 

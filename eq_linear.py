@@ -35,6 +35,10 @@ class LinearEquation(Equation):
     def S(self, U):
         """ Return S(U) """
         return U
+        
+    def sigma(self, U):
+        """ Return sigma(U) """
+        return 0. 
 
     
     def Piplus(self, ui, uip1):
