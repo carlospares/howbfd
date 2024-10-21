@@ -34,7 +34,7 @@ class UpwindGF(NumericalMethod):
         uGhost = np.zeros((nvars, N+2*gw)) 
         bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         tend = np.zeros((nvars,N))
-        fstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
+        fstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, initCond,funH, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
         #print fstar[1,:]
         #return
@@ -58,7 +58,7 @@ class UpwindGF(NumericalMethod):
             print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend
     
-    def gf(self, u, x, Hx, H, eqn, gw, dx, tloc):
+    def gf(self, u, x, Hx, H, eqn, initCond, funH, gw, dx, tloc):
 #        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
@@ -75,10 +75,11 @@ class UpwindGF(NumericalMethod):
             for i in reversed(range(nsteps-gw)):
                 #uloc[:,i] = np.exp(x[0]-k*dx)**2  #Ugly hack for convergence in steady case
                 #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                uloc[:,i] = u[:,0] 
+                #uloc[:,i] = u[:,0]
                 xloc[i] = x[0]-k*dx
                 k +=1
-            #prin uloc    
+            uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
+            #prin uloc
             #print xloc
             #return    
             uloc[:,nsteps:]=u[:,gw:]    
