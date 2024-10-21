@@ -34,7 +34,7 @@ def weno3_rec(phim1, phi0, phip1):
         By symmetry, weno3_rec(phip1, phi0, phim1) will perform a right-biased
         reconstruction at x_{i-1/2}
     """
-    # eps = 1e-10
+#eps = 1e-10
     p0 = -0.5*phim1 + 1.5*phi0
     p1 = 0.5*phi0 + 0.5*phip1
      
@@ -44,9 +44,9 @@ def weno3_rec(phim1, phi0, phip1):
     alpha0 = (1.0/3.0) / (eps + beta0)/ (eps + beta0)
     alpha1 = (2.0/3.0) / (eps + beta1) / (eps + beta1)
 
-#    alpha0 = 1./3.
-#    alpha1 = 2./3.
-#     
+    alpha0 = 1./3.
+    alpha1 = 2./3.
+#
     alpha_sum = alpha0 + alpha1
      
     w0 = alpha0 / alpha_sum
@@ -59,7 +59,7 @@ def weno5_rec(phim2, phim1, phi0, phip1, phip2):
     """ Performs left-biased 5th order reconstruction
         Cf. weno3_rec
     """
-    # eps = 1e-10
+    eps = 1e-10
     p0 = (1.0/3.0) * phim2  - (7.0/6.0)*phim1 + (11.0/6.0)*phi0
     p1 = (-1.0/6.0) * phim1 + (5.0/6.0)*phi0 + (1.0/3.0)*phip1
     p2 = (1.0/3.0) * phi0 + (5.0/6.0)*phip1 - (1.0/6.0)*phip2

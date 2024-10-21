@@ -84,9 +84,12 @@ def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
     
     
@@ -100,8 +103,7 @@ def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1]:
-        FF = eqn.sigma(u[j+nsteps])
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
         
     return sumSHx
 
@@ -132,9 +134,12 @@ def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
     
     Bx = np.zeros(nsteps)
@@ -148,8 +153,8 @@ def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-3, -2, -1]:
-        FF = eqn.sigma(u[j+nsteps])
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
+        FF = eqn.sigma(u[:,j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
 
     return sumSHx
 
@@ -214,9 +219,12 @@ def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
 
@@ -230,8 +238,8 @@ def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-4, -3, -2, -1]:
-        FF = eqn.sigma(u[j+nsteps])
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
+        FF = eqn.sigma(u[:,j+nsteps])
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
 
     return sumSHx
 
@@ -296,9 +304,12 @@ def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
 
@@ -312,8 +323,7 @@ def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-6, -5, -4, -3, -2, -1]:
-        FF = eqn.sigma(u[j+nsteps])
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - FF[1] )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
 
     return sumSHx
 
@@ -386,9 +396,12 @@ def adamsbashforth8SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
 
@@ -402,7 +415,7 @@ def adamsbashforth8SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
 
     return sumSHx
 
@@ -442,7 +455,7 @@ def adamsmoulton2SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1]:
-        FF = eqn.sigma(u[j+nsteps])
+        FF = eqn.sigma(u[:,j+nsteps])
         sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] -  FF[1] )
 
     return sumSHx
@@ -476,9 +489,12 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
         eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
     
     Bx = np.zeros(nsteps)
@@ -493,7 +509,7 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -eqn.sigma(u[j+nsteps-1]) )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -sig[j+nsteps-1]  )
         
 
     return sumSHx
@@ -558,10 +574,13 @@ def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
     # - bathymetry and bathymetry derivatives values
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
         eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
     Bx = np.zeros(nsteps)
@@ -576,7 +595,8 @@ def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - eqn.sigma(u[j+nsteps-1]) )
+        
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
 
     return sumSHx
 
@@ -640,9 +660,12 @@ def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
         eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
     Bx = np.zeros(nsteps)
@@ -657,8 +680,7 @@ def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-5, -4, -3, -2, -1, 0]:
-        FF = eqn.sigma( u[j+nsteps-1] )
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - FF[1] )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
 
     return sumSHx
 
@@ -722,9 +744,12 @@ def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
+    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
         eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        sig[l]=FF[1]
         bb[l] = H(x[i-nsteps+l+1],t)
 
     Bx = np.zeros(nsteps)
@@ -739,7 +764,7 @@ def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
     for j in [-7, -6, -5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - eqn.sigma(u[j+nsteps-1]) )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -  sig[j+nsteps-1] )
 
     return sumSHx
 

@@ -71,7 +71,7 @@ for level in range(0, config.refinements+1):
         t += dt
         io_manager.io_if_appropriate(x, u-uin, H, t, config)
         
-        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, t)
+        print ('Error is',np.sum(np.abs(uin[0,3:N-3] - u[0,3:N-3]))*dx, t)
 
         #print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx

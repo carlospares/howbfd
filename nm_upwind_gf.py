@@ -49,6 +49,7 @@ class UpwindGF(NumericalMethod):
             (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, eqn)
             #fails += fail
             tend[:,i] = -(Gr - Gl)/dx
+           #print ('fails at ', tend[:,i])
             
             if fail==1:
                 print ('fails at ', x[i])

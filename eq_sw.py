@@ -20,7 +20,8 @@ class SWEquation(Equation):
     
     # other function parameters
     g = 9.812
-    fcoeff =  0.
+    fcoeff = 0.3
+    #fcoeff = 0.3 #for exact solution with imposed free surface
 
     def F(self, U):
         """ Flux function """
@@ -93,7 +94,9 @@ class SWEquation(Equation):
         
     def sigma(self, U):
         """ Return sigma(U) """
-        return np.array([ 0, self.fcoeff*U[1] ])
+       # return np.array([ 0, self.fcoeff*U[1] ]) # simple linear friction
+         #return np.array([ 0, self.g*self.fcoeff*self.fcoeff*U[1]*np.abs(U[1])*pow(U[0],-7./3.) ]) # manning
+        return np.array([ 0, self.fcoeff*U[1]*np.abs(U[1])*U[0]]) # for exact solution with imposed free surface
 
 #    def upw_criterion(self, uStencil):
 #        """ Returns a pair (l,r) with the velocity for upwind criterion at
@@ -127,17 +130,17 @@ class SWEquation(Equation):
         s1 = .5*(1 + np.sign(l1))
         s2 = .5*(1 + np.sign(l2))
         
-        l1l = ul - np.sqrt(self.g*hl)
-        l1r = ur - np.sqrt(self.g*hr)
+       # l1l = ul - np.sqrt(self.g*hl)
+       # l1r = ur - np.sqrt(self.g*hr)
         
-        l2l = ul + np.sqrt(self.g*hl)
-        l2r = ur + np.sqrt(self.g*hr)
+       # l2l = ul + np.sqrt(self.g*hl)
+       # l2r = ur + np.sqrt(self.g*hr)
         
-        if l1l < 0 < l1r :
-            s1 = ( l1r - l1 )/( l1r - l1l )
+       # if l1l < 0 < l1r :
+       #     s1 = ( l1r - l1 )/( l1r - l1l )
             
-        if l2r < 0 < l2l :
-            s2 = (l2l - l2)/( l2l - l2r )
+       # if l2r < 0 < l2l :
+       #     s2 = (l2l - l2)/( l2l - l2r )
             
     
         #h = .5*(hl + hr)
@@ -171,17 +174,17 @@ class SWEquation(Equation):
         s1 = .5*(1 - np.sign(l1))
         s2 = .5*(1 - np.sign(l2))
         
-        l1l = ul - np.sqrt(self.g*hl)
-        l1r = ur - np.sqrt(self.g*hr)
+       # l1l = ul - np.sqrt(self.g*hl)
+       # l1r = ur - np.sqrt(self.g*hr)
         
-        l2l = ul + np.sqrt(self.g*hl)
-        l2r = ur + np.sqrt(self.g*hr)
+       # l2l = ul + np.sqrt(self.g*hl)
+       # l2r = ur + np.sqrt(self.g*hr)
         
-        if l1l < 0 < l1r :
-            s1 = ( l1 - l1l )/( l1r - l1l )
+       # if l1l < 0 < l1r :
+       #     s1 = ( l1 - l1l )/( l1r - l1l )
             
-        if l2r < 0 < l2l :
-            s2 = (l2 - l2r)/( l2l - l2r )
+       # if l2r < 0 < l2l :
+       #     s2 = (l2 - l2r)/( l2l - l2r )
         
         
         #h = .5*(hl + hr)
@@ -262,6 +265,7 @@ class SWEquation(Equation):
 
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
+        
     
     def steady_trans(self,H,x): 
         U0 = np.ones((self.dim(), len(H)))
@@ -410,10 +414,10 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-      #  plt.plot(x, -H, 'b', label='-H') # MARIO
-      #  plt.plot(x, u[0]-H, 'g', label='$\eta$') #MARIO
-
-        plt.plot(x, u[0], 'r', label='h')
+        #plt.plot(x, -H, 'k', label='$b$') # MARIO
+        #plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
+        plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)
         #plt.plot(x, u[1]/u[0], label='u')

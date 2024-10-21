@@ -24,6 +24,7 @@ class FunH:
     STEP   = 312
     PAR   = 313
     EUL_SEC = 314
+    FRICTSOL = 315
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -110,6 +111,19 @@ class FunH:
         elif self.funH==self.EUL_SEC:
             Ax = -3.0/5.0*(1-(x+5.0)/5)*(x>-5)*(x<=0) +  -1.0/5.0*(1-(x+5.0)/5)*(x>0)*(x<=5)
             H = Ax
+        elif self.funH==self.FRICTSOL:
+            coeffa=1.5
+            coeffb=0.5
+            eta=coeffa+1-coeffb*((2*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            eta0=coeffa+1-coeffb*( - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            hh0=1
+            Fr0=1.5
+            kk0=Fr0*Fr0*9.812*hh0/2
+            q02=hh0*hh0*kk0*2
+            kappa = 0.3 #friction coefficient
+            hh=hh0*hh0*kk0/(kk0-kappa*q02*x-9.812*(eta-eta0) ) #exact depth
+            hh=np.sqrt(hh)
+            H=hh-eta
         return H
     
     def Hx(self, x, t):
@@ -151,5 +165,23 @@ class FunH:
             Hx=2.0*x 
         elif self.funH==self.EUL_SEC:
             Hx = 3.0/25.0*(x>-5)*(x<=0) +  1.0/25.0*(x>0)*(x<=5)
+        elif self.funH==self.FRICTSOL:
+            coeffa=1.5
+            coeffb=0.5
+            eta=coeffa+1-coeffb*((2*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            eta0=coeffa+1-coeffb*( - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            etax=-coeffb*( 2*np.exp(np.cos(4*np.pi*x))-(2*x)*np.exp(np.cos(4*np.pi*x))*np.sin(4*np.pi*x)*4*np.pi) /(np.exp(1)-np.exp(-1))
+            hh0=1
+            Fr0=1.5
+            kk0=Fr0*Fr0*9.812*hh0/2
+            q02=hh0*hh0*kk0*2
+            kappa = 0.3 #friction coefficient
+            #hh=hh0*hh0*k0/(k0-kappa*q02*x-9.812*(eta-1.5) ) #exact depth
+            #hh=sqrt(hh)
+            hh=1./(kk0-kappa*q02*x-9.812*(eta-eta0) )
+            hh=np.sqrt(hh)
+            hhx = -0.5*np.sqrt(hh0*hh0*kk0)*hh*hh*hh*( -kappa*q02-9.812*etax )
+            #H=hh-eta
+            Hx = hhx - etax
         return Hx
 

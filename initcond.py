@@ -22,6 +22,7 @@ class InitCond:
     MMSburg  = 511
 #    SW_TRANS = 510
     Eulersec = 512
+    Frictsol = 513
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -134,6 +135,20 @@ class InitCond:
             U0[0] = 0.0
             U0[1] = 0.0
             U0[2] = 0.0
+        elif self.initCond==InitCond.Frictsol:
+            coeffa=1.5
+            coeffb=0.5
+            eta=coeffa+1-coeffb*((2*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            eta0=coeffa+1-coeffb*( - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+            hh0=1
+            Fr0=1.5
+            kk0=Fr0*Fr0*9.812*hh0/2
+            q02=hh0*hh0*kk0*2
+            kappa = 0.3 #friction coefficient
+            hh=hh0*hh0*kk0/(kk0-kappa*q02*x-9.812*(eta-eta0) ) #exact depth
+            hh=np.sqrt(hh)
+            U0[0] = hh
+            U0[1] = np.sqrt(q02)
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):
@@ -151,7 +166,8 @@ class InitCond:
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         elif self.pert ==InitCond.PERT_WB:
-            pert[0] = .02*(x<=-.3)*(x>=-.4)
+            #pert[0] = .02*(x<=-.3)*(x>=-.4)
+            pert[0] = .1*(x<=.2)*(x>=.1)
         elif self.pert == InitCond.PERT_WM:
             pert[0] = .5*(x<7.)*(x > 5.)
         elif self.pert == InitCond.PERT_DISC:
