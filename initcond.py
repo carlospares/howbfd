@@ -73,6 +73,12 @@ class InitCond:
                 file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
+                file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
+            elif N== 80:
+                file_in = open('frict-super-data/steady-super-weno3-80.txt', 'r')
+                #file_in = open('frict-super-data/steady-super-weno3AM4-80.txt', 'r')
+                #file_in = open('frict-super-data/steady-super-weno3AM6-80.txt', 'r')
+                #file_in = open('frict-super-data/steady-super-weno3AM8-80.txt', 'r')
             elif N== 100:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
@@ -103,7 +109,8 @@ class InitCond:
 #                xx.append(float(y))
 #
 #            U0[0] = xx#2 + H
-#            U0[1] = U0[1]+ 24.0#4.42#1.53#24.0
+#            U0[1] = U0[1]+ 1.53#4.42#1.53#24.0
+            self.initCond=InitCond.Frictsol
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
             U0[0] = 2.0 + H
@@ -132,14 +139,23 @@ class InitCond:
 #            U0[2] = 0.0
         elif self.initCond==InitCond.Frictsol:
             coeffa=1.5
-            coeffb=0.5
-            eta=coeffa+1-coeffb*((2*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
+        # SUPERCRITICAL CASE
+            #coeffb=0.5
+            #coeffc=2
+            #Fr0=1.5
+            #kappa = 0.3 #friction coefficient
+        # SUBCRITICAL CASE
+            coeffb=0.25
+            coeffc=0.5
+            Fr0=0.3
+            kappa = 0.5 #friction coefficient
+            
+            
+            eta=coeffa+1-coeffb*((coeffc*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
             eta0=coeffa+1-coeffb*( - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
             hh0=1
-            Fr0=1.5
             kk0=Fr0*Fr0*9.812*hh0/2
             q02=hh0*hh0*kk0*2
-            kappa = 0.3 #friction coefficient
             hh=hh0*hh0*kk0/(kk0-kappa*q02*x-9.812*(eta-eta0) ) #exact depth
             hh=np.sqrt(hh)
             U0[0] = hh
@@ -161,8 +177,8 @@ class InitCond:
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         elif self.pert ==InitCond.PERT_WB:
-            #pert[0] = .02*(x<=-.3)*(x>=-.4)
-            pert[0] = .1*(x<=.2)*(x>=.1)
+            pert[1] = .0001*(x<=.5)*(x>=.4)
+            #pert[1] = .0001*(x<=.2)*(x>=.1)
         elif self.pert == InitCond.PERT_WM:
             pert[0] = .5*(x<7.)*(x > 5.)
         elif self.pert == InitCond.PERT_DISC:
