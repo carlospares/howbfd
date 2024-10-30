@@ -1,0 +1,47 @@
+w3am4=load('DISC_0p0001_from_analytical/Weno3_AM4_N100_T1p0.txt');
+w3am6=load('DISC_0p0001_from_analytical/Weno3_AM6_N100_T1p0.txt');
+w3am8=load('DISC_0p0001_from_analytical/Weno3_AM8_N100_T1p0.txt');
+w3up=load('DISC_0p0001_from_analytical/Weno3_Upwind_N100_T1p0.txt');
+
+analytic=load('../../../initial_data/analytical_sw/subcritical/initial_sub_100.dat');
+
+%subplot(3,1,1)
+figure
+%plot(w3am4(:,1),w3am4(:,2)-analytic,'b','linewidth',2);
+plot(w3am4(:,1),w3am4(:,4)-w3am4(:,6),'b',w3am4(:,1),-w3am4(:,6),'k','linewidth',2);
+pert=w3am4(:,2)-analytic;
+
+xlim_zoom = [1.5, 2.5];
+ylim_zoom = [sin(1.5), sin(2.5)];
+
+zoom_axes = axes('Position', [0.5, 0.3, 0.35, 0.35]); % Position in normalized units [left bottom width height]
+box on;
+
+% Plot the zoomed-in region in the new axes
+plot(w3am4(:,1),pert(:),'LineWidth', 1.5);
+xlabel('Zoomed x');
+ylabel('\eta');
+title('Perturbation');
+
+% Set limits for the zoomed-in plot
+xlim([6 11]);
+%ylim(ylim_zoom);
+
+% Highlight the zoomed region on the main plot
+hold on;
+%rectangle('Position', [xlim_zoom(1), ylim_zoom(1), diff(xlim_zoom), diff(ylim_zoom)], ...
+%    'EdgeColor', 'r', 'LineWidth', 1.5, 'LineStyle', '--');
+%hold off;
+
+figure
+subplot(2,1,1)
+%plot(w3am4(:,1),w3am4(:,4)-w3am4(:,6),'b',w3am4(:,1),-w3am4(:,6),'k','linewidth',2);
+
+plot(w3am4(:,1),w3am4(:,4)-w3am4(:,2)+pert,'b','linewidth',2); hold on
+plot(w3am6(:,1),w3am6(:,4)-w3am4(:,2)+pert,'b','linewidth',2); 
+legend('\eta','b')
+%axis([0 25 -0.1 2.1])
+
+subplot(2,1,2)
+plot(w3am4(:,1),w3am4(:,5),'b','linewidth',2);
+legend('q')
