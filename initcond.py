@@ -34,6 +34,7 @@ class InitCond:
     PERT_WB = 607
     PERT_WM = 608
     PERT_DISC = 609
+    PERT_RIEMANN = 610
 
     C = 0 # average of sine perturbation
 
@@ -69,46 +70,40 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_25.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_25.dat', 'r')
             elif N== 50:
-                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
+                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_50.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_50.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
             elif N== 100:
                 #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_100.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_100.dat', 'r')
-                file_in = open('initial_data/analytical_sw/transcritical/trans_100_ex.dat', 'r')
-                #U0=exact=self.steady_form_file(x)
+                #file_in = open('initial_data/analytical_sw/transcritical/trans_100_ex.dat', 'r')
+                U0=exact=self.steady_form_file(x)
             elif N== 200:
                 file_in = open('initial_data/analytical_sw/subcritical/initial_sub_200.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_200.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_200.dat', 'r')
             elif N== 400:
-                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_400.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_400.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_400.dat', 'r')
+                U0=exact=self.steady_form_file(x)
             elif N== 800:
-                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_800.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_800.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_800.dat', 'r')
+                U0=exact=self.steady_form_file(x)
             elif N== 5000:
-                file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
-                #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
+                #file_in = open('initial_data/analytical_sw/subcritical/initial_sub_5000.dat', 'r')
+                file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
                 #fO1 = open('./Grid_convergence_files/w50-t1-O1.dat', 'r')
 
-#            for line in file_in:
-#                line = line.strip()
-#                columns = line.split()
-#                print columns[1],m1
-#                #xO1[m1] = float(columns[0])
-#                #xx[m1]  = float(columns[4])
-#                m1 = m1 + 1
-#                #file_in.close()
-            for y in file_in.read().split('\n'):
-                #if y.isdigit():
-                xx.append(float(y))
-
-            U0[0] = xx#2 + H
-            U0[1] = U0[1]+ 1.53#4.42#1.53#24.0
+#            for y in file_in.read().split('\n'):
+#                #if y.isdigit():
+#                xx.append(float(y))
+#
+#            U0[0] = xx#2 + H
+#            U0[1] = U0[1]+ 24.0#4.42#1.53#24.0
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
             U0[0] = 2.0 + H
@@ -130,11 +125,11 @@ class InitCond:
 #            U0 = self.trans(x,H)
         elif self.initCond==InitCond.MMSburg:
             U0 = np.exp(-(x-5.0)*(x-5.0))
-        elif self.initCond==InitCond.WATER_AT_REST:
-            N=len(x)
-            U0[0] = 0.0
-            U0[1] = 0.0
-            U0[2] = 0.0
+#        elif self.initCond==InitCond.WATER_AT_REST:
+#            N=len(x)
+#            U0[0] = 0.0
+#            U0[1] = 0.0
+#            U0[2] = 0.0
         elif self.initCond==InitCond.Frictsol:
             coeffa=1.5
             coeffb=0.5
@@ -173,13 +168,15 @@ class InitCond:
         elif self.pert == InitCond.PERT_DISC:
             #pert[0] = 0.1*(x <=-0.5 )*(x > -0.7)
             #pert[0] = 0.1*(x <=13.5 )*(x >= 11.5)
-            pert[0] = 0.000001*(x <=9.5 )*(x >= 7.5)
+            pert[0] = 0.0001*(x <=9.5 )*(x >= 7.5)
+        elif self.pert == InitCond.PERT_RIEMANN:
+            pert[0] = 1.0*(x<=12.0)
         return pert
     
     def steady_form_file(self,x):
         xx = []
         N=len(x)
-        U0 = np.zeros((2, N))
+        U0 = np.zeros((self.eqn.dim(), len(x)))
 #        if N == 25:
 #            file_in = open('initial_data/analytical_sw/subcritical/ex_sub_25.dat', 'r')
 #        elif N== 50:
@@ -200,7 +197,14 @@ class InitCond:
 #        U0[0] = xx#2 + H
 #        #print U0[0]
 #        U0[1] = 1.53#U0[1]+24.0
-        with open('subcritical_sw/Weno3_AM4/out100.txt', 'r') as file:
+
+#        with open('Results/subcritical_sw/Weno_upind/out100', 'r') as file:
+#        with open('Results/subcritical_sw/Weno3_AM8/out100.txt', 'r') as file:
+#        with open('Results/super_sw/Weno7_AM8/out800.txt', 'r') as file:
+#        with open('Results/super_sw/weno3_upwind/out100', 'r') as file:
+        #with open('Results/Manning/supercritical/weno3_am4_N100_steady.txt', 'r') as file:
+        with open('Results/Manning/supercritical/weno3_upwind_N100_steady.txt', 'r') as file:
+
              # Initialize empty lists for each column
             column1 = []
             column2 = []
