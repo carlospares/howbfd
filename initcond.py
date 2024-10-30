@@ -104,6 +104,17 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
                 #fO1 = open('./Grid_convergence_files/w50-t1-O1.dat', 'r')
 
+            m1 = 0
+            for line in file_in:
+                line = line.strip()
+                columns = line.split()
+                x[m1] = float(columns[0])
+                U0[0,m1] = float(columns[1])
+                U0[1,m1] = float(columns[2])
+                print(columns[0],m1)
+                m1 = m1 + 1
+            file_in.close()
+
 #            for y in file_in.read().split('\n'):
 #                #if y.isdigit():
 #                xx.append(float(y))
@@ -140,15 +151,15 @@ class InitCond:
         elif self.initCond==InitCond.Frictsol:
             coeffa=1.5
         # SUPERCRITICAL CASE
-            #coeffb=0.5
-            #coeffc=2
-            #Fr0=1.5
-            #kappa = 0.3 #friction coefficient
+            coeffb=0.5
+            coeffc=2
+            Fr0=1.5
+            kappa = 0.3 #friction coefficient
         # SUBCRITICAL CASE
-            coeffb=0.25
-            coeffc=0.5
-            Fr0=0.3
-            kappa = 0.5 #friction coefficient
+            #coeffb=0.25
+            #coeffc=0.5
+            #Fr0=0.3
+            #kappa = 0.5 #friction coefficient
             
             
             eta=coeffa+1-coeffb*((coeffc*x)*np.exp(np.cos(4*np.pi*x)) - np.exp(-1))/(np.exp(1)-np.exp(-1)) #exact free surface
