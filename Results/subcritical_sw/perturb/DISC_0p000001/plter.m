@@ -1,5 +1,6 @@
 
 load w3_am4_n100.txt
+load w3_am6_n100.txt
 load w3_am8_n100.txt
 load w3_upwind_n100.txt
 load w3_am4_n100_st.txt

@@ -14,3 +14,30 @@ Error at N=320 is 1.97913335651e-09
 Order: 3.993767733948055
 CPU Time: 979.259912
 
+until T=5
+0.000121858196307
+7.86529204402e-06
+5.00064193944e-07
+3.15297229901e-08
+1.97920013642e-09
+
+tarting simulation with N=20...
+('d\\eta/dt', 1.616891620592751e-11)
+Error at N=20 is 0.000121858196307
+Starting simulation with N=40...
+('d\\eta/dt', 4.3798298321462366e-15)
+Error at N=40 is 7.86529204402e-06
+Order: 3.95355914629296
+Starting simulation with N=80...
+('d\\eta/dt', 2.775557561562906e-18)
+Error at N=80 is 5.00064193944e-07
+Order: 3.975315122274165
+Starting simulation with N=160...
+('d\\eta/dt', 1.5265566588595984e-17)
+Error at N=160 is 3.15297229901e-08
+Order: 3.987328907426159
+Starting simulation with N=320...
+('d\\eta/dt', 1.0755285551055975e-17)
+Error at N=320 is 1.97920013642e-09
+Order: 3.993723085047509
+

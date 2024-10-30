@@ -10,3 +10,22 @@ Starting simulation with N=160...
 Error at N=160 is 6.65807686762e-14
 Order: 23.916105470231212
 
+
+until T=5
+
+Starting simulation with N=20...
+('d\\eta/dt', 1.7666590050663376e-05)
+Error at N=20 is 0.000207187911796
+Starting simulation with N=40...
+('d\\eta/dt', 7.675252741930194e-05)
+Error at N=40 is 0.000535351844157
+Order: -1.3695475391965726
+Starting simulation with N=80...
+('d\\eta/dt', 4.087159982402188e-07)
+Error at N=80 is 1.33809153474e-06
+Order: 8.644166751920515
+Starting simulation with N=160...
+('d\\eta/dt', 1.1102230246251625e-17)
+Error at N=160 is 1.16005816064e-13
+Order: 23.459476335831337
+
