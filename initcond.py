@@ -75,7 +75,14 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
                 file_in = open('initial_data/analytical_sw/transcritical/trans_50_ex.dat', 'r')
             elif N== 80:
-                file_in = open('frict-super-data/steady-super-weno3-80.txt', 'r')
+                #file_in = open('frict-sub-data/steady-sub-weno3-80.txt', 'r')
+                #file_in = open('frict-sub-data/steady-sub-weno5-80.txt', 'r')
+                #file_in = open('frict-sub-data/steady-sub-weno3AM4-80.txt', 'r')
+                #file_in = open('frict-sub-data/steady-sub-weno3AM6-80.txt', 'r')
+                file_in = open('frict-sub-data/steady-sub-weno3AM8-80.txt', 'r')
+                #
+                #file_in = open('frict-super-data/steady-super-weno3-80.txt', 'r')
+                #file_in = open('frict-super-data/steady-super-weno5-80.txt', 'r')
                 #file_in = open('frict-super-data/steady-super-weno3AM4-80.txt', 'r')
                 #file_in = open('frict-super-data/steady-super-weno3AM6-80.txt', 'r')
                 #file_in = open('frict-super-data/steady-super-weno3AM8-80.txt', 'r')
