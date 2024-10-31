@@ -104,16 +104,16 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
                 #fO1 = open('./Grid_convergence_files/w50-t1-O1.dat', 'r')
 
-            m1 = 0
-            for line in file_in:
-                line = line.strip()
-                columns = line.split()
-                x[m1] = float(columns[0])
-                U0[0,m1] = float(columns[1])
-                U0[1,m1] = float(columns[2])
-                print(columns[0],m1)
-                m1 = m1 + 1
-            file_in.close()
+#            m1 = 0
+#            for line in file_in:
+#                line = line.strip()
+#                columns = line.split()
+#                x[m1] = float(columns[0])
+#                U0[0,m1] = float(columns[1])
+#                U0[1,m1] = float(columns[2])
+#                print(columns[0],m1)
+#                m1 = m1 + 1
+#            file_in.close()
 
 #            for y in file_in.read().split('\n'):
 #                #if y.isdigit():
@@ -121,7 +121,7 @@ class InitCond:
 #
 #            U0[0] = xx#2 + H
 #            U0[1] = U0[1]+ 1.53#4.42#1.53#24.0
-            self.initCond=InitCond.Frictsol
+#            self.initCond=InitCond.Frictsol
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
             U0[0] = 2.0 + H
