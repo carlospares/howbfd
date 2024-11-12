@@ -36,7 +36,6 @@ class UpwindGF(NumericalMethod):
         tend = np.zeros((nvars,N))
         fstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, initCond,funH, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
-        #print fstar[1,:]
         #return
 
         fails = 0
@@ -78,7 +77,11 @@ class UpwindGF(NumericalMethod):
                 #uloc[:,i] = u[:,0]
                 xloc[i] = x[0]-k*dx
                 k +=1
-            uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
+
+            for j in range(nsteps-gw):
+                uloc[:,j] = uloc[:,nsteps-gw] - (nsteps-gw-j)*(uloc[:,nsteps-gw+1]-uloc[:,nsteps-gw]) #extrapolation
+                
+            #uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
             #prin uloc
             #print xloc
             #return    
@@ -101,19 +104,15 @@ class UpwindGF(NumericalMethod):
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
         fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
-
  
-        #print np.size(fstar),N+min(2*gw-nsteps,0)
+        #print fstar.shape,N+min(2*gw-nsteps,0)
         #for i in range(N+min(2*gw-nsteps,0)):
+        #for i in range(N+gw):
         for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-            #print i,iOff,np.size(uloc)
             sumSHx=odi.odeint(nsteps,multmeth, eqn, Hx, H, uloc, xloc, iOff, tloc)
-            
 
             fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
-            #fstar[:,i+1] = fstar[:,i] + dx*sumSHx
-
         #if nsteps< 2*gw :
         #    fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
     
@@ -128,7 +127,6 @@ class UpwindGF(NumericalMethod):
         i = (u.shape[1]-1)/2
         i = int(i)
         phi = eqn.F(u) - fstar
-            
   
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-

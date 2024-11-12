@@ -11,10 +11,10 @@ ref = np.loadtxt('DISC_0p0001/reference_W3_AM4_N5000_T1.txt')
 
 # First figure
 plt.figure()
-pert4 = w3am4[:, 1] - w3am4[:,5]
-pert6 = w3am6[:, 1] - w3am6[:,5]
-pert8 = w3am8[:, 1] - w3am8[:,5]
-pert_ref = ref[:, 1] -ref[:,5]
+pert4 = w3am4[:, 1] - w3am4[:,5]-2.0
+pert6 = w3am6[:, 1] - w3am6[:,5] -2.0
+pert8 = w3am8[:, 1] - w3am8[:,5] -2.0
+pert_ref = ref[:, 1] -ref[:,5] -2.0
 
 # Plot the perturbation (difference between the numerical solution and analytical)
 plt.plot(w3am4[:, 0], w3am4[:, 3] - w3am4[:, 5], 'b', linewidth=2, label='$\eta$')
@@ -23,7 +23,7 @@ plt.plot(w3am4[:, 0], -w3am4[:, 5], 'k', linewidth=2,label='$-H(x)$')
 plt.legend(loc='upper right',bbox_to_anchor=(1, 0.95),fontsize=12,framealpha=0.5)
 
 plt.xlabel(r'$x$', fontsize=18)
-plt.ylabel(r'$\eta$', fontsize=18)
+#plt.ylabel(r'$\eta$', fontsize=18)
 plt.axis([0, 25, -0.1, 2.1])
 
 
@@ -38,8 +38,8 @@ plt.box(on=True)
 
 # Plot the zoomed-in region in the new axes
 plt.plot(w3am4[:, 0], pert4, linewidth=1.5)
-plt.xlabel('Zoomed x')
-plt.ylabel(r'$\eta$')
+#plt.xlabel('Zoomed x')
+#plt.ylabel(r'$\eta$')
 plt.title('Perturbation')
 
 # Set limits for the zoomed-in plot
@@ -62,24 +62,27 @@ plt.plot(w3am4[:, 0], w3am4[:, 3] - w3am4[:, 1] + pert4, '-ob', linewidth=2, lab
 plt.plot(w3am6[:, 0], w3am6[:, 3] - w3am6[:, 1] + pert6, '--k', linewidth=2, label='GF-AM6')
 plt.plot(w3am8[:, 0], w3am8[:, 3] - w3am8[:, 1] + pert8, '-.c', linewidth=2, label='GF-AM8')
 
-plt.legend(loc='upper right',bbox_to_anchor=(1, 1.05),fontsize=11,framealpha=0.5)
+plt.legend(loc='upper right',bbox_to_anchor=(1, 1.),fontsize=11,framealpha=1.0)
 plt.xlabel(r'$x$', fontsize=18)
-plt.ylabel(r'$\eta$', fontsize=18)
+plt.ylabel(r'$\eta-\eta_s$', fontsize=18)
 plt.grid()
-plt.axis([0, 30, 2-0.00001, 2+0.00006])
+plt.ticklabel_format(axis='both', style='plain',scilimits=(4,4))
+plt.axis([0, 25, -0.00001, +0.000075])
 
+plt.tight_layout()
 # Subplot 2: Comparison of AM4, AM6, AM8 for 'q' values
 plt.subplot(2, 1, 2)
-plt.plot(w3up[:, 0], w3up[:, 4], '--', linewidth=2, label='WENO3',color='slategray')
-plt.plot(ref[:, 0], ref[:, 4], 'r', linewidth=2.5, label='reference')
-plt.plot(w3am4[:, 0], w3am4[:, 4], '-ob', linewidth=2, label='GF-AM4',markersize=3)
-plt.plot(w3am6[:, 0], w3am6[:, 4], '--k', linewidth=2, label='GF-AM6')
-plt.plot(w3am8[:, 0], w3am8[:, 4], '-.c', linewidth=2, label='GF-AM8')
-plt.axis([0, 30, -0.0003, 0.0003])
+plt.plot(w3up[:, 0], w3up[:, 4]-w3up[:,2], '--', linewidth=2, label='WENO3',color='slategray')
+plt.plot(ref[:, 0], ref[:, 4]-ref[:,2], 'r', linewidth=2.5, label='reference')
+plt.plot(w3am4[:, 0], w3am4[:, 4]-w3am4[:,2], '-ob', linewidth=2, label='GF-AM4',markersize=3)
+plt.plot(w3am6[:, 0], w3am6[:, 4]-w3am6[:,2], '--k', linewidth=2, label='GF-AM6')
+plt.plot(w3am8[:, 0], w3am8[:, 4]-w3am8[:,2], '-.c', linewidth=2, label='GF-AM8')
+plt.ticklabel_format(axis='y', style='plain',scilimits=(4,4))
+plt.axis([0, 25, -0.0003, 0.0003])
 
-plt.legend(loc='upper right',bbox_to_anchor=(1, 0.97),fontsize=11,framealpha=0.5)
+plt.legend(loc='upper right',bbox_to_anchor=(1, 1.0),fontsize=11,framealpha=1.0)
 plt.xlabel(r'$x$', fontsize=18)
-plt.ylabel(r'$q$', fontsize=18)
+plt.ylabel(r'$q-q_s$', fontsize=18)
 plt.grid()
 
 plt.tight_layout()

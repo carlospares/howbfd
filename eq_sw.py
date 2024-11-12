@@ -20,8 +20,8 @@ class SWEquation(Equation):
     
     # other function parameters
     g = 9.812
-    fcoeff = 0.3
-    #fcoeff = 0.3 #for exact solution with imposed free surface
+    fcoeff = 0.05
+    #fcoeff = 0.1 #for exact solution with imposed free surface
 
     def F(self, U):
         """ Flux function """
@@ -95,8 +95,8 @@ class SWEquation(Equation):
     def sigma(self, U):
         """ Return sigma(U) """
        # return np.array([ 0, self.fcoeff*U[1] ]) # simple linear friction
-         #return np.array([ 0, self.g*self.fcoeff*self.fcoeff*U[1]*np.abs(U[1])*pow(U[0],-7./3.) ]) # manning
-        return np.array([ 0, self.fcoeff*U[1]*np.abs(U[1])*U[0]]) # for exact solution with imposed free surface
+        return np.array([ 0, self.g*self.fcoeff*self.fcoeff*U[1]*np.abs(U[1])*pow(U[0],-7./3.) ]) # manning
+        #return np.array([ 0, self.fcoeff*U[1]*np.abs(U[1])*U[0]]) # for exact solution with imposed free surface
 
 #    def upw_criterion(self, uStencil):
 #        """ Returns a pair (l,r) with the velocity for upwind criterion at
@@ -238,12 +238,12 @@ class SWEquation(Equation):
         #----supercritical
 #        HConst = 0.
 #        qConst = 24.
-#        hConst = 2.
+#        hConst = 3.#2.
 
         #----subcritical
-#        HConst = 0.
-#        qConst = 4.42
-#        hConst = 2.
+        HConst = 0.
+        qConst = 4.42
+        hConst = 2.
 
 #BUMPT
         #----transcritical with shock 
@@ -252,9 +252,9 @@ class SWEquation(Equation):
 #        hConst = 0.33
 
         #----transcritical without shock 
-        HConst = 0.
-        qConst = 1.53
-        hConst = 0.4057809453450358#0.66
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 0.4057809453450358#0.66
         
 #BUMPD  
 #        HConst = -.5
@@ -365,8 +365,8 @@ class SWEquation(Equation):
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
-#            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-            Ustar[0,j] = hsuperc if x[j] > 10. else hsubc  # transcritical stationary solution with critical point at x = 0
+            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+#            Ustar[0,j] = hsuperc if x[j] > 10. else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
 #        i = (U0.shape[1]-1)/2
 #        if x[i]== -1.05:
@@ -414,9 +414,9 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        #plt.plot(x, -H, 'k', label='$b$') # MARIO
-        #plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
-        plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        plt.plot(x, -H, 'k', label='$b$') # MARIO
+        plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
+        #plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)

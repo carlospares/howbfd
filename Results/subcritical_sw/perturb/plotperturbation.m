@@ -8,7 +8,15 @@ analytic=load('../../../initial_data/analytical_sw/subcritical/initial_sub_100.d
 %subplot(3,1,1)
 figure
 %plot(w3am4(:,1),w3am4(:,2)-analytic,'b','linewidth',2);
-plot(w3am4(:,1),w3am4(:,4)-w3am4(:,6),'b',w3am4(:,1),-w3am4(:,6),'k','linewidth',2);
+%plot(w3am4(:,1),w3am4(:,4)-w3am4(:,6),'b',w3am4(:,1),-w3am4(:,6),'k','linewidth',2);
+plt.plot(w3am4[:, 0], w3am4[:, 3] - w3am4[:, 5], 'b', linewidth=2, label='$\eta$')
+plt.plot(w3am4[:, 0], -w3am4[:, 5], 'k', linewidth=2,label='$-H(x)$')
+plt.legend(loc='upper right',fontsize=11,framealpha=0.5,ncol=2,bbox_to_anchor=(1,0.85))
+plt.xlabel(r'$x$', fontsize=18)
+plt.axis([0, 25, -0.1, 2.2])
+
+
+
 pert=w3am4(:,2)-analytic;
 
 xlim_zoom = [1.5, 2.5];

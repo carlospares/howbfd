@@ -57,9 +57,10 @@ class FunH:
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        Y=[0.0]
+        #Y=[0.0]
         #Y=np.zeros_like([1,2])
-        #Y= [0, 0.505]
+        Y= [0, 0.505]
+        #Y= [0, 0.5]
         
 #        if self.funH==self.DISC:
 #            Y=np.ones_like([1,2])
@@ -75,9 +76,9 @@ class FunH:
             H = np.copy(x)
         elif self.funH==self.DISC:
             ##H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
-            #H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))
+            H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))
             ##H = np.exp(0.1*x)*(x <= 0) + np.exp(.9 +x)*(x > 0)
-            H = x*x +0.1*(x>0)
+            #H = x*x +0.1*(x>0)
         elif self.funH == self.BUMP:
             H = (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
         elif self.funH==self.DISC_BOT:
@@ -137,9 +138,9 @@ class FunH:
         elif self.funH==FunH.IDENT:
             Hx = np.ones_like(x)
         elif self.funH==FunH.DISC:
-            #Hx = .1*(x <= 0) + 1.*(x > 0)
+            Hx = .1*(x <= 0) + 1.*(x > 0)
             ##Hx = 0.1*np.exp(0.1*x)*(x <= 0) + np.exp(0.9+x)*(x > 0)
-            Hx=2.0*x 
+            #Hx=2.0*x 
         elif self.funH == self.BUMP:
             Hx= 0.1*(x-10)*(x>=8)*(x<=12)
         elif self.funH==self.DISC_BOT:
@@ -151,6 +152,8 @@ class FunH:
         elif self.funH == self.BUMP2:
             #Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
             Hx = -0.628319*np.sin(pi*x/4)*np.sin(pi*x/4)*np.sin(pi*x/4)*np.cos(pi*x/4)*(x<12)*(x>8)
+        elif self.funH == self.STEP:
+            Hx = np.exp(-(x-12.5)*(x-12.5))*((0.271828*x-3.39785)*np.sin(x-12.5) - 0.135914*np.cos(x-12.5))
         elif self.funH == self.SLOPE:
             Hx = np.ones_like(x)
         elif self.funH == self.BUMPD:

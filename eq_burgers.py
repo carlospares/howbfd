@@ -31,9 +31,9 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        #return U*U # std burger's case
+        return U*U # std burger's case
         #return U # std burger's case
-        return (U - 1.0)# MMSburg case
+        #return (U - 1.0)# MMSburg case
         
     def sigma(self, U):
         """ Return sigma(U) """
@@ -97,6 +97,7 @@ class BurgersEquation(Equation):
             legend, labels and so on; io_manager will do plt.show() or savefig() 
             as required """
         plt.plot(x,u[0], label='u')
+        plt.plot(x,H, label='H')
         plt.legend()
         plt.title(t)
         

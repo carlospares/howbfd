@@ -82,7 +82,7 @@ class IoManager:
                 plt.show()
             if cf.save_npys:
                 np.save("npys/{}{}.npy".format(tag,t), u)
-                table=np.column_stack([x,u[0]])
+                table=np.column_stack([x,u[0],u[1],H])
                 np.savetxt("npys/{}{}.txt".format(tag,t),table)
             self.plot_counter += 1
             

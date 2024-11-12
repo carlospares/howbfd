@@ -236,8 +236,9 @@ class InitCond:
 #        with open('Results/subcritical_sw/Weno3_AM8/out100.txt', 'r') as file:
 #        with open('Results/super_sw/Weno7_AM8/out800.txt', 'r') as file:
 #        with open('Results/super_sw/weno3_upwind/out100', 'r') as file:
-        #with open('Results/Manning/supercritical/weno3_am4_N100_steady.txt', 'r') as file:
-        with open('Results/Manning/supercritical/weno3_upwind_N100_steady.txt', 'r') as file:
+        #with open('Results/Manning/subcritical/weno5_upwind_N100_steady.txt', 'r') as file:
+        #with open('Results/Manning/supercritical/weno5_upwind_N100_steady.txt', 'r') as file:
+        with open('Results/Manning/subcritical/reference_w7_am8_N800_steady.txt', 'r') as file:
 
              # Initialize empty lists for each column
             column1 = []

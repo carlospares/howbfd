@@ -335,7 +335,7 @@ def adamsbashforth8(eqn, Hx, H, u, x, i, t):
 #    sumSHx = np.zeros(nvars)
 #    for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
 #        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
-
+#
     funH = FunH(x, config)
     d_index = None
     if config.funh == FunH.DISC:
@@ -543,8 +543,8 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
         #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
         dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
         if(abs(dH) <= 0.000001):
-            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
-            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+            #dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
         
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
@@ -627,8 +627,8 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
         #print i, 'hello'
         dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
         if(abs(dH) <= 0.000001):
-            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
-            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
+            #dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
 
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
@@ -712,8 +712,8 @@ def adamsmoulton8(eqn, Hx, H, u, x, i, t):
         #print i, 'hello'
         dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
         if(abs(dH) <= 0.000001):
-            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
-            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
+            #dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
 
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
