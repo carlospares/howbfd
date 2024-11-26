@@ -17,6 +17,7 @@ class BoundaryCond:
     SUBCR = 409
     SUBCR_RE = 410
     SUPER = 411
+    SUPER_RE = 412
 
     def __init__(self, cf):
         self.bc = cf.boundary
@@ -53,7 +54,7 @@ class BoundaryCond:
 ##
 #            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
 #            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1]
-#            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
+##            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
             # ---subcritical
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             uNew[0,:gw] =  uOld[0,gw:0:-1]
@@ -66,15 +67,20 @@ class BoundaryCond:
 
             #uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+        elif self.bc==BoundaryCond.SUPER_RE:
+            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[-gw:], tloc), xGhost[-gw:])
+
+            uNew[:,:gw] = uOld[:,gw:0:-1] # naively try to make derivative zero
 
         elif self.bc==BoundaryCond.SUBCR_RE:
             #-----subcritical reversed
-            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-            uNew[0,-gw:] =  uOld[0,gw:0:-1]
-
-            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw]) #left
+            #uNew[1,:gw] =  uOld[1,2*gw:gw:-1] # naively try to make derivative zero
             uNew[1,:gw] =  uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
 
+            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[-gw:], tloc), xGhost[-gw:])   #right
+            #uNew[0,-gw:] =  uOld[0, -1-gw:-1-2*gw:-1] # naively try to make derivative zero
+            uNew[0,-gw:] =  uOld[0, gw:0:-1] # naively try to make derivative zero
 
         elif self.bc==BoundaryCond.LIN_EXTRAP:
             for j in range(gw):

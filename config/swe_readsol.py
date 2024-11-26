@@ -9,28 +9,28 @@ from timest import TimeStepping
 # For a detailed explanation, see howbfd_config
 
 equation = Equation.SW
-init = InitCond.READ_FROM_FILE#STEADY #WATER_AT_REST
+init = InitCond.STEADY#READ_FROM_FILE#STEADY #WATER_AT_REST
 funh = FunH.BUMPS#STEP#BUMP2#D# BUMP
 H_noise_factor = 0
-perturb_init = InitCond.PERT_RIEMANN#DISC#PERT_WB #PERT_NONE
-boundary = BoundaryCond.SUBCR#SUBCR_RE#IN_OUT #FORCE_STEADY_INIT
+perturb_init = InitCond.PERT_NONE#PERT_RIEMANN#DISC#PERT_WB #PERT_NONE
+boundary = BoundaryCond.SUBCR#_RE#SUBCR#SUBCR_RE#IN_OUT #FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB #UPWINDGF
 timest = TimeStepping.TVDRK3#EULER#TVDRK3
-order = 7
+order = 3
 N = 25
 a = 0#-3 #0
 b = 25 #3 #25
-cfl = 0.6
-T = 1.0
+cfl = 0.5
+T = 30.
 steps=8
 ode='AM'
 system='SW'
 plot_exact = False
-plot_every = 200.0
-show_plots = True
+plot_every = 100.0
+show_plots = False
 save_plots = False
-save_npys = True
+save_npys = False
 
 
 
-print ("Loaded config/swe_rest.py!")
+print ("Loaded config/swe_readsol.py!")

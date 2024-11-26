@@ -72,11 +72,11 @@ for level in range(0, config.refinements+1):
         io_manager.io_if_appropriate(x, u, H, t, config)
         #io_manager.io_if_appropriate(x, u-uin, H, t, config)
         
-        #print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, t)
+#        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, t)
 
-        print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
+#        print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
-#        print "Time ",t," Error at N={} is {}".format(N, errors[level])
+#        print ("Time ",t," Error at N={} is {}".format(N, errors[level]))
 
         #io_manager.io_if_appropriate(x, uin-u, H, t, config)
 #        print '[', t,',', np.sum(u[0])*dx, '],' 
@@ -110,10 +110,10 @@ tfin = datetime.now()
 #print ('CPU Time: ' + str(tfin-tini))
 
 
-for i in range(N):
+#for i in range(N):
  #   print (x[i],uin[0,i],u[0,i],H[i])
  #   print x[i],uin[0,i],u[0,i],H[i]
-    print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
+ #   print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
  #   print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 

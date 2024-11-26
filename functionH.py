@@ -151,7 +151,7 @@ class FunH:
             Hx = np.ones_like(x) + A*alfa*np.cos(alfa*x)
         elif self.funH == self.BUMP2:
             #Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
-            Hx = -0.628319*np.sin(pi*x/4)*np.sin(pi*x/4)*np.sin(pi*x/4)*np.cos(pi*x/4)*(x<12)*(x>8)
+            Hx = -0.628319*np.sin(np.pi*x/4)*np.sin(np.pi*x/4)*np.sin(np.pi*x/4)*np.cos(np.pi*x/4)*(x<12)*(x>8)
         elif self.funH == self.STEP:
             Hx = np.exp(-(x-12.5)*(x-12.5))*((0.271828*x-3.39785)*np.sin(x-12.5) - 0.135914*np.cos(x-12.5))
         elif self.funH == self.SLOPE:

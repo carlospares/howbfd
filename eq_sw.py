@@ -20,7 +20,8 @@ class SWEquation(Equation):
     
     # other function parameters
     g = 9.812
-    fcoeff = 0.05
+    fcoeff = 0.0
+    #fcoeff = 0.05
     #fcoeff = 0.1 #for exact solution with imposed free surface
 
     def F(self, U):
@@ -30,6 +31,17 @@ class SWEquation(Equation):
         q = U[1,:]
         ret[0,:] = q
         ret[1,:] = q*q/h + 0.5*self.g*h*h
+        return ret
+
+    def F_hr(self, U, B, H):
+        """ Flux function """
+        ret = np.empty(U.shape)
+        eta = U[0,:]
+        q = U[1,:]
+        h = eta + H
+        ret[0,:] = q
+        #ret[1,:] = q*q/h + 0.5*self.g*h*h
+        ret[1,:] = q*q/h + 0.5*self.g*pow(eta+B,2)
         return ret
 
     def Fp(self, U):
@@ -236,14 +248,14 @@ class SWEquation(Equation):
 
 #BUMPS
         #----supercritical
-#        HConst = 0.
-#        qConst = 24.
-#        hConst = 3.#2.
+        HConst = 0.
+        qConst = 24.
+        hConst = 2.
 
         #----subcritical
-        HConst = 0.
-        qConst = 4.42
-        hConst = 2.
+#        HConst = 0.
+#        qConst = 4.42
+#        hConst = 2.
 
 #BUMPT
         #----transcritical with shock 

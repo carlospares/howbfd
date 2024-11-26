@@ -33,6 +33,10 @@ class Equation:
         """ Flux function """
         raise NotImplementedError
 
+    def F_hr(self, U, B, H):
+        """ Flux function """
+        raise NotImplementedError
+
     def dF(self, U):
         """ Derivative of flux function """
         raise NotImplementedError

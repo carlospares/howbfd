@@ -1,0 +1,21 @@
+Loaded config/swe_readsol.py!
+Starting simulation with N=25...
+d\eta/dt 1.6675836267410205e-09
+Error at N=25 is 0.7412056959052289
+Starting simulation with N=50...
+d\eta/dt 1.6106893596656846e-11
+Error at N=50 is 0.021716089945211126
+Order: 5.09303769845257
+Starting simulation with N=100...
+d\eta/dt 1.411093464298574e-13
+Error at N=100 is 0.00019764646819592224
+Order: 6.77969837878451
+Starting simulation with N=200...
+d\eta/dt 0.0
+Error at N=200 is 9.775626785002434e-07
+Order: 7.659517253267396
+Starting simulation with N=400...
+d\eta/dt 0.0
+Error at N=400 is 3.748721277840872e-09
+Order: 8.026646833190414
+

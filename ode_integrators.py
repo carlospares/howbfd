@@ -10,54 +10,82 @@ from howbfd_io import IoManager, parse_command_line
 ### Get config file from command line, or load default:
 config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
-def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4, arg5):
+def B_odeint(nsteps, multmeth, eqn, Hx, H, x, i, t):
+    nvars = eqn.dim()
+    if multmeth =='AB':
+        if nsteps == 4:
+            ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
+        if nsteps == 6:
+            ab_coeff=[-475./1440., 2877./1440., -7298./1440., 9982./1440,  -7923./1440., 4277./1440.]
+        if nsteps == 8:
+            ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+
+        sumSHx = 0.
+        for j in range(-nsteps,0):
+            sumSHx  += ab_coeff[j+nsteps]*( Hx(x[i+j],t) )
+
+    if multmeth =='AM':
+        if nsteps == 4:
+            ab_coeff=[1./24., -5./24., 19./24., 9./24]
+        if nsteps == 6:
+            ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
+        if nsteps == 8:
+            ab_coeff=[1375./120960., -11351./120960., 41499./120960.,  -88547./120960., 123133./120960., -121797./120960, 139849./120960., 36799/120960.]
+
+        sumSHx = 0.
+        for j in range(-nsteps+1,1):
+            sumSHx  += ab_coeff[j+nsteps-1]*( Hx(x[i+j],t) )
+
+    return sumSHx
+
+def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6):
     nvars = eqn.dim()
     if config.system == 'No':
         if multmeth == 'AM':
             if nsteps == 2 :
-                return adamsmoulton2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+                return adamsmoulton2(eqn, arg1, arg2, arg3, arg4, arg5, arg6) # MARIO!!!!
             if nsteps == 3 :
-                return adamsmoulton3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton3(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 4 :
-                return adamsmoulton4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton4(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 6 :
-                return adamsmoulton6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton6(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 8 :
-                return adamsmoulton8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton8(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
         elif multmeth == 'AB':
             if nsteps == 2 :
-                return adamsbashforth2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+                return adamsbashforth2(eqn, arg1, arg2, arg3, arg4, arg5, arg6) 
             if nsteps == 3 :
-                return adamsbashforth3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth3(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 4 :
-                return adamsbashforth4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth4(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 6 :
-                return adamsbashforth6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth6(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 8 :
-                return adamsbashforth8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth8(eqn, arg1, arg2, arg3, arg4, arg5, arg6)
     elif config.system == 'SW':
         if multmeth == 'AM':
             if nsteps == 2 :
-                return adamsmoulton2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+                return adamsmoulton2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6) 
             if nsteps == 3 :
-                return adamsmoulton3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 4 :
-                return adamsmoulton4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 6 :
-                return adamsmoulton6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 8 :
-                return adamsmoulton8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsmoulton8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
         elif multmeth == 'AB':
             if nsteps == 2 :
-                return adamsbashforth2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+                return adamsbashforth2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6) 
             if nsteps == 3 :
-                return adamsbashforth3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 4 :
-                return adamsbashforth4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 6 :
-                return adamsbashforth6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
             if nsteps == 8 :
-                return adamsbashforth8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+                return adamsbashforth8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
         
 def adamsbashforth2(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
@@ -69,7 +97,7 @@ def adamsbashforth2(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - eqn.sigma(u[:,i+j]) )
     return sumSHx
     
-def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
+def adamsbashforth2SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 2
     ab_coeff=[-1./2., 3./2]
@@ -119,7 +147,7 @@ def adamsbashforth3(eqn, Hx, H, u, x, i, t):
     return sumSHx
     
     
-def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
+def adamsbashforth3SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 3
     ab_coeff=[5./12., -16./12., 23./12.]
@@ -204,7 +232,7 @@ def adamsbashforth4(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
+def adamsbashforth4SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 4
     ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
@@ -222,24 +250,34 @@ def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        FF = eqn.sigma(u[:,i-nsteps+l])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+#        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+#        bb[l] = H(x[i-nsteps+l+1],t)
 
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography- be carefull has the value in i and the i-(nsteps-1) nodes
+        eta[l] = u[0,i-nsteps+l] # new version of keeping the lake at rest
+
+
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
+
+    
 
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx=0
     for j in [-4, -3, -2, -1]:
         FF = eqn.sigma(u[:,j+nsteps])
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t))
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Hx(x[j+i],t)- sig[j+nsteps]) #new version for keeping lake at rest
+
 
     return sumSHx
 
@@ -289,7 +327,7 @@ def adamsbashforth6(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
+def adamsbashforth6SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 6
     ab_coeff=[-475./1440., 2877./1440., -7298./1440., 9982./1440,  -7923./1440., 4277./1440.]
@@ -307,23 +345,28 @@ def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
     sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        FF = eqn.sigma(u[:,i-nsteps+l])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+#        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+#        bb[l] = H(x[i-nsteps+l+1],t)
 
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography- be carefull has the value in i and the i-(nsteps-1) nodes
+        eta[l] = u[0,i-nsteps+l] # new version of keeping the lake at rest
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
 
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx=0.
     for j in [-6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t))
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Hx(x[j+i],t)- sig[j+nsteps]) #new version for keeping lake at rest
 
     return sumSHx
 
@@ -381,7 +424,7 @@ def adamsbashforth8(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsbashforth8SW(eqn, Hx, H, u, x, i, t):
+def adamsbashforth8SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 8
     ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
@@ -399,23 +442,28 @@ def adamsbashforth8SW(eqn, Hx, H, u, x, i, t):
     sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-        FF = eqn.sigma(u[:,i-nsteps+l+1])
+        FF = eqn.sigma(u[:,i-nsteps+l])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+#        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+#        bb[l] = H(x[i-nsteps+l+1],t)
 
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography- be carefull has the value in i and the i-(nsteps-1) nodes
+        eta[l] = u[0,i-nsteps+l] # new version of keeping the lake at rest
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
 
     sumSHx = np.zeros(nvars)
     sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx=0.
     for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
+        #sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t))
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Hx(x[j+i],t)- sig[j+nsteps]) #new version for keeping lake at rest
 
     return sumSHx
 
@@ -430,7 +478,7 @@ def adamsmoulton2(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsmoulton2SW(eqn, Hx, H, u, x, i, t):
+def adamsmoulton2SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 2
     ab_coeff=[1./2., 1./2.]
@@ -474,7 +522,7 @@ def adamsmoulton3(eqn, Hx, H, u, x, i, t):
     return sumSHx
 
 
-def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
+def adamsmoulton3SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 3
     ab_coeff=[-1./12., 8./12., 5./12.]
@@ -506,10 +554,12 @@ def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
       
     # Compute integrated source
     
-    sumSHx = np.zeros(nvars)
-    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx = np.zeros(nvars)
+    #sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    sumSHx = 0.
     for j in [-2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -sig[j+nsteps-1]  )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -sig[j+nsteps-1]  )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) )
         
 
     return sumSHx
@@ -560,7 +610,8 @@ def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
 
     return sumSHx
 
-def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
+
+def adamsmoulton4SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 4
     ab_coeff=[1./24., -5./24., 19./24., 9./24]
@@ -578,25 +629,30 @@ def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
     bb  = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        #eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
         FF = eqn.sigma(u[:,i-nsteps+l+1])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+        #bb[l] = H(x[i-nsteps+l+1],t)
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography
+        eta[l] = u[0,i-nsteps+l+1]
+
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
 
     # Compute integrated source
 
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx=0.
     for j in [-3, -2, -1, 0]:
-        
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
+        #sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Hx(x[j+i],t))
 
     return sumSHx
 
@@ -644,7 +700,7 @@ def adamsmoulton6(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
+def adamsmoulton6SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 6
     ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
@@ -663,24 +719,30 @@ def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
     sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
         FF = eqn.sigma(u[:,i-nsteps+l+1])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+#        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+#        bb[l] = H(x[i-nsteps+l+1],t)
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography
+        eta[l] = u[0,i-nsteps+l+1]
+    
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
 
     # Compute integrated source
 
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx = 0.
     for j in [-5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
+        #sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Hx(x[j+i],t))
 
     return sumSHx
 
@@ -729,7 +791,7 @@ def adamsmoulton8(eqn, Hx, H, u, x, i, t):
 
     return sumSHx
 
-def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
+def adamsmoulton8SW(eqn, B, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 8
     ab_coeff=[1375./120960., -11351./120960., 41499./120960.,  -88547./120960., 123133./120960., -121797./120960, 139849./120960., 36799/120960.]
@@ -747,24 +809,30 @@ def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
     sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
         FF = eqn.sigma(u[:,i-nsteps+l+1])
         sig[l]=FF[1]
-        bb[l] = H(x[i-nsteps+l+1],t)
+#        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+#        bb[l] = H(x[i-nsteps+l+1],t)
 
-    Bx = np.zeros(nsteps)
-    for q in range(0,nsteps):
-        Bx[q] = 0.0
-        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-        for p in range(0,nsteps):
-            Bx[q] = Bx[q] + LL[p]*bb[p]
+        bb[l] = B[i-nsteps+l+1] #reconstructed topography
+        eta[l] = u[0,i-nsteps+l+1]
+
+#    Bx = np.zeros(nsteps)
+#    for q in range(0,nsteps):
+#        Bx[q] = 0.0
+#        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+#        for p in range(0,nsteps):
+#            Bx[q] = Bx[q] + LL[p]*bb[p]
 
     # Compute integrated source
 
     sumSHx = np.zeros(nvars)
     sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    #sumSHx=0.
     for j in [-7, -6, -5, -4, -3, -2, -1, 0]:
-        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -  sig[j+nsteps-1] )
+        #sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] -  sig[j+nsteps-1] )
+        #sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) )
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Hx(x[j+i],t))
 
     return sumSHx
 
