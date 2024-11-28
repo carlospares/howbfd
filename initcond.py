@@ -5,6 +5,7 @@ import numpy as np
 from scipy.optimize import *
 # from equation import Equation
 
+
 class InitCond:
     # Identifiers for initial condition
     READ_FROM_FILE = 0
@@ -23,6 +24,8 @@ class InitCond:
 #    SW_TRANS = 510
     Eulersec = 512
     Frictsol = 513
+    Discrete_AB = 514
+
 
     # Identifiers for perturbation (if relevant)
     PERT_NONE = 600
@@ -43,6 +46,7 @@ class InitCond:
         self.initCond = cf.init
         self.pert = cf.perturb_init
         self.eqn = eqn
+        self.source = cf.compute_source
 
     def u0(self, x, H):
         m1=0
@@ -179,8 +183,12 @@ class InitCond:
             hh=np.sqrt(hh)
             U0[0] = hh
             U0[1] = np.sqrt(q02)
+
+        elif self.initCond==InitCond.Discrete_AB:
+            U0 = self.eqn.dicrete_steady(x)
+
             
-        if self.eqn.dim() == 2:
+        if self.eqn.dim() == 2 and self.source == 'hydraustatic_reconstruction':
             U0[0] = U0[0]-H #eta
         return U0 + self.perturbation(x)
 

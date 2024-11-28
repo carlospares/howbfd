@@ -15,7 +15,7 @@ config = parse_command_line() # from howbdf_io, defaults to howbdf_config
 
 nsteps = config.steps
 multmeth = config.ode
-
+compute_source=config.compute_source
 
 class UpwindGF(NumericalMethod):
     """ 1D scalar linear transport equation with mass term
@@ -140,7 +140,8 @@ class UpwindGF(NumericalMethod):
         Glp = np.zeros(nvars)
         i = (u.shape[1]-1)/2
         i = int(i)
-        if nvars == 2:
+
+        if nvars == 2 and compute_source == 'hydraustatic_reconstruction':
             phi = eqn.F_hr(u, bstar, H) - fstar
         else:
             phi = eqn.F(u) - fstar

@@ -222,6 +222,97 @@ class SWEquation(Equation):
         """ Returns dimension of the problem: 1 for scalars """
         return 2
 
+    def dicrete_steady(self, x):
+        
+        config = parse_command_line() # from howbdf_io, defaults to howbdf_config
+        nsteps = config.steps
+        gw = int((config.order-1)/2)+1 # number of ghost cells
+        
+        U0 = np.ones((self.dim(), len(x)+nsteps+gw))
+        x0 = np.ones((self.dim(), len(x)+nsteps+gw))
+        
+        for jj in range (0,nsteps) :
+                x0[jj] = x[nsteps] - (nsteps-jj)*(x[1]-x[0])
+        for jj in range (nsteps,len(x)+nteps) :
+            x0[j] = x[jj]
+        for jj in range (len(x)+nteps,len(x)+nteps+gw) :
+            x0[jj] = x[len(x)+nteps-1] + jj*(x[1]-x[0])
+        
+        time = 0.0
+        H = funH.H(x0, time)
+        Hx = funH.Hx(x0, time)
+
+        """ Returns a discrete  steady state for the equation.
+            Input:
+                x: spatial coordinates
+            Output:
+                (nvars, len(x)) numpy array with the values
+                If nvars = 1, this must still be a (1,len(x)) matrix;
+                a len(x) array will not work!
+        """
+#BUMPS
+        #----supercritical
+        HConst = 0.
+        qConst = 24.
+        hConst = 2.
+        
+        # if no friction
+        for jj in range(0,nsteps) :
+            U0[1,jj] = qConst
+            U0[0,jj] = hConst
+        
+        # if with manning friction
+        fcoeff = self.fcoeff
+        grav   = self.g
+        
+        # Initialization of ghost values for U0
+        for jj in range(0,nsteps) :
+            U0[1,jj] = qConst
+            
+            hprime = grav*pow(fcoeff,2)*pow(qConst,2)/( grav*pow(hConst,10./3.) - pow(qConst,2)*pow(hConst,1./3.) )
+            hini = hConst - jj*( x[1] - x[0] )*hprime
+        
+            RHS  = - 3.*grav*pow(hini,13./3.)/13. + 3.*pow(qConst,2)*pow(hini,4./3.)/4.
+            RHS += 3.*grav*pow(hConst,13./3.)/13. - 3.*pow(qConst,2)*pow(hConst,4./3.)/4.
+            RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*( x[1] - x[0] )
+            
+            hk = hini
+            
+            while abs( RHS ) > 1.e-10:
+                Fprime = pow(hk,1./3.)*( grav*pow(hk,3.) - pow(qConst,2) )
+                hk  += RHS/Fprime
+                
+                RHS  = - 3.*grav*pow(hk,13./3.)/13. + 3.*pow(qConst,2)*pow(hk,4./3.)/4.
+                RHS += 3.*grav*pow(hConst,13./3.)/13. - 3.*pow(qConst,2)*pow(hConst,4./3.)/4.
+                RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*( x[1] - x[0] )
+                
+            U0[0,jj] = hk
+            
+            #end of the for loop
+    
+
+        #----subcritical
+#        HConst = 0.
+#        qConst = 4.42
+#        hConst = 2.
+
+#BUMPT
+        #----transcritical with shock
+#        HConst = 0.
+#        qConst = 0.18
+#        hConst = 0.33
+
+        #----transcritical without shock
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 0.4057809453450358#0.66
+
+    
+    #3 - define values of U0
+ 
+        uConst = [hConst, qConst]
+        return self.discrete_steady_constraint(HConst, uConst, H, Hx, x0, U0, nsteps)
+
     def steady(self, H,x):
         U0 = np.ones((self.dim(), len(H)))
         """ Returns an arbitrary steady state for the equation.
@@ -278,6 +369,40 @@ class SWEquation(Equation):
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
         
+    def discrete_steady_constraint(self, HConstr, uConstr, H,Hx, x, U0, nsteps):
+        """ Returns a disscrete steady state solution of the equation, u*, constrained
+            to u*(xConstr) = uConstr
+            Input:
+                xConstr: double, x to fix the constraint
+                uConstr: double or (dims,1) np array, u*(x) = uConstr for u* we look for
+                x: values of x at which to evaluate u*
+            Output:
+                (nvars, len(x)) numpy array with the values
+                If nvars = 1, this must still be a (1,len(x)) matrix;
+                a len(x) array will not work! """
+         
+        length = U0.shape[1]
+        for i in range(nsteps,length):
+            # 2- compute sumHx using ode integrator
+            # 3- compute the roots of the cubic
+            # 4- select the appropriate one (positive h, sub/supercritical)
+            U0[1,i] = U0[1,0]
+            
+            sumSHx = 0.
+            for j in range(nsteps,i):
+                sumSHx= sumSHx + odi.odeint(nsteps,'AB', eqn, Hx, H, U0, x0, j, tloc)
+            
+            Fi = ( x0[1]-x0[0] )*sumSHx + U0[1,i-1]*U0[1,i-1]/U0[0,i-1] + self.g*U0[0,i-1]*U0[0,i-1]*0.5
+            
+            P = 2.*Fi/( 3.*self.g )
+            arg = - U0[1,i-1]*U0[1,i-1]/(self.g*pow(P,1.5))
+            theta = np.arccos( arg )
+
+            r1 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*1)/3.0)
+            r2 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*2)/3.0)
+            r3 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*3)/3.0)
+        
+        return U0 #Ustar
     
     def steady_trans(self,H,x): 
         U0 = np.ones((self.dim(), len(H)))

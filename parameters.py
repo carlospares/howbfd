@@ -61,6 +61,7 @@ class Parameters:
         self.steps = cf.steps
         self.ode = cf.ode
         self.system = cf.system
+        self.compute_source = cf.compute_source
         self.plot_every = cf.plot_every
         self.show_plots = cf.show_plots
         self.save_plots = cf.save_plots
