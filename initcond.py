@@ -54,7 +54,7 @@ class InitCond:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
             U0 = self.eqn.steady(H,x)
-            U0[0] = U0[0]-H #eta
+            U0[0] = U0[0]
             #U0 = np.exp(x**2)
         elif self.initCond==InitCond.PWPOLY:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
@@ -127,12 +127,12 @@ class InitCond:
                 #if y.isdigit():
                 xx.append(float(y))
 
-            U0[0] = xx-H#2 + H
+            U0[0] = xx#2 + H
             U0[1] = U0[1]-4.42#+ 24.0#1.53#4.42#1.53#24.0
             #self.initCond=InitCond.Frictsol
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
-            U0[0] = 2.0 #+ H
+            U0[0] = 2.0 + H
             #U0[0] = 0.66 + H
             U0[1] = 0.0
         elif self.initCond==InitCond.WATER_MASS:
@@ -179,6 +179,9 @@ class InitCond:
             hh=np.sqrt(hh)
             U0[0] = hh
             U0[1] = np.sqrt(q02)
+            
+        if self.eqn.dim() == 2:
+            U0[0] = U0[0]-H #eta
         return U0 + self.perturbation(x)
 
     def perturbation(self, x):

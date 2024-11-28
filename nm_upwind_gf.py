@@ -60,7 +60,6 @@ class UpwindGF(NumericalMethod):
         return tend
     
     def gf(self, u, x, Hx, H, eqn, initCond, funH, gw, dx, tloc):
-#        nsteps = 8
         nvars = eqn.dim()
         N = len(x)-2*gw
 
@@ -109,22 +108,23 @@ class UpwindGF(NumericalMethod):
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
         fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
-        bstar[0:nsteps] =  funH.H(xloc[0:nsteps],tloc) ### initatilization of the multistep method
+        if nvars == 2:
 
-        for i in range(N+gw):
-            iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-            sumSBx=odi.B_odeint(nsteps,multmeth, eqn, Hx, H, xloc, iOff, tloc)
+            bstar[0:nsteps] =  funH.H(xloc[0:nsteps],tloc) ### initatilization of the multistep method
 
-            bstar[i+nsteps] = bstar[i+nsteps-1] + dx*sumSBx
+
+            for i in range(N+gw):   #-------------------this part is just for SW
+                iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
+                sumSBx=odi.B_odeint(eqn, Hx, H, xloc, iOff, tloc)
+
+                bstar[i+nsteps] = bstar[i+nsteps-1] + dx*sumSBx
  
-        #print fstar.shape,N+min(2*gw-nsteps,0)
-        #for i in range(N+min(2*gw-nsteps,0)):
-        #for i in range(N+gw):
         for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-            sumSHx=odi.odeint(nsteps, multmeth, eqn, bstar, Hx, H, uloc, xloc, iOff, tloc)
+            sumSHx=odi.odeint(eqn, bstar, Hx, H, uloc, xloc, iOff, tloc)
 
             fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
+
         #if nsteps< 2*gw :
         #    fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
 
@@ -140,8 +140,10 @@ class UpwindGF(NumericalMethod):
         Glp = np.zeros(nvars)
         i = (u.shape[1]-1)/2
         i = int(i)
-        #phi = eqn.F(u) - fstar
-        phi = eqn.F_hr(u, bstar, H) - fstar
+        if nvars == 2:
+            phi = eqn.F_hr(u, bstar, H) - fstar
+        else:
+            phi = eqn.F(u) - fstar
   
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-

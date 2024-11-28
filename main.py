@@ -11,9 +11,9 @@ from functionH import FunH
 from boundary import BoundaryCond
 from timest import TimeStepping
 from howbfd_io import IoManager, parse_command_line#, safe_name
-#from time import clock
 from datetime import datetime
 import os
+import time
 
 
 ### Get config file from command line, or load default:
@@ -39,7 +39,7 @@ dxs = np.zeros(config.refinements+1)
 errors = np.zeros(config.refinements+1)
 
 tini = datetime.now()
-#tini = clock()
+tini = time.perf_counter()
 for level in range(0, config.refinements+1):
     N = config.N * (2**level)
 #    N = config.N
@@ -105,9 +105,9 @@ for level in range(0, config.refinements+1):
 
 
     io_manager.reset_timer() # otherwise only level=0 will plot
-#tfin = clock()
-tfin = datetime.now()
-#print ('CPU Time: ' + str(tfin-tini))
+tfin = time.perf_counter()
+#tfin = datetime.now()
+print ('CPU Time: ' + str(tfin-tini))
 
 
 #for i in range(N):

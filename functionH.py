@@ -59,8 +59,8 @@ class FunH:
     def get_disc_points(self, x):
         #Y=[0.0]
         #Y=np.zeros_like([1,2])
-        Y= [0, 0.505]
-        #Y= [0, 0.5]
+        #Y= [0, 0.505]
+        Y= [0, 0.5]
         
 #        if self.funH==self.DISC:
 #            Y=np.ones_like([1,2])
