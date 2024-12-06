@@ -24,7 +24,7 @@ class InitCond:
 #    SW_TRANS = 510
     Eulersec = 512
     Frictsol = 513
-    Discrete_AB = 514
+    DISCRETE_AB = 514
 
 
     # Identifiers for perturbation (if relevant)
@@ -58,7 +58,6 @@ class InitCond:
             U0[0] = 1 + np.sin(2*np.pi*x)
         elif self.initCond==InitCond.STEADY:
             U0 = self.eqn.steady(H,x)
-            U0[0] = U0[0]
             #U0 = np.exp(x**2)
         elif self.initCond==InitCond.PWPOLY:
             U0[0] = 1. + (0.13+0.05*(x-10)*(x-10))*(x>=8)*(x<=12)+0.33*((x<8)+(x>12))
@@ -184,9 +183,8 @@ class InitCond:
             U0[0] = hh
             U0[1] = np.sqrt(q02)
 
-        elif self.initCond==InitCond.Discrete_AB:
+        elif self.initCond==InitCond.DISCRETE_AB:
             U0 = self.eqn.dicrete_steady(x)
-
             
         if self.eqn.dim() == 2 and self.source == 'hydraustatic_reconstruction':
             U0[0] = U0[0]-H #eta

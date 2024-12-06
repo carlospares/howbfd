@@ -3,7 +3,6 @@
 # Carlos Parés Pulido, 2019
 
 import numpy as np
-from equation import Equation
 from functionH import FunH
 from howbfd_io import IoManager, parse_command_line
 from multistep_coefficients import AB_COEFFS
@@ -123,7 +122,7 @@ def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
 
         sumSHx=0
         for j in range(-nsteps,0):
-            sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t))
+            sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - sig[j+nsteps])
 
     elif compute_source == 'source_reconstruction':
 
@@ -237,7 +236,7 @@ def adamsmoultonSW(eqn, B, Hx, H, u, x, i, t):
 
         sumSHx=0.
         for j in range(-nsteps+1,1):
-            sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) )
+            sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) - sig[j+nsteps-1])
 
     elif compute_source == 'source_reconstruction':
 
@@ -289,6 +288,7 @@ def adamsmoultonSW(eqn, B, Hx, H, u, x, i, t):
 #    return sumSHx
     
 
+#------------------------------------------------------------------------------------------------------------------------------------
 def adamsmoulton2(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
     nsteps= 2

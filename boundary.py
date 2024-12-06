@@ -18,9 +18,11 @@ class BoundaryCond:
     SUBCR_RE = 410
     SUPER = 411
     SUPER_RE = 412
+    FORCE_DISCRETE_STEADY_INIT = 413 # force steady state which agrees with HConstr = H[0], uConstr = u0[:,0]
 
     def __init__(self, cf):
         self.bc = cf.boundary
+        self.steps = cf.steps
 
     def expand_with_bcs(self, uNew, uOld, gw, eqn, initCond, funH, xGhost, tloc):
         """ Take the array of values and make a copy, augmented with BCs
@@ -103,6 +105,15 @@ class BoundaryCond:
             #plt.show()
             uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw],tloc),xGhost[:gw], np.zeros((nvars,gw)))
             uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
+        elif self.bc==BoundaryCond.FORCE_DISCRETE_STEADY_INIT:
+#            HConstr = funH.H(xGhost[gw],tloc)
+#            uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
+            x=xGhost[gw:-1-gw]
+            u=eqn.dicrete_steady(xGhost)
+
+            uNew[:,:gw] = u[:,self.steps-gw:self.steps] #left boundary
+            uNew[:,-gw:] = u[:,-gw:] 
+               
         elif self.bc==BoundaryCond.WALL:
 #            print eqn
             uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]

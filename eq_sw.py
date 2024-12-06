@@ -222,26 +222,8 @@ class SWEquation(Equation):
         """ Returns dimension of the problem: 1 for scalars """
         return 2
 
-    def dicrete_steady(self, x):
+    def dicrete_steady(self, xx):
         
-        config = parse_command_line() # from howbdf_io, defaults to howbdf_config
-        nsteps = config.steps
-        gw = int((config.order-1)/2)+1 # number of ghost cells
-        
-        U0 = np.ones((self.dim(), len(x)+nsteps+gw))
-        x0 = np.ones((self.dim(), len(x)+nsteps+gw))
-        
-        for jj in range (0,nsteps) :
-                x0[jj] = x[nsteps] - (nsteps-jj)*(x[1]-x[0])
-        for jj in range (nsteps,len(x)+nteps) :
-            x0[j] = x[jj]
-        for jj in range (len(x)+nteps,len(x)+nteps+gw) :
-            x0[jj] = x[len(x)+nteps-1] + jj*(x[1]-x[0])
-        
-        time = 0.0
-        H = funH.H(x0, time)
-        Hx = funH.Hx(x0, time)
-
         """ Returns a discrete  steady state for the equation.
             Input:
                 x: spatial coordinates
@@ -250,12 +232,62 @@ class SWEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work!
         """
+        from functionH import FunH
+        from howbfd_io import IoManager, parse_command_line
+
+        config = parse_command_line() # from howbdf_io, defaults to howbdf_config
+        nsteps = config.steps
+        N = config.N
+        gw = int((config.order-1)/2)+1 # number of ghost cells
+        
+
+        if(len(xx)>N+2*gw):  #called from nm_upwind_gf
+            x=xx[nsteps:len(xx)-gw] 
+        elif(len(xx)>N):  #called from the boundary.py 
+            x=xx[gw:-gw]
+        else:  #called from initcond
+            x=xx
+
+#        if(len(xx)>N):  #called from the boundary.py 
+#            x=xx[gw:-gw]
+#        else:  #called from initcond
+#            x=xx
+
+        U0 = np.ones((self.dim(), len(x)+nsteps+gw))
+        x0 = np.ones(len(x)+nsteps+gw)
+#        U0 = np.ones((self.dim(), len(x)))
+#        
+        interfaces = np.linspace(config.a,config.b,N+1) # we won't really use them
+        xtmp = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
+        dx = xtmp[1]-xtmp[0]
+
+
+      
+        x0[nsteps:len(x)+nsteps] = x
+        for jj in range (0,nsteps) :
+            x0[jj] = x0[nsteps] - (nsteps-jj)*(dx)
+        for jj in range (len(x)+nsteps,len(x)+nsteps+gw) :
+            x0[jj] = x[-1] + jj*(dx)
+        
+        time = 0.0
+        funH=FunH(x,config)
+        H = funH.H(x0, time)
+        Hx = funH.Hx(x0, time)
+#        H = funH.H(x, time)
+#        Hx = funH.Hx(x, time)
+
+#-----------------------------------------------------        
 #BUMPS
         #----supercritical
+#        HConst = 0.
+#        qConst = 24.
+#        hConst = 2.
+        #----subcritical
         HConst = 0.
-        qConst = 24.
+        qConst = 4.42
         hConst = 2.
-        
+#-----------------------------------------------------        
+
         # if no friction
         for jj in range(0,nsteps) :
             U0[1,jj] = qConst
@@ -270,11 +302,11 @@ class SWEquation(Equation):
             U0[1,jj] = qConst
             
             hprime = grav*pow(fcoeff,2)*pow(qConst,2)/( grav*pow(hConst,10./3.) - pow(qConst,2)*pow(hConst,1./3.) )
-            hini = hConst - jj*( x[1] - x[0] )*hprime
+            hini = hConst - jj*(dx)*hprime
         
             RHS  = - 3.*grav*pow(hini,13./3.)/13. + 3.*pow(qConst,2)*pow(hini,4./3.)/4.
             RHS += 3.*grav*pow(hConst,13./3.)/13. - 3.*pow(qConst,2)*pow(hConst,4./3.)/4.
-            RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*( x[1] - x[0] )
+            RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*(dx)
             
             hk = hini
             
@@ -284,7 +316,7 @@ class SWEquation(Equation):
                 
                 RHS  = - 3.*grav*pow(hk,13./3.)/13. + 3.*pow(qConst,2)*pow(hk,4./3.)/4.
                 RHS += 3.*grav*pow(hConst,13./3.)/13. - 3.*pow(qConst,2)*pow(hConst,4./3.)/4.
-                RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*( x[1] - x[0] )
+                RHS -= grav*pow(fcoeff,2)*pow(qConst,2)*jj*(dx)
                 
             U0[0,jj] = hk
             
@@ -311,7 +343,15 @@ class SWEquation(Equation):
     #3 - define values of U0
  
         uConst = [hConst, qConst]
-        return self.discrete_steady_constraint(HConst, uConst, H, Hx, x0, U0, nsteps)
+        UDS = np.ones((self.dim(), len(x)))
+        Utmp = self.discrete_steady_constraint(HConst, uConst, H, Hx, x0, U0, nsteps)
+        if(len(xx)>N):
+            UDS = Utmp
+        else:
+            UDS[0] = Utmp[0,nsteps:len(x)+nsteps]
+            UDS[1] = Utmp[1,nsteps:len(x)+nsteps]
+
+        return UDS
 
     def steady(self, H,x):
         U0 = np.ones((self.dim(), len(H)))
@@ -339,14 +379,14 @@ class SWEquation(Equation):
 
 #BUMPS
         #----supercritical
-        HConst = 0.
-        qConst = 24.
-        hConst = 2.
+#        HConst = 0.
+#        qConst = 24.
+#        hConst = 2.
 
         #----subcritical
-#        HConst = 0.
-#        qConst = 4.42
-#        hConst = 2.
+        HConst = 0.
+        qConst = 4.42
+        hConst = 2.
 
 #BUMPT
         #----transcritical with shock 
@@ -369,7 +409,7 @@ class SWEquation(Equation):
         uConst = [hConst, qConst]
         return self.steady_constraint(HConst, uConst, H,x, U0)
         
-    def discrete_steady_constraint(self, HConstr, uConstr, H,Hx, x, U0, nsteps):
+    def discrete_steady_constraint(self, HConstr, uConstr, H, Hx, x0, U0, nsteps):
         """ Returns a disscrete steady state solution of the equation, u*, constrained
             to u*(xConstr) = uConstr
             Input:
@@ -381,6 +421,21 @@ class SWEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
          
+        from functionH import FunH
+        from eq_factory import equation_factory
+        import ode_integrators as odi
+        from howbfd_io import IoManager, parse_command_line
+
+        tloc=0.0
+        config = parse_command_line() # from howbdf_io, defaults to howbdf_config
+        funH=FunH(x0,config)
+        H = funH.H(x0, tloc)
+        Hx = funH.Hx(x0, tloc)
+
+
+        eqn = equation_factory(config)
+
+
         length = U0.shape[1]
         for i in range(nsteps,length):
             # 2- compute sumHx using ode integrator
@@ -388,9 +443,12 @@ class SWEquation(Equation):
             # 4- select the appropriate one (positive h, sub/supercritical)
             U0[1,i] = U0[1,0]
             
+            bstar = np.zeros(len(x0)) #------be careful
             sumSHx = 0.
-            for j in range(nsteps,i):
-                sumSHx= sumSHx + odi.odeint(nsteps,'AB', eqn, Hx, H, U0, x0, j, tloc)
+            tmp= 0.
+            tmp = odi.odeint(eqn, bstar, funH.Hx, funH.H, U0, x0, i, tloc) # it has to be AB allways
+            sumSHx = tmp[1]
+
             
             Fi = ( x0[1]-x0[0] )*sumSHx + U0[1,i-1]*U0[1,i-1]/U0[0,i-1] + self.g*U0[0,i-1]*U0[0,i-1]*0.5
             
@@ -398,9 +456,12 @@ class SWEquation(Equation):
             arg = - U0[1,i-1]*U0[1,i-1]/(self.g*pow(P,1.5))
             theta = np.arccos( arg )
 
-            r1 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*1)/3.0)
-            r2 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*2)/3.0)
-            r3 = 2.0*sqrt(P)*np.cos((theta+2.0*np.pi*3)/3.0)
+            r1 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*1)/3.0)
+            r2 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*2)/3.0)
+            r3 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*3)/3.0)
+
+            #U0[0,i] = r2 #supercritical 
+            U0[0,i] = r3 #subcritical
         
         return U0 #Ustar
     
@@ -551,9 +612,9 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        plt.plot(x, -H, 'k', label='$b$') # MARIO
-        plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
-        #plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        #plt.plot(x, -H, 'k', label='$b$') # MARIO
+        #plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
+        plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)
