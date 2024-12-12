@@ -69,8 +69,8 @@ for level in range(0, config.refinements+1):
 #        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
         u = timest.update(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, config, t)
         t += dt
-        #io_manager.io_if_appropriate(x, u, H, t, config)
-        io_manager.io_if_appropriate(x, u-uin, H, t, config)
+        io_manager.io_if_appropriate(x, u, H, t, config)
+#        io_manager.io_if_appropriate(x, u-uin, H, t, config)
         
         print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, t)
 
@@ -110,10 +110,10 @@ tfin = time.perf_counter()
 print ('CPU Time: ' + str(tfin-tini))
 
 
-#for i in range(N):
+for i in range(N):
  #   print (x[i],uin[0,i],u[0,i],H[i])
  #   print x[i],uin[0,i],u[0,i],H[i]
-#    print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
+    print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
  #   print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]
 
 

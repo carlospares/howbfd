@@ -3,53 +3,155 @@
 # Carlos Parés Pulido, 2019
 
 import numpy as np
+from equation import Equation
 from functionH import FunH
 from howbfd_io import IoManager, parse_command_line
-from multistep_coefficients import AB_COEFFS
-from multistep_coefficients import AM_COEFFS
 
 ### Get config file from command line, or load default:
 config = parse_command_line() # from howbdf_io, defaults to howbdf_config
-if config.ode =='AB':
-    ab_coeff = AB_COEFFS[config.steps]
 
-if config.ode =='AM':
-    ab_coeff = AM_COEFFS[config.steps]
-
-def B_odeint(eqn, Hx, H, x, i, t):
+def odeint(nsteps, multmeth, eqn, arg0, arg1, arg2, arg3, arg4, arg5):
     nvars = eqn.dim()
-    nsteps = config.steps
-    if config.ode =='AB':
-        sumSHx = 0.
-        for j in range(-nsteps,0):
-            sumSHx  += ab_coeff[j+nsteps]*( Hx(x[i+j],t) )
+    if config.system == 'No':
+        if multmeth == 'AM':
+            if nsteps == 2 :
+                return adamsmoulton2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsmoulton3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsmoulton4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsmoulton6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsmoulton8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+        elif multmeth == 'AB':
+            if nsteps == 2 :
+                return adamsbashforth2(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsbashforth3(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsbashforth4(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsbashforth6(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsbashforth8(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+    elif config.system == 'SW':
+        if multmeth == 'AM':
+            if nsteps == 2 :
+                return adamsmoulton2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsmoulton3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsmoulton4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsmoulton6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsmoulton8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+        elif multmeth == 'AB':
+            if nsteps == 2 :
+                return adamsbashforth2SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5) # MARIO!!!!
+            if nsteps == 3 :
+                return adamsbashforth3SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 4 :
+                return adamsbashforth4SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 6 :
+                return adamsbashforth6SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+            if nsteps == 8 :
+                return adamsbashforth8SW(eqn, arg0, arg1, arg2, arg3, arg4, arg5)
+        
+def adamsbashforth2(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 2
+    ab_coeff=[-1./2., 3./2]
+    
+    sumSHx = np.zeros(nvars)
+    for j in [-2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+    return sumSHx
+    
+def adamsbashforth2SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 2
+    ab_coeff=[-1./2., 3./2]
+    
+    ddx = x[i] - x[i-1]
+    g = 9.812
+    
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        bb[l] = H(x[i-nsteps+l+1],t)
+    
+    
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+        
+    sumSHx = np.zeros(nvars)
+    sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+        
+    return sumSHx
 
-    if config.ode =='AM':
-        sumSHx = 0.
-        for j in range(-nsteps+1,1):
-            sumSHx  += ab_coeff[j+nsteps-1]*( Hx(x[i+j],t) )
+def adamsbashforth3(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 3
+    ab_coeff=[5./12., -16./12., 23./12.]
+
+    sumSHx = np.zeros(nvars)
+    for j in [-3, -2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j],t)
+
+    return sumSHx
+    
+    
+def adamsbashforth3SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 3
+    ab_coeff=[5./12., -16./12., 23./12.]
+
+    ddx = x[i] - x[i-1]
+    g = 9.812
+    
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        bb[l] = H(x[i-nsteps+l+1],t)
+    
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+      
+    # Compute integrated source
+    sumSHx = np.zeros(nvars)
+    sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-3, -2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
 
     return sumSHx
 
-#------------------------------------------------------------------------------------------------------------------------------------
-
-def odeint(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6):
-    nvars = eqn.dim()
-
-    if config.system == 'No':
-        if config.ode == 'AM':
-                return adamsmoulton(eqn, arg1, arg2, arg3, arg4, arg5, arg6) # MARIO!!!!
-        elif config.ode == 'AB':
-                return adamsbashforth(eqn, arg1, arg2, arg3, arg4, arg5, arg6) 
-    elif config.system == 'SW':
-        if config.ode == 'AM':
-            return adamsmoultonSW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
-        elif config.ode == 'AB':
-            return adamsbashforthSW(eqn, arg0, arg1, arg2, arg3, arg4, arg5, arg6) 
-
-#------------------------------------------------------------------------------------------------------------------------------------
-
-def adamsbashforth(eqn, Hx, H, u, x, i, t):
+def adamsbashforth4(eqn, Hx, H, u, x, i, t):
     funH = FunH(x, config)
     d_index = None
     if config.funh == FunH.DISC:
@@ -60,7 +162,8 @@ def adamsbashforth(eqn, Hx, H, u, x, i, t):
     dx = x[2] - x[1]
     nvars = eqn.dim()
     sumSHx = np.zeros(nvars)
-    nsteps= config.steps
+    nsteps= 4
+    ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
     
     indicator = 'normal'
     if d_index != None :
@@ -84,22 +187,20 @@ def adamsbashforth(eqn, Hx, H, u, x, i, t):
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
     else :
-        for k in range(-nsteps,0):
-            sumSHx[nvars-1] += ab_coeff[k+nsteps]*( eqn.S(u[:,i+k])*Hx(x[i+k],t) - eqn.sigma(u[:,i+k]) )
+        for k in [-4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
 
-#------------------------------------------------------------------------------------------------------------------------------------
+    return sumSHx
 
-def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
-
-    compute_source = config.compute_source
-
+def adamsbashforth4SW(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
-    nsteps = config.steps 
+    nsteps= 4
+    ab_coeff=[-9./24., 37./24., -59./24., 55./24.]
 
     ddx = x[i] - x[i-1]
     g = 9.812
@@ -111,56 +212,27 @@ def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
-    sig = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        FF = eqn.sigma(u[:,i-nsteps+l])
-        sig[l]=FF[1]
+        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        bb[l] = H(x[i-nsteps+l+1],t)
 
 
-    if compute_source == 'analytic_source':
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
 
-        sumSHx=0
-        for j in range(-nsteps,0):
-            sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - sig[j+nsteps])
-
-    elif compute_source == 'source_reconstruction':
-
-        for l in range(0,nsteps):
-            eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
-            bb[l] = H(x[i-nsteps+l+1],t)
-
-        Bx = np.zeros(nsteps)
-        for q in range(0,nsteps):
-            Bx[q] = 0.0
-            LL = Lprime( nsteps, xx, x[i-nsteps+q] )
-            for p in range(0,nsteps):
-                Bx[q] = Bx[q] + LL[p]*bb[p]
-
-        sumSHx = np.zeros(nvars)
-        sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-        for j in range(-nsteps,0):
-            sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
-
-    elif compute_source == 'hydrostatic_reconstruction':
-
-        for l in range(0,nsteps):
-            bb[l] = B[i-nsteps+l+1] #reconstructed topography- be carefull has the value in i and the i-(nsteps-1) nodes
-            eta[l] = u[0,i-nsteps+l] # new version of keeping the lake at rest
-
-        sumSHx = np.zeros(nvars)
-        sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-        for j in range(-nsteps,0):
-            FF = eqn.sigma(u[:,j+nsteps])
-            sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Hx(x[j+i],t)- sig[j+nsteps]) #new version for keeping lake at rest solving for eta
-    else :
-        print(compute_source, 'This type of reconstruction does not exist')
+    sumSHx = np.zeros(nvars)
+    sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-4, -3, -2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
 
     return sumSHx
 
-#------------------------------------------------------------------------------------------------------------------------------------
-
-def adamsmoulton(eqn, Hx, H, u, x, i, t ):
+def adamsbashforth6(eqn, Hx, H, u, x, i, t):
     funH = FunH(x, config)
     d_index = None
     if config.funh == FunH.DISC:
@@ -171,7 +243,269 @@ def adamsmoulton(eqn, Hx, H, u, x, i, t ):
     dx = x[2] - x[1]
     nvars = eqn.dim()
     sumSHx = np.zeros(nvars)
-    nsteps= config.steps
+    nsteps= 6
+    ab_coeff=[-475./1440., 2877./1440., -7298./1440., 9982./1440,  -7923./1440., 4277./1440.]
+    
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + nsteps:
+                indicator='AM2'
+
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+    
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-6, -5, -4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
+
+    return sumSHx
+
+def adamsbashforth6SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 6
+    ab_coeff=[-475./1440., 2877./1440., -7298./1440., 9982./1440,  -7923./1440., 4277./1440.]
+
+    ddx = x[i] - x[i-1]
+    g = 9.812
+
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        bb[l] = H(x[i-nsteps+l+1],t)
+
+
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+
+    sumSHx = np.zeros(nvars)
+    sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-6, -5, -4, -3, -2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+
+    return sumSHx
+
+def adamsbashforth8(eqn, Hx, H, u, x, i, t):
+#    nvars = eqn.dim()
+#    nsteps= 8
+#    ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+#
+#    sumSHx = np.zeros(nvars)
+#    for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
+#        sumSHx[nvars-1] += ab_coeff[j+nsteps]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+        
+    dx = x[2] - x[1]
+    nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
+    nsteps= 8
+    ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+    
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + nsteps:
+                indicator='AM2'
+
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+        
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+    
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-8, -7, -6, -5, -4,-3, -2, -1 ]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps]*eqn.S(u[:,i+k])*Hx(x[i+k],t)
+
+    return sumSHx
+
+def adamsbashforth8SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 8
+    ab_coeff=[-36799./120960., 295767./120960., -1041723./120960., 2102243./120960.,  -2664477./120960., 2183877./120960., -1152169./120960., 434241./120960.]
+
+    ddx = x[i] - x[i-1]
+    g = 9.812
+
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l],t)+u[0,i-nsteps+l]
+        bb[l] = H(x[i-nsteps+l+1],t)
+
+
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+
+    sumSHx = np.zeros(nvars)
+    sumSHx[1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-8, -7, -6, -5, -4, -3, -2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+
+    return sumSHx
+
+def adamsmoulton2(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 2
+    ab_coeff=[1./2., 1./2.]
+
+    sumSHx = np.zeros(nvars)
+    for j in [-1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    return sumSHx
+
+def adamsmoulton2SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 2
+    ab_coeff=[1./2., 1./2.]
+
+    # Collect stencil nodes
+    xx = [ x[i-1], x[i] ]
+    ddx = x[i] - x[i-1]
+    g = 9.812
+    # Collect eta values (REMARK: really specific to gravity source !!!!)
+    eta = [ -H(x[i-1],t)+u[0,i-1],  -H(x[i],t)+u[0,i] ]
+    
+    # Collect bathymetry and bathymetry derivatives values
+    bb = [ H(x[i-1],t), H(x[i],t)]
+    
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+        
+    sumSHx = np.zeros(nvars)
+    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-2, -1]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps]*g*eta[j+nsteps]*Bx[j+nsteps]
+
+    return sumSHx
+
+    
+
+def adamsmoulton3(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 3
+    ab_coeff=[-1./12., 8./12., 5./12.]
+
+    sumSHx = np.zeros(nvars)
+    for j in [-2, -1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*eqn.S(u[:,i+j])*Hx(x[i+j], t)
+
+    return sumSHx
+
+
+def adamsmoulton3SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 3
+    ab_coeff=[-1./12., 8./12., 5./12.]
+    
+    ddx = x[i] - x[i-1]
+    g = 9.812
+
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        bb[l] = H(x[i-nsteps+l+1],t)
+    
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+      
+    # Compute integrated source
+    
+    sumSHx = np.zeros(nvars)
+    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-2, -1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+        
+
+    return sumSHx
+
+def adamsmoulton4(eqn, Hx, H, u, x, i, t ):
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+        
+    Y = funH.get_disc_points(x)
+        
+    dx = x[2] - x[1]
+    nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
+    nsteps= 4
+    ab_coeff=[1./24., -5./24., 19./24., 9./24]
     
     indicator = 'normal'
     if d_index != None :
@@ -188,32 +522,27 @@ def adamsmoulton(eqn, Hx, H, u, x, i, t ):
         #dH = H(Y[j]+ 0.0000000001, t ) - H(Y[j] - 0.0000000001, t )
         dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
         if(abs(dH) <= 0.000001):
-            #dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
-            dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face 
         
         delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
         sumSHx[nvars-1] += delta/dx
 
         #Left integration
-        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5 - eqn.sigma(u[:,i-1])*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
     
         #Right integration
-        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5 - eqn.sigma(u[:,i])*0.5
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
     else :
-        for k in range(-nsteps+1,1):
-            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*( eqn.S(u[:,i+k])*Hx(x[i+k], t) - eqn.sigma(u[:,i+k]) )
+        for k in [-3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
 
     return sumSHx
 
-
-
-#------------------------------------------------------------------------------------------------------------------------------------
-def adamsmoultonSW(eqn, B, Hx, H, u, x, i, t):
-
-    compute_source = config.compute_source
- 
+def adamsmoulton4SW(eqn, Hx, H, u, x, i, t):
     nvars = eqn.dim()
-    nsteps = config.steps 
+    nsteps= 4
+    ab_coeff=[1./24., -5./24., 19./24., 9./24]
 
     ddx = x[i] - x[i-1]
     g = 9.812
@@ -224,82 +553,189 @@ def adamsmoultonSW(eqn, B, Hx, H, u, x, i, t):
     # - bathymetry and bathymetry derivatives values
     xx  = np.zeros(nsteps)
     eta = np.zeros(nsteps)
-    sig = np.zeros(nsteps)
     bb  = np.zeros(nsteps)
     for l in range(0,nsteps):
         xx[l] = x[i-nsteps+l+1]
-        FF = eqn.sigma(u[:,i-nsteps+l+1])
-        sig[l]=FF[1]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        bb[l] = H(x[i-nsteps+l+1],t)
 
-#------------------------------analytic source  
-    if compute_source == 'analytic_source':
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
 
-        sumSHx=0.
-        for j in range(-nsteps+1,1):
-            sumSHx += ab_coeff[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) - sig[j+nsteps-1])
-
-    elif compute_source == 'source_reconstruction':
-
-#------------------------------source reconstruction 
-        for l in range(0,nsteps):
-            eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
-            bb[l] = H(x[i-nsteps+l+1],t)
-
-        Bx = np.zeros(nsteps)
-        for q in range(0,nsteps):
-            Bx[q] = 0.0
-            LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
-            for p in range(0,nsteps):
-                Bx[q] = Bx[q] + LL[p]*bb[p]
-
-        sumSHx = np.zeros(nvars)
-        sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-        for j in range(-nsteps+1,1):
-            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
-
-    elif compute_source == 'hydrostatic_reconstruction':
-
-#----------------------hydrostatic reconstruction
-
-        for l in range(0,nsteps):
-            bb[l] = B[i-nsteps+l+1] #reconstructed topography
-            eta[l] = u[0,i-nsteps+l+1]
-
-        # Compute integrated source
-        sumSHx = np.zeros(nvars)
-        sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
-        for j in range(-nsteps+1,1):
-            sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Hx(x[j+i],t))
-    else:
-        print(compute_source, 'This type of reconstruction does not exist')
-        print()
-
-    return sumSHx
-
-#------------------------------------------------------------------------------------------------------------------------------------
-#def adamsbashforth2(eqn, Hx, H, u, x, i, t):
-#    nvars = eqn.dim()
-#    nsteps= 2
-#    ab_coeff=[-1./2., 3./2]
-#    
-#    sumSHx = np.zeros(nvars)
-#    for j in [-2, -1]:
-#        sumSHx[nvars-1] += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - eqn.sigma(u[:,i+j]) )
-#    return sumSHx
-    
-
-#------------------------------------------------------------------------------------------------------------------------------------
-def adamsmoulton2(eqn, Hx, H, u, x, i, t):
-    nvars = eqn.dim()
-    nsteps= 2
-    ab_coeff2=[1./2., 1./2.]
+    # Compute integrated source
 
     sumSHx = np.zeros(nvars)
-    for j in [-1, 0]:
-        sumSHx[nvars-1] += ab_coeff2[j+nsteps-1]*( eqn.S(u[:,i+j])*Hx(x[i+j], t) - eqn.sigma(u[:,i+j]) )
+    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-3, -2, -1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
 
     return sumSHx
-#-------------------------------------------------------------------------------------------------------------------
+
+def adamsmoulton6(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+
+    dx = x[2] - x[1]
+    nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
+    nsteps= 6
+    ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
+
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
+
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
+
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
+
+    return sumSHx
+
+def adamsmoulton6SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 6
+    ab_coeff=[27./1440., -173./1440., 482./1440., -798./1440,  1427./1440., 475./1440.]
+
+
+    ddx = x[i] - x[i-1]
+    g = 9.812
+
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        bb[l] = H(x[i-nsteps+l+1],t)
+
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+
+    # Compute integrated source
+
+    sumSHx = np.zeros(nvars)
+    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-5, -4, -3, -2, -1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+
+    return sumSHx
+
+def adamsmoulton8(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    funH = FunH(x, config)
+    d_index = None
+    if config.funh == FunH.DISC:
+        d_index=funH.find_disc(x,1.0) #check again for the threshold
+
+    dx = x[2] - x[1]
+    nvars = eqn.dim()
+    sumSHx = np.zeros(nvars)
+    nsteps= 8
+    ab_coeff=[1375./120960., -11351./120960., 41499./120960.,  -88547./120960., 123133./120960., -121797./120960, 139849./120960., 36799/120960.]
+
+
+    indicator = 'normal'
+    if d_index != None :
+        for num in d_index:
+            if num + 1 == i:
+                indicator = 'jump'
+            elif i >= num+1+1 and i<=num + 1 + nsteps:
+                indicator='AM2'
+
+    if ( indicator == 'AM2'):
+            sumSHx[nvars-1] += adamsmoulton2(eqn, Hx, H, u, x, i, t)
+    elif (indicator == 'jump'):
+        #print i, 'hello'
+        dH = H(x[i-1]+ 0.0000000001, t ) - H(x[i-1] - 0.0000000001, t ) #if the dicontinuity is on a mesh point
+        if(abs(dH) <= 0.000001):
+            dH = H(x[i-1]+  dx , t ) - H(x[i-1] , t ) #if the disc is on the face
+            #dH = H(x[i-1]+ 0.5*dx + 0.0000000001, t ) - H(x[i-1]+ 0.5*dx - 0.0000000001, t ) #if the disc is on the face
+
+        delta = eqn.discH_jumpF( u[:,i-1], u[:,i], i, dH, x, t)
+        sumSHx[nvars-1] += delta/dx
+
+        #Left integration
+        sumSHx[nvars-1] += eqn.S(u[:,i-1])*Hx(x[i-1],t)*0.5
+
+        #Right integration
+        sumSHx[nvars-1] += eqn.S(u[:,i])*Hx(x[i],t)*0.5
+    else :
+        for k in [-7, -6, -5, -4, -3, -2, -1, 0]:
+            sumSHx[nvars-1] += ab_coeff[k+nsteps-1]*eqn.S(u[:,i+k])*Hx(x[i+k], t)
+
+    return sumSHx
+
+def adamsmoulton8SW(eqn, Hx, H, u, x, i, t):
+    nvars = eqn.dim()
+    nsteps= 8
+    ab_coeff=[1375./120960., -11351./120960., 41499./120960.,  -88547./120960., 123133./120960., -121797./120960, 139849./120960., 36799/120960.]
+ 
+    ddx = x[i] - x[i-1]
+    g = 9.812
+
+    # Collect:
+    # - stencil nodes
+    # - eta values (REMARK: really specific to gravity source !!!!)
+    # - bathymetry and bathymetry derivatives values
+    xx  = np.zeros(nsteps)
+    eta = np.zeros(nsteps)
+    bb  = np.zeros(nsteps)
+    for l in range(0,nsteps):
+        xx[l] = x[i-nsteps+l+1]
+        eta[l] = -H(x[i-nsteps+l+1],t)+u[0,i-nsteps+l+1]
+        bb[l] = H(x[i-nsteps+l+1],t)
+
+    Bx = np.zeros(nsteps)
+    for q in range(0,nsteps):
+        Bx[q] = 0.0
+        LL = Lprime( nsteps, xx, x[i-nsteps+q+1] )
+        for p in range(0,nsteps):
+            Bx[q] = Bx[q] + LL[p]*bb[p]
+
+    # Compute integrated source
+
+    sumSHx = np.zeros(nvars)
+    sumSHx[nvars-1] = 0.5*g*( bb[nsteps-1]*bb[nsteps-1] - bb[nsteps-2]*bb[nsteps-2]  )/ddx
+    for j in [-7, -6, -5, -4, -3, -2, -1, 0]:
+        sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*g*eta[j+nsteps-1]*Bx[j+nsteps-1]
+
+    return sumSHx
 
 def Lprime(m, xx, y):
 
@@ -322,7 +758,6 @@ def Lprime(m, xx, y):
         LL[l] = num/den
 
     return LL
-#-------------------------------------------------------------------------------------------------------------------
     
 def Lbasis(m, xx, y):
 
@@ -342,7 +777,6 @@ def Lbasis(m, xx, y):
         LL[l] = num/den
 
     return LL
-#-------------------------------------------------------------------------------------------------------------------
     
 def disc_int(eqn, xi, xip1, m, xx, uu, Hx, t):
  
