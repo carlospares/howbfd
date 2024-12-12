@@ -15,7 +15,6 @@ H_noise_factor = 0
 perturb_init = InitCond.PERT_NONE#PERT_RIEMANN#DISC#PERT_WB #PERT_NONE
 boundary = BoundaryCond.SUBCR#FORCE_DISCRETE_STEADY_INIT#SUPER#_RE#SUBCR#SUBCR_RE#IN_OUT #FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDGF#RUSANOVGWB #UPWINDGF
-<<<<<<< HEAD
 timest = TimeStepping.TVDRK2#EULER#TVDRK3
 order = 3
 N = 400
