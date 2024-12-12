@@ -108,7 +108,7 @@ class UpwindGF(NumericalMethod):
 #        if(nsteps >gw):
 #            uloc = initCond.u0(xloc, funH.H(xloc, tloc))
 #            uloc[:,nsteps:]=u[:,gw:]
-
+#---------------------------------------------------------
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
         fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
@@ -122,6 +122,7 @@ class UpwindGF(NumericalMethod):
                 sumSBx=odi.B_odeint(eqn, Hx, H, xloc, iOff, tloc)
 
                 bstar[i+nsteps] = bstar[i+nsteps-1] + dx*sumSBx
+
  
         for i in range(N+gw):
             iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost

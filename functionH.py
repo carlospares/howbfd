@@ -40,8 +40,8 @@ class FunH:
     def find_disc(self,x,threshold):
         Y=self.get_disc_points(x)
         dx=x[2]-x[1]
-#        d_index = np.zeros(len(Y))
-        if self.funH==self.DISC:
+        d_index = np.zeros(len(Y))
+        if self.funH==self.DISC or self.funH==self.STEP:
 #            for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
 #                dx = x[i + 1] - x[i]
 #                if ( x[i] - dx/1000000. ) * x[i + 1] < 0:
@@ -52,15 +52,14 @@ class FunH:
                 for i, xx in enumerate(x):
                     if pos-xx < dx and pos-xx >=0.:
                         d_index.append(i)
-            #d_index=None            
-
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        #Y=[0.0]
+        #Y=[0]
+        Y=[14.0]
         #Y=np.zeros_like([1,2])
         #Y= [0, 0.505]
-        Y= [0, 0.5]
+        #Y= [0, 0.5]
         
 #        if self.funH==self.DISC:
 #            Y=np.ones_like([1,2])
@@ -100,7 +99,7 @@ class FunH:
         elif self.funH == self.STEP:
             #H = -.2*(abs(x-10)<5)
             #H = -.2*np.exp( 1-1./(1.-pow(abs(x-10)/5,2)) )*(abs(x-10)<5) - 0.1*(x>10)*(x<12)
-            H = -.05*np.sin(x-12.5)*np.exp(1-(x-12.5)*(x-12.5)) - 0.1*(x>14)
+            H = -.05*np.sin(x-12.5)*np.exp(1-(x-12.5)*(x-12.5)) - 0.9*(x>=14)
         elif self.funH == self.SLOPE:
             H = x + 11
         if self.noise_amplit != 0:
@@ -153,7 +152,8 @@ class FunH:
             #Hx =  1.25*np.pi*np.sin(5*np.pi*x)*(x<.2)*(x>-.2)
             Hx = -0.628319*np.sin(np.pi*x/4)*np.sin(np.pi*x/4)*np.sin(np.pi*x/4)*np.cos(np.pi*x/4)*(x<12)*(x>8)
         elif self.funH == self.STEP:
-            Hx = np.exp(-(x-12.5)*(x-12.5))*((0.271828*x-3.39785)*np.sin(x-12.5) - 0.135914*np.cos(x-12.5))
+            #Hx = np.exp(-(x-12.5)*(x-12.5))*((0.271828*x-3.39785)*np.sin(x-12.5) - 0.135914*np.cos(x-12.5))
+            Hx = -.05*np.exp(1-(x-12.5)*(x-12.5))*(np.cos(x-12.5)+2.0*np.sin(x-12.5)*(x-12.5))
         elif self.funH == self.SLOPE:
             Hx = np.ones_like(x)
         elif self.funH == self.BUMPD:

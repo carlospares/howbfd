@@ -279,13 +279,13 @@ class SWEquation(Equation):
 #-----------------------------------------------------        
 #BUMPS
         #----supercritical
-#        HConst = 0.
-#        qConst = 24.
-#        hConst = 2.
-        #----subcritical
         HConst = 0.
-        qConst = 4.42
+        qConst = 24.
         hConst = 2.
+        #----subcritical
+#        HConst = 0.
+#        qConst = 4.42
+#        hConst = 2.
 #-----------------------------------------------------        
 
         # if no friction
@@ -322,23 +322,6 @@ class SWEquation(Equation):
             
             #end of the for loop
     
-
-        #----subcritical
-#        HConst = 0.
-#        qConst = 4.42
-#        hConst = 2.
-
-#BUMPT
-        #----transcritical with shock
-#        HConst = 0.
-#        qConst = 0.18
-#        hConst = 0.33
-
-        #----transcritical without shock
-#        HConst = 0.
-#        qConst = 1.53
-#        hConst = 0.4057809453450358#0.66
-
     
     #3 - define values of U0
  
@@ -461,7 +444,8 @@ class SWEquation(Equation):
             r3 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*3)/3.0)
 
             #U0[0,i] = r2 #supercritical 
-            U0[0,i] = r3 #subcritical
+            U0[0,i] = r2 #subcritical
+            #print (r1,r2,r3)
         
         return U0 #Ustar
     
@@ -612,9 +596,9 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        #plt.plot(x, -H, 'k', label='$b$') # MARIO
-        #plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
-        plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        plt.plot(x, -H, 'k', label='$b$') # MARIO
+        plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
+        #plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)
