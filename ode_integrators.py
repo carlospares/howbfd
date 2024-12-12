@@ -142,7 +142,7 @@ def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
         for j in range(-nsteps,0):
             sumSHx[nvars-1] += ab_coeff[j+nsteps]*( g*eta[j+nsteps]*Bx[j+nsteps] - sig[j+nsteps] )
 
-    elif compute_source == 'hydraustatic_reconstruction':
+    elif compute_source == 'hydrostatic_reconstruction':
 
         for l in range(0,nsteps):
             bb[l] = B[i-nsteps+l+1] #reconstructed topography- be carefull has the value in i and the i-(nsteps-1) nodes
@@ -257,9 +257,9 @@ def adamsmoultonSW(eqn, B, Hx, H, u, x, i, t):
         for j in range(-nsteps+1,1):
             sumSHx[nvars-1] += ab_coeff[j+nsteps-1]*( g*eta[j+nsteps-1]*Bx[j+nsteps-1] - sig[j+nsteps-1] )
 
-    elif compute_source == 'hydraustatic_reconstruction':
+    elif compute_source == 'hydrostatic_reconstruction':
 
-#----------------------hydraustatic reconstruction
+#----------------------hydrostatic reconstruction
 
         for l in range(0,nsteps):
             bb[l] = B[i-nsteps+l+1] #reconstructed topography
