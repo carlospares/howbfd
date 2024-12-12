@@ -142,10 +142,40 @@ class UpwindGF(NumericalMethod):
         Grp = np.zeros(nvars)
         Glm = np.zeros(nvars)
         Glp = np.zeros(nvars)
+        
+        Urm = np.zeros(nvars)
+        Urp = np.zeros(nvars)
+        Ulm = np.zeros(nvars)
+        Ulp = np.zeros(nvars)
+        
         i = (u.shape[1]-1)/2
         i = int(i)
+        
+        lambda_min = u[1,i]/u[0,i] - np.sqrt(9.81*u[0,i])
+        lambda_max = u[1,i]/u[0,i] - np.sqrt(9.81*u[0,i])
+        sonicl = -1
+        for k in range(1,2):
+            if u[1,i-k]/u[0,i-k] - np.sqrt(9.81*u[0,i-k]) < lambda_min:
+                lambda_min = u[1,i-k]/u[0,i-k] - np.sqrt(9.81*u[0,i-k])
+            if u[1,i-k]/u[0,i-k] - np.sqrt(9.81*u[0,i-k]) > lambda_max:
+                lambda_max = u[1,i-k]/u[0,i-k] - np.sqrt(9.81*u[0,i-k])
+            
+        if lambda_min*lambda_max < 0:
+            sonicl = 1
+            
+        lambda_min = u[1,i]/u[0,i] - np.sqrt(9.81*u[0,i])
+        lambda_max = u[1,i]/u[0,i] - np.sqrt(9.81*u[0,i])
+        sonicr = -1
+        for k in range(1,2):
+            if u[1,i+k]/u[0,i+k] - np.sqrt(9.81*u[0,i+k]) < lambda_min:
+                lambda_min = u[1,i+k]/u[0,i+k] - np.sqrt(9.81*u[0,i+k])
+            if u[1,i+k]/u[0,i+k] - np.sqrt(9.81*u[0,i+k]) > lambda_max:
+                lambda_max = u[1,i+k]/u[0,i+k] - np.sqrt(9.81*u[0,i+k])
+            
+        if lambda_min*lambda_max < 0:
+            sonicr = 1
 
-        if nvars == 2 and compute_source == 'hydraustatic_reconstruction':
+        if nvars == 2 and compute_source =='hydrostatic_reconstruction':
             phi = eqn.F_hr(u, bstar, H) - fstar
         else:
             phi = eqn.F(u) - fstar
@@ -155,10 +185,37 @@ class UpwindGF(NumericalMethod):
             Grp[var] = wr.wenorec(self.order, phi[var,-1:1:-1]) # at i+1/2^+
             Glm[var] = wr.wenorec(self.order, phi[var,0:-2]) # at i-1/2^-
             Glp[var] = wr.wenorec(self.order, phi[var,-2:0:-1]) # at i-1/2^+
+        #    if sonicr > 0 :
+        #        Urm[var] = u[var,i] #wr.wenorec(self.order, u[var,1:-1]) # at i+1/2^-
+        #        Urp[var] = u[var,i+1] #wr.wenorec(self.order, u[var,-1:1:-1]) # at i+1/2^+
+        #    if sonicl > 0 :
+        #        Ulm[var] = u[var,i-1]#wr.wenorec(self.order, u[var,0:-2]) # at i-1/2^-
+        #        Ulp[var] = u[var,i] #wr.wenorec(self.order, u[var,-2:0:-1]) # at i-1/2^+
+                
+                
+        if sonicr > 0 :
+            Urm[0] = wr.wenorec(self.order, u[0,1:-1]) # at i+1/2^-
+            Urp[0] = wr.wenorec(self.order, u[0,-1:1:-1]) # at i+1/2^+
+        if sonicl > 0 :
+            Ulm[0] = wr.wenorec(self.order, u[0,0:-2]) # at i-1/2^-
+            Ulp[0] = wr.wenorec(self.order, u[0,-2:0:-1]) # at i-1/2^+
+     
+        if sonicr > 0 :
+            Gr = Grm
+        else :
+            Gr = np.dot(eqn.Piplus(u[:,i], u[:,i+1]),Grm) + np.dot(eqn.Piminus(u[:,i], u[:,i+1]),Grp)
+        if sonicl > 0 :
+            Gl = Glm
+        else :
+            Gl = np.dot(eqn.Piplus(u[:,i-1], u[:,i]),Glm) + np.dot(eqn.Piminus(u[:,i-1], u[:,i]),Glp)
             
-        Gr = np.dot(eqn.Piplus(u[:,i], u[:,i+1]),Grm) + np.dot(eqn.Piminus(u[:,i], u[:,i+1]),Grp)
-        Gl = np.dot(eqn.Piplus(u[:,i-1], u[:,i]),Glm) + np.dot(eqn.Piminus(u[:,i-1], u[:,i]),Glp)
-
- 
+        
+       # if sonicr > 0 :
+       #     ar = np.sqrt( 0.5*9.81*( u[0,i] + u[0,i+1] ) ) + ( abs( u[1,i] ) + abs( u[0,i+1]  ) )/( u[0,i] + u[0,i+1] )
+       #     Gr = Gr - ar*( Urp - Urm )
+       # if sonicl > 0 :
+       #     al = np.sqrt( 0.5*9.81*( u[0,i] + u[0,i-1] ) ) + ( abs( u[1,i] ) + abs( u[1,i-1]  ) )/( u[0,i] + u[0,i-1] )
+       #     Gl = Gl - al*( Ulp - Ulm )
+    
         return (Gl, Gr)
     

@@ -186,7 +186,7 @@ class InitCond:
         elif self.initCond==InitCond.DISCRETE_AB:
             U0 = self.eqn.dicrete_steady(x)
             
-        if self.eqn.dim() == 2 and self.source == 'hydraustatic_reconstruction':
+        if self.eqn.dim() == 2 and self.source == 'hydrostatic_reconstruction':
             U0[0] = U0[0]-H #eta
         return U0 + self.perturbation(x)
 

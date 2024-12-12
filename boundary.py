@@ -50,19 +50,18 @@ class BoundaryCond:
             uNew[:,0:gw] = initCond.u0(xGhost[0:gw], funH.H(xGhost[0:gw], tloc)) #impose initial state
             uNew[:,N+gw:] = initCond.u0(xGhost[N+gw:], funH.H(xGhost[N+gw:], tloc)) #impose initial state
         elif self.bc==BoundaryCond.SUBCR:
-            #---transcritical 
-#            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-#            uNew[0,:gw] =  uOld[0,gw:0:-1]
-##
-#            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
-#            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1]
-##            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1]
-            # ---subcritical
+            #---transcritical
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             uNew[0,:gw] =  uOld[0,gw:0:-1]
-
+##
             uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
-            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
+            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+            # ---subcritical
+          #  uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
+          #  uNew[0,:gw] =  uOld[0,gw:0:-1]
+
+   #         uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+   #         uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.SUPER:
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             #uNew[0,:gw] =  uOld[0,gw:0:-1]
