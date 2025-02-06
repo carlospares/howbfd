@@ -41,7 +41,8 @@ class FunH:
         Y=self.get_disc_points(x)
         dx=x[2]-x[1]
         d_index = np.zeros(len(Y))
-        if self.funH==self.DISC or self.funH==self.STEP:
+        if self.funH==self.DISC or self.funH==self.STEP : # last from Maria
+        #if self.funH==self.BUMP2: # test for sonic point
 #            for i in range(len(x) - 1): #we know that the discontinuity is located at x=0
 #                dx = x[i + 1] - x[i]
 #                if ( x[i] - dx/1000000. ) * x[i + 1] < 0:
@@ -56,7 +57,8 @@ class FunH:
         
     def get_disc_points(self, x):
         #Y=[0]
-        Y=[14.0]
+        Y=[14.0] # last from Maria
+        #Y=[10.0] # test for sonic point
         #Y=np.zeros_like([1,2])
         #Y= [0, 0.505]
         #Y= [0, 0.5]
