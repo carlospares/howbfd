@@ -102,7 +102,8 @@ def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
         
     Y = funH.get_disc_points(x)
         
-    dx = x[i] - x[i-1]
+    ddx = x[i] - x[i-1]
+    dx=ddx
 
     nvars = eqn.dim()
     nsteps= config.steps

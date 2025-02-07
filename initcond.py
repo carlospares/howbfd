@@ -114,24 +114,26 @@ class InitCond:
                 #file_in = open('initial_data/analytical_sw/supercritical/initial_sup_5000.dat', 'r')
                 file_in = open('initial_data/analytical_sw/transcritical/trans_5000.dat', 'r')
                 #fO1 = open('./Grid_convergence_files/w50-t1-O1.dat', 'r')
+            else:
+                U0=exact=self.steady_form_file(x)
 
 #            m1 = 0
 #            for line in file_in:
 #                line = line.strip()
 #                columns = line.split()
-#                x[m1] = float(columns[0])
-#                U0[0,m1] = float(columns[1])
-#                U0[1,m1] = float(columns[2])
-#                print(columns[0],m1)
+#                #x[m1] = float(columns[0])
+#                U0[0,m1] = float(columns[0])
+#                U0[1,m1] = 1.53#float(columns[2])
+#                #print(columns[0],m1)
 #                m1 = m1 + 1
 #            file_in.close()
 
-            for y in file_in.read().split('\n'):
-                #if y.isdigit():
-                xx.append(float(y))
-
-            U0[0] = xx#2 + H
-            U0[1] = U0[1]-4.42#+ 24.0#1.53#4.42#1.53#24.0
+#            for y in file_in.read().split('\n'):
+#                #if y.isdigit():
+#                xx.append(float(y))
+#
+#            U0[0] = xx#2 + H
+#            U0[1] = U0[1]+1.53#+ 24.0#1.53#4.42#1.53#24.0
             #self.initCond=InitCond.Frictsol
         elif self.initCond==InitCond.WATER_AT_REST:
             N=len(x)
@@ -248,7 +250,8 @@ class InitCond:
 #        with open('Results/super_sw/weno3_upwind/out100', 'r') as file:
         #with open('Results/Manning/subcritical/weno5_upwind_N100_steady.txt', 'r') as file:
         #with open('Results/Manning/supercritical/weno5_upwind_N100_steady.txt', 'r') as file:
-        with open('Results/Manning/subcritical/reference_w7_am8_N800_steady.txt', 'r') as file:
+        #with open('Results/Manning/subcritical/reference_w7_am8_N800_steady.txt', 'r') as file:
+        with open('Results/super_sw/perturb_discB/reference_w7_am8_st_N1000.txt', 'r') as file:
 
              # Initialize empty lists for each column
             column1 = []

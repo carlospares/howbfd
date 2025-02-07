@@ -266,8 +266,10 @@ class SWEquation(Equation):
         x0[nsteps:len(x)+nsteps] = x
         for jj in range (0,nsteps) :
             x0[jj] = x0[nsteps] - (nsteps-jj)*(dx)
+        k=1;    
         for jj in range (len(x)+nsteps,len(x)+nsteps+gw) :
-            x0[jj] = x[-1] + jj*(dx)
+            x0[jj] = x[-1] + k*(dx)
+            k=k+1
         
         time = 0.0
         funH=FunH(x,config)
@@ -286,6 +288,10 @@ class SWEquation(Equation):
 #        HConst = 0.
 #        qConst = 4.42
 #        hConst = 2.
+        #----transcritical without shock 
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 1.014446798301019#1.0#0.66
 #-----------------------------------------------------        
 
         # if no friction
@@ -362,9 +368,9 @@ class SWEquation(Equation):
 
 #BUMPS
         #----supercritical
-#        HConst = 0.
-#        qConst = 24.
-#        hConst = 2.
+        HConst = 0.
+        qConst = -24.
+        hConst = 2.
 
         #----subcritical
 #        HConst = 0.
@@ -378,9 +384,10 @@ class SWEquation(Equation):
 #        hConst = 0.33
 
         #----transcritical without shock 
-        HConst = 0.
-        qConst = 1.53
-        hConst = 0.4057809453450358#0.66
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 0.4057809453450358#0.66
+        #hConst = 1.014446798301019#0.40573292721431
         
 #BUMPD  
 #        HConst = -.5
@@ -432,20 +439,74 @@ class SWEquation(Equation):
             tmp = odi.odeint(eqn, bstar, funH.Hx, funH.H, U0, x0, i, tloc) # it has to be AB allways
             sumSHx = tmp[1]
 
+            supercritical = -1
+            if x0[i] > 10. :
+                supercritical = 1
             
             Fi = ( x0[1]-x0[0] )*sumSHx + U0[1,i-1]*U0[1,i-1]/U0[0,i-1] + self.g*U0[0,i-1]*U0[0,i-1]*0.5
             
             P = 2.*Fi/( 3.*self.g )
+            #print( 8*Fi*Fi*Fi/(27*self.g), pow(U0[1,i-1],4))
             arg = - U0[1,i-1]*U0[1,i-1]/(self.g*pow(P,1.5))
+            if abs( arg ) > 1 : arg = arg/ abs( arg )
+            #if(arg <= -1.0): arg = -1.0
             theta = np.arccos( arg )
 
+            
             r1 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*1)/3.0)
             r2 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*2)/3.0)
             r3 = 2.0*np.sqrt(P)*np.cos((theta+2.0*np.pi*3)/3.0)
 
-            #U0[0,i] = r2 #supercritical 
-            U0[0,i] = r2 #subcritical
+            #print('')
+            #print(pow(U0[1,i-1],4),8.0*pow(Fi,3)/(27*self.g))
+            #print('roots at ', x0[i], arg, r1,r2,r3 )
+            #print('root 1', r1 )
+            #if r1 > 0 : print('F1', uConstr[1]/np.sqrt( self.g*r1*r1*r1 ) )
+            #print('root 2', r2 )
+            #if r2 > 0 : print('F2', uConstr[1]/np.sqrt( self.g*r2*r2*r2 ) )
+            #print('root 3', r3 )
+            #if r3 > 0 : print('F3', uConstr[1]/np.sqrt( self.g*r3*r3*r3 ) )
+           
+            if r1 > 0 :
+                if uConstr[1]/np.sqrt( self.g*r1*r1*r1 ) > 1 :
+                    if supercritical > 0 :
+                        U0[0,i] = r1
+                if uConstr[1]/np.sqrt( self.g*r1*r1*r1 ) < 1 :
+                    if supercritical < 0 :
+                        U0[0,i] = r1
+            if r2 > 0 :
+                if uConstr[1]/np.sqrt( self.g*r2*r2*r2 ) >= 1  :
+                    if supercritical > 0 :
+                        U0[0,i] = r2
+                if uConstr[1]/np.sqrt( self.g*r2*r2*r2 ) <= 1  :
+                    if supercritical < 0 :
+                        U0[0,i] = r2
+            if r3 > 0 :
+                if uConstr[1]/np.sqrt( self.g*r3*r3*r3 ) >= 1  :
+                    if supercritical > 0 :
+                        U0[0,i] = r3
+                if uConstr[1]/np.sqrt( self.g*r3*r3*r3 ) <= 1  :
+                    if supercritical < 0 :
+                        U0[0,i] = r3
+                       
+            if(abs(r2-r3)<=0.0000001): U0[0,i] =r2           
+            
+            #print('root retained ', U0[0,i] , uConstr[1]/np.sqrt( self.g*U0[0,i]*U0[0,i]*U0[0,i] ) )
+            
+            #U0[0,i] = r2 #supercritical
+            #U0[0,i] = r2 #subcritical
             #print (r1,r2,r3)
+            
+            #if give_error > 0 :
+            #    total = total + 1
+            #    true = steady_constraint(self, HConstr, uConstr, H,x, U1)
+            #    error = error + abs( U0[0,i] - U1[0,i]  )
+                
+        #if give_error > 0 :
+        #    error = error/(1.0*total)
+        #    print('discrete steady state error on h:',error)
+
+
         
         return U0 #Ustar
     
@@ -528,7 +589,7 @@ class SWEquation(Equation):
         Ustar = np.zeros((self.dim(), len(H)))
         (hi, qi, ui) = (uConstr[0], uConstr[1], uConstr[1]/uConstr[0])
         Hstar = self.critical_H(HConstr, qi, hi)
-        if np.min(H) < Hstar - 1.e-4:
+        if np.min(H) < Hstar - 1.e-6:
             print ('no existe solucion estacionaria')
             raise NoSteadyError("No steady state exists for constraint \
                                 (Hi={}, hi={}, ui={}), H={}"\
@@ -547,8 +608,8 @@ class SWEquation(Equation):
                 raise NoSteadyError("Steady state exists but failed to find it. Too close to critical flow?\
                                     (Hi={}, hi={}, ui={}), H-Hstar={}".format(HConstr, hi, ui, H-Hstar ))
             # hstar = polyNewton[j] # Halley's method
-#            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
-            Ustar[0,j] = hsuperc if x[j] > 10. else hsubc  # transcritical stationary solution with critical point at x = 0
+            Ustar[0,j] = hsuperc if Fr_i > 1 else hsubc
+#            Ustar[0,j] = hsuperc if x[j] > 10. else hsubc  # transcritical stationary solution with critical point at x = 0
             Ustar[1,j] = uConstr[1]
 #        i = (U0.shape[1]-1)/2
 #        if x[i]== -1.05:

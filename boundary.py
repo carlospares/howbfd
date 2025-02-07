@@ -54,14 +54,14 @@ class BoundaryCond:
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             uNew[0,:gw] =  uOld[0,gw:0:-1]
 ##
-            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+#            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
             uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
             # ---subcritical
-          #  uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-          #  uNew[0,:gw] =  uOld[0,gw:0:-1]
-
-   #         uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
-   #         uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
+#            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
+#            uNew[0,:gw] =  uOld[0,gw:0:-1]
+#
+#            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+#            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.SUPER:
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             #uNew[0,:gw] =  uOld[0,gw:0:-1]
@@ -96,12 +96,12 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.FORCE_STEADY_INIT:
             HConstr = funH.H(xGhost[gw],tloc)
             uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
-            #import matplotlib.pyplot as plt
-            #print eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))
-            #plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
-            #plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
-            #plt.title("steady constraint")
-            #plt.show()
+#            import matplotlib.pyplot as plt
+#            print (eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost)))
+#            plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
+#            plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
+#            plt.title("steady constraint")
+#            plt.show()
             uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw],tloc),xGhost[:gw], np.zeros((nvars,gw)))
             uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.FORCE_DISCRETE_STEADY_INIT:
