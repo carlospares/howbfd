@@ -21,6 +21,7 @@ class EulerEquationGRAV(Equation):
     
     # other function parameters
     g = 1.4 # heat coefficient ratio - perfect gas
+    fcoeff = 0.0
 
     def F(self, U):
         """ Flux function """
@@ -30,7 +31,7 @@ class EulerEquationGRAV(Equation):
         E = U[2,:]
         
         u = q/h
-        p = ( g - 1. )*( E - h*u*u*0.5 )
+        p = ( self.g - 1. )*( E - h*u*u*0.5 )
         
         ret[0,:] = q
         ret[1,:] = u*q +  p
@@ -45,7 +46,7 @@ class EulerEquationGRAV(Equation):
         E = U[2,:]
         
         u = q/h
-        p = ( g - 1. )*( E - h*u*u*0.5 )
+        p = ( self.g - 1. )*( E - h*u*u*0.5 )
         a = np.sqrt(self.g*p/h)
         
         
@@ -111,7 +112,7 @@ class EulerEquationGRAV(Equation):
         E = U[2,:]
         
         u = q/h
-        p = ( g - 1. )*( E - h*u*u*0.5 )
+        p = ( self.g - 1. )*( E - h*u*u*0.5 )
         a = np.sqrt(self.g*p/h)
         
         
@@ -190,13 +191,13 @@ class EulerEquationGRAV(Equation):
         """ Returns eigenvalues of dF(U), as
             numpy array shaped like U, with
             eig[0,i] < eig[1,i] < ... for all i """
-#        eig = np.zeros(U.shape)
+        eig = np.zeros(U.shape)
         h = U[0,:]
         q = U[1,:]
         E = U[2,:]
         
         u = q/h
-        p = ( g - 1. )*( E - h*u*u*0.5 )
+        p = ( self.g - 1. )*( E - h*u*u*0.5 )
         a = np.sqrt(self.g*p/h)
         eig[0,:] = u - a
         eig[1,:] = u
@@ -236,9 +237,11 @@ class EulerEquationGRAV(Equation):
     def Piplus(self, ui, uip1):
         hl = ui[0]
         ql = ui[1]
+        ul = ui[1]/ui[0]
         El = ui[2]
         hr = uip1[0]
         qr = uip1[1]
+        ur = uip1[1]/uip1[0]
         Er = uip1[2]
         
         h = .5*(np.sqrt(hl) + np.sqrt(hr))
@@ -250,6 +253,7 @@ class EulerEquationGRAV(Equation):
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/h)
         
+        E = Hs +h *0.5*u*u
         
         l1 = u - a
         l2 = u
@@ -314,9 +318,11 @@ class EulerEquationGRAV(Equation):
     def Piminus(self, ui, uip1):
         hl = ui[0]
         ql = ui[1]
+        ul = ui[1]/ui[0]
         El = ui[2]
         hr = uip1[0]
         qr = uip1[1]
+        ur = uip1[1]/uip1[0]
         Er = uip1[2]
         
         h = .5*(np.sqrt(hl) + np.sqrt(hr))
@@ -328,6 +334,7 @@ class EulerEquationGRAV(Equation):
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/h)
         
+        E = Hs +h *0.5*u*u
         
         l1 = u - a
         l2 = u
@@ -594,15 +601,18 @@ class EulerEquationGRAV(Equation):
             This function should produce a finished plot, including title,
             legend, labels and so on; io_manager will do plt.show() or savefig() 
             as required """
-        plt.subplot(211)
+        plt.subplot(311)
         plt.title(t)
         plt.plot(x, -H, 'b', label='-H')
-        plt.plot(x, u[0]-H, 'g', label='$\eta$')
+        plt.plot(x, u[0], 'g', label='$rho$')
 #        plt.plot(x, u[0], 'r', label='h')
         plt.legend()
-        plt.subplot(212)
-        #plt.plot(x, u[1]/u[0], label='u')
-        plt.plot(x, u[1], label='q')
+        plt.subplot(312)
+        plt.plot(x, u[1]/u[0], label='u')
+        #plt.plot(x, u[1], label='rho u')
+        plt.legend()
+        plt.subplot(313)
+        plt.plot(x, u[2], label='E')
         plt.legend()
 
     def exact(self, x, t, H, params):

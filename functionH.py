@@ -25,6 +25,7 @@ class FunH:
     PAR   = 313
     EUL_SEC = 314
     FRICTSOL = 315
+    EUL_GRAV = 316
 
     SEED = 11235813 # seed for reproducibility
     def __init__(self, xGhost, cf):
@@ -56,8 +57,8 @@ class FunH:
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        #Y=[0]
-        Y=[14.0] # last from Maria
+        Y=[0]
+        #Y=[14.0] # last from Maria
         #Y=[10.0] # test for sonic point
         #Y=np.zeros_like([1,2])
         #Y= [0, 0.505]
@@ -113,6 +114,8 @@ class FunH:
         elif self.funH==self.EUL_SEC:
             Ax = -3.0/5.0*(1-(x+5.0)/5)*(x>-5)*(x<=0) +  -1.0/5.0*(1-(x+5.0)/5)*(x>0)*(x<=5)
             H = Ax
+        elif self.funH==self.EUL_GRAV:
+            H = 0.0*np.ones_like(x)
         elif self.funH==self.FRICTSOL:
             coeffa=1.5
             coeffb=0.5
@@ -171,6 +174,8 @@ class FunH:
             Hx=2.0*x 
         elif self.funH==self.EUL_SEC:
             Hx = 3.0/25.0*(x>-5)*(x<=0) +  1.0/25.0*(x>0)*(x<=5)
+        elif self.funH==self.EUL_GRAV:
+            Hx = 0.0*np.ones_like(x)
         elif self.funH==self.FRICTSOL:
             coeffa=1.5
             coeffb=0.5

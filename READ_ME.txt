@@ -21,16 +21,14 @@ DONE
 * discontinuous H: first order ok, missing extrapolation
 * discontinuous H: Carlo's stuff
 
-
-To do 
-* Latex the above
-
-
-
 * Then we will focus on trans critical with Carlos
 * add friction? 
 * reversed flow case
 
+* Latex the above
+
+
+To do 
 
 * Euler: check mismatches just to be able to run
 * Euler:  look into case of figure 4 in https://arxiv.org/pdf/2307.12089

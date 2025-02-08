@@ -110,7 +110,7 @@ class UpwindGF(NumericalMethod):
 #            uloc[:,nsteps:]=u[:,gw:]
 #---------------------------------------------------------
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
-        fstar[:,0:gw] =  eqn.F(u[:,0:gw]) ### initatilization of the multistep method
+        fstar[:,0:gw] =  0#eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
         if nvars == 2:
 

@@ -164,7 +164,7 @@ def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):
     
             sumSHx=0
             for j in range(-nsteps,0):
-                sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t) - sig[j+nsteps])
+                sumSHx += ab_coeff[j+nsteps]*( eqn.S(u[:,i+j])*Hx(x[i+j],t)) #- sig[j+nsteps])
 
         elif compute_source == 'source_reconstruction':
 
