@@ -26,12 +26,12 @@ class EulerEquationGRAV(Equation):
     def F(self, U):
         """ Flux function """
         ret = np.empty(U.shape)
-        h = U[0,:]
-        q = U[1,:]
-        E = U[2,:]
+        rho = U[0,:]
+        q   = U[1,:]
+        E   = U[2,:]
         
-        u = q/h
-        p = ( self.g - 1. )*( E - h*u*u*0.5 )
+        u = q/rho
+        p = ( self.g - 1. )*( E - q*u*0.5 )
         
         ret[0,:] = q
         ret[1,:] = u*q +  p
@@ -41,22 +41,22 @@ class EulerEquationGRAV(Equation):
     def Fp(self, U):
         """ Flux function """
         ret = np.empty(U.shape)
-        h = U[0,:]
-        q = U[1,:]
-        E = U[2,:]
+        rho = U[0,:]
+        q   = U[1,:]
+        E   = U[2,:]
         
-        u = q/h
-        p = ( self.g - 1. )*( E - h*u*u*0.5 )
-        a = np.sqrt(self.g*p/h)
+        u = q/rho
+        p = ( self.g - 1. )*( E - q*u*0.5 )
+        a = np.sqrt(self.g*p/rho)
         
         
-        l1 = q/h - a
-        l2 = q/h
-        l3 = q/h + a
+        l1 = u - a
+        l2 = u
+        l3 = u + a
         
         r11 = 1.
         r21 = u - a
-        r31 = E/h + p/h - u*a
+        r31 = E/rho + p/rho - u*a
         
         r12 = 1.
         r22 = u
@@ -64,7 +64,7 @@ class EulerEquationGRAV(Equation):
         
         r13 = 1.
         r23 = u + a
-        r33 = E/h + p/h + u*a
+        r33 = E/rho + p/rho + u*a
         
         
         l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
@@ -95,9 +95,9 @@ class EulerEquationGRAV(Equation):
         l32p = l3p*l32
         l33p = l3p*l33
         
-        vv1 = l11p*h + l12p*q + l13p*E
-        vv2 = l21p*h + l22p*q + l23p*E
-        vv3 = l31p*h + l32p*q + l33p*E
+        vv1 = l11p*rho + l12p*q + l13p*E
+        vv2 = l21p*rho + l22p*q + l23p*E
+        vv3 = l31p*rho + l32p*q + l33p*E
         
         ret[0,:] = r11*vv1 + r12*vv2 + r13*vv3
         ret[1,:] = r21*vv1 + r22*vv2 + r23*vv3
@@ -107,22 +107,22 @@ class EulerEquationGRAV(Equation):
     def Fm(self, U):
         """ Flux function """
         ret = np.empty(U.shape)
-        h = U[0,:]
-        q = U[1,:]
-        E = U[2,:]
+        rho = U[0,:]
+        q   = U[1,:]
+        E   = U[2,:]
         
-        u = q/h
-        p = ( self.g - 1. )*( E - h*u*u*0.5 )
-        a = np.sqrt(self.g*p/h)
+        u = q/rho
+        p = ( self.g - 1. )*( E - q*u*0.5 )
+        a = np.sqrt(self.g*p/rho)
         
         
-        l1 = q/h - a
-        l2 = q/h
-        l3 = q/h + a
+        l1 = u - a
+        l2 = u
+        l3 = u + a
         
         r11 = 1.
         r21 = u - a
-        r31 = E/h + p/h - u*a
+        r31 = E/rho + p/rho - u*a
         
         r12 = 1.
         r22 = u
@@ -130,7 +130,7 @@ class EulerEquationGRAV(Equation):
         
         r13 = 1.
         r23 = u + a
-        r33 = E/h + p/h + u*a
+        r33 = E/rho + p/rho + u*a
         
         
         l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
@@ -161,9 +161,9 @@ class EulerEquationGRAV(Equation):
         l32m = l3m*l32
         l33m = l3m*l33
         
-        vv1 = l11m*h + l12m*q + l13m*E
-        vv2 = l21m*h + l22m*q + l23m*E
-        vv3 = l31m*h + l32m*q + l33m*E
+        vv1 = l11m*rho + l12m*q + l13m*E
+        vv2 = l21m*rho + l22m*q + l23m*E
+        vv3 = l31m*rho + l32m*q + l33m*E
         
         ret[0,:] = r11*vv1 + r12*vv2 + r13*vv3
         ret[1,:] = r21*vv1 + r22*vv2 + r23*vv3
@@ -175,15 +175,15 @@ class EulerEquationGRAV(Equation):
         """ Derivative of flux function """
         DF = np.zeros((U.shape[1], self.dim(), self.dim()))
         for i in range(U.shape[1]):
-            h = U[0,i]
-            q = U[1,i]
-            E = U[2,i]
-            u = q/h
+            rho = U[0,i]
+            q   = U[1,i]
+            E   = U[2,i]
+            u = q/rho
             k = 0.5*u*u
             gm1 = self.g-1.
             gm3 = self.g-3.
-            p = (self.g-1.)*( E - h*k )
-            Hs = E/h  + p/h
+            p = (self.g-1.)*( E - rho*k )
+            Hs = E/rho  + p/rho
             DF[i] = np.array([[0,1,0],[gm3*k,-gm3*u,gm1],[u*(gm1*k-Hs),Hs-2.*gm1*k,self.g*u]])
         return DF
 
@@ -192,13 +192,13 @@ class EulerEquationGRAV(Equation):
             numpy array shaped like U, with
             eig[0,i] < eig[1,i] < ... for all i """
         eig = np.zeros(U.shape)
-        h = U[0,:]
-        q = U[1,:]
-        E = U[2,:]
+        rho = U[0,:]
+        q   = U[1,:]
+        E   = U[2,:]
         
-        u = q/h
-        p = ( self.g - 1. )*( E - h*u*u*0.5 )
-        a = np.sqrt(self.g*p/h)
+        u = q/rho
+        p = ( self.g - 1. )*( E - q*u*0.5 )
+        a = np.sqrt(self.g*p/rho)
         eig[0,:] = u - a
         eig[1,:] = u
         eig[2,:] = u + a
@@ -235,25 +235,26 @@ class EulerEquationGRAV(Equation):
         return delta
         
     def Piplus(self, ui, uip1):
-        hl = ui[0]
-        ql = ui[1]
-        ul = ui[1]/ui[0]
-        El = ui[2]
-        hr = uip1[0]
-        qr = uip1[1]
-        ur = uip1[1]/uip1[0]
-        Er = uip1[2]
+        rhol = ui[0]
+        ql   = ui[1]
+        ul   = ui[1]/ui[0]
+        El   = ui[2]
+        kl   = 0.5*ul*ul
+        rhor = uip1[0]
+        qr   = uip1[1]
+        ur   = uip1[1]/uip1[0]
+        Er   = uip1[2]
+        kr   = 0.5*ur*ur
         
-        h = .5*(np.sqrt(hl) + np.sqrt(hr))
-        h = h*h
-        u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
-        Hs = np.sqrt(hl)*( self.g*El - (self.g-1.)*0.5*ql*ql/(hl*hl) ) + np.sqrt(hr)*( self.g*Er - (self.g-1.)*0.5*qr*qr/(hr*hr) )
-        Hs = Hs/(np.sqrt(hl) + np.sqrt(hr))
+        rho = .5*(np.sqrt(rhol) + np.sqrt(rhor))
+        rho = rho*rho
+        u   = (np.sqrt(rhol)*ul + np.sqrt(rhor)*ur)/(np.sqrt(rhol) + np.sqrt(rhor))
+        Hs  = np.sqrt(rhol)*( self.g*El - (self.g-1.)*kl ) + np.sqrt(rhor)*( self.g*Er - (self.g-1.)*kr )
+        Hs  = Hs/(np.sqrt(rhol) + np.sqrt(rhor))
+        k   = 0.5*u*u
         
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
-        a = np.sqrt(self.g*p/h)
-        
-        E = Hs +h *0.5*u*u
+        a = np.sqrt(self.g*p/rho)
         
         l1 = u - a
         l2 = u
@@ -261,7 +262,7 @@ class EulerEquationGRAV(Equation):
         
         r11 = 1.
         r21 = u - a
-        r31 = E/h + p/h - u*a
+        r31 = Hs - u*a
         
         r12 = 1.
         r22 = u
@@ -269,7 +270,7 @@ class EulerEquationGRAV(Equation):
         
         r13 = 1.
         r23 = u + a
-        r33 = E/h + p/h + u*a
+        r33 = Hs + u*a
         
         
         l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
@@ -334,7 +335,6 @@ class EulerEquationGRAV(Equation):
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/h)
         
-        E = Hs +h *0.5*u*u
         
         l1 = u - a
         l2 = u
@@ -342,7 +342,7 @@ class EulerEquationGRAV(Equation):
         
         r11 = 1.
         r21 = u - a
-        r31 = E/h + p/h - u*a
+        r31 = Hs - u*a
         
         r12 = 1.
         r22 = u
@@ -350,7 +350,7 @@ class EulerEquationGRAV(Equation):
         
         r13 = 1.
         r23 = u + a
-        r33 = E/h + p/h + u*a
+        r33 = Hs + u*a
         
         
         l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
