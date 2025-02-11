@@ -317,23 +317,23 @@ class EulerEquationGRAV(Equation):
         return A
     
     def Piminus(self, ui, uip1):
-        hl = ui[0]
-        ql = ui[1]
-        ul = ui[1]/ui[0]
-        El = ui[2]
-        hr = uip1[0]
-        qr = uip1[1]
-        ur = uip1[1]/uip1[0]
-        Er = uip1[2]
+        rhol = ui[0]
+        ql   = ui[1]
+        ul   = ui[1]/ui[0]
+        El   = ui[2]
+        rhor = uip1[0]
+        qr   = uip1[1]
+        ur   = uip1[1]/uip1[0]
+        Er   = uip1[2]
         
-        h = .5*(np.sqrt(hl) + np.sqrt(hr))
-        h = h*h
-        u = (np.sqrt(hl)*ul + np.sqrt(hr)*ur)/(np.sqrt(hl) + np.sqrt(hr))
-        Hs = np.sqrt(hl)*( self.g*El - (self.g-1.)*0.5*ql*ql/(hl*hl) ) + np.sqrt(hr)*( self.g*Er - (self.g-1.)*0.5*qr*qr/(hr*hr) )
-        Hs = Hs/(np.sqrt(hl) + np.sqrt(hr))
+        rho = .5*(np.sqrt(rhol) + np.sqrt(rhor))
+        rho = rho*rho
+        u = (np.sqrt(rhol)*ul + np.sqrt(rhor)*ur)/(np.sqrt(rhol) + np.sqrt(rhor))
+        Hs = np.sqrt(rhol)*( self.g*El - (self.g-1.)*0.5*ul*ul ) + np.sqrt(rhor)*( self.g*Er - (self.g-1.)*0.5*ur*ur )
+        Hs = Hs/(np.sqrt(rhol) + np.sqrt(rhor))
         
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
-        a = np.sqrt(self.g*p/h)
+        a = np.sqrt(self.g*p/rho)
         
         
         l1 = u - a
