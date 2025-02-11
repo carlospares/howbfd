@@ -240,17 +240,18 @@ class EulerEquationGRAV(Equation):
         ul   = ui[1]/ui[0]
         El   = ui[2]
         kl   = 0.5*ul*ul
+        Hsl  = self.g*El/rhol - (self.g-1.)*kl
         rhor = uip1[0]
         qr   = uip1[1]
         ur   = uip1[1]/uip1[0]
         Er   = uip1[2]
         kr   = 0.5*ur*ur
+        Hsr  = self.g*Er/rhor - (self.g-1.)*kr
         
         rho = .5*(np.sqrt(rhol) + np.sqrt(rhor))
         rho = rho*rho
         u   = (np.sqrt(rhol)*ul + np.sqrt(rhor)*ur)/(np.sqrt(rhol) + np.sqrt(rhor))
-        Hs  = np.sqrt(rhol)*( self.g*El - (self.g-1.)*kl ) + np.sqrt(rhor)*( self.g*Er - (self.g-1.)*kr )
-        Hs  = Hs/(np.sqrt(rhol) + np.sqrt(rhor))
+        Hs  = ( np.sqrt(rhol)*Hsl + np.sqrt(rhor)*Hsr )/(np.sqrt(rhol) + np.sqrt(rhor))
         k   = 0.5*u*u
         
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
@@ -321,16 +322,20 @@ class EulerEquationGRAV(Equation):
         ql   = ui[1]
         ul   = ui[1]/ui[0]
         El   = ui[2]
+        kl   = 0.5*ul*ul
+        Hsl  = self.g*El/rhol - (self.g-1.)*kl
         rhor = uip1[0]
         qr   = uip1[1]
         ur   = uip1[1]/uip1[0]
         Er   = uip1[2]
+        kr   = 0.5*ur*ur
+        Hsr  = self.g*Er/rhor - (self.g-1.)*kr
         
         rho = .5*(np.sqrt(rhol) + np.sqrt(rhor))
         rho = rho*rho
-        u = (np.sqrt(rhol)*ul + np.sqrt(rhor)*ur)/(np.sqrt(rhol) + np.sqrt(rhor))
-        Hs = np.sqrt(rhol)*( self.g*El - (self.g-1.)*0.5*ul*ul ) + np.sqrt(rhor)*( self.g*Er - (self.g-1.)*0.5*ur*ur )
-        Hs = Hs/(np.sqrt(rhol) + np.sqrt(rhor))
+        u   = (np.sqrt(rhol)*ul + np.sqrt(rhor)*ur)/(np.sqrt(rhol) + np.sqrt(rhor))
+        Hs  = ( np.sqrt(rhol)*Hsl + np.sqrt(rhor)*Hsr )/(np.sqrt(rhol) + np.sqrt(rhor))
+        k   = 0.5*u*u
         
         p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/rho)
