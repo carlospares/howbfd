@@ -254,37 +254,66 @@ class EulerEquationGRAV(Equation):
         Hs  = ( np.sqrt(rhol)*Hsl + np.sqrt(rhor)*Hsr )/(np.sqrt(rhol) + np.sqrt(rhor))
         k   = 0.5*u*u
         
-        p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
+        p = (self.g-1.)*rho*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/rho)
+        E = p/(self.g-1) +0.5*rho*u*u
         
         l1 = u - a
         l2 = u
         l3 = u + a
+        if(np.abs(l2)<1.e-4): 
+            l2 = 1.e-4
         
-        r11 = 1.
-        r21 = u - a
-        r31 = Hs - u*a
-        
+
+        r11 = rho/a #1.
+        r21 = rho*( -1. + u/a )#u - a
+        r31 = rho*( E/rho + p/rho )/a - rho*u #E/rho + p/rho - u*a
+
         r12 = 1.
         r22 = u
         r32 = u*u*0.5
-        
-        r13 = 1.
-        r23 = u + a
-        r33 = Hs + u*a
-        
-        
-        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
-        l12 = -0.5*( (self.g-1.)*u/a + 1. )/a
-        l13 = 0.5*(self.g-1.)/( a*a )
-        
-        l21 = 1. - 0.5*(self.g-1.)*u*u/(a*a)
-        l22 = 0.5*(self.g-1.)*u/(a*a)
-        l23 = -0.5*(self.g-1.)/(a*a)
-        
-        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
-        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
+
+        r13 = rho/a #1.
+        r23 = rho*( 1. + u/a )#u + a
+        r33 = rho*( E/rho + p/rho )/a + rho*u #E/rho + p/rho + u*a
+
+        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/rho #0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
+        l12 = -(self.g-1.)*0.5*u/( rho*a ) - 0.5/rho ;#-0.5*( (self.g-1.)*u/a + 1. )/a
+        l13 = 0.5*(self.g-1.)/( a*rho ) #0.5*(self.g-1.)/( a*a )
+
+        l21 = 1. - (self.g-1.)*0.5*u*u/(a*a)
+        l22 = (self.g-1.)*u/(a*a)
+        l23 = -(self.g-1.)/(a*a)
+
+        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/rho#0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
+        l32 = -(self.g-1.)*0.5*u/( rho*a ) + 0.5/rho
         l33 = l13
+
+
+#        r11 = 1.
+#        r21 = u - a
+#        r31 = Hs - u*a
+#        
+#        r12 = 1.
+#        r22 = u
+#        r32 = u*u*0.5
+#        
+#        r13 = 1.
+#        r23 = u + a
+#        r33 = Hs + u*a
+#        
+#        
+#        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
+#        l12 = -0.5*( (self.g-1.)*u/a + 1. )/a
+#        l13 = 0.5*(self.g-1.)/( a*a )
+#        
+#        l21 = 1. - 0.5*(self.g-1.)*u*u/(a*a)
+#        l22 = (self.g-1.)*u/(a*a)
+#        l23 = -(self.g-1.)/(a*a)
+#        
+#        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
+#        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
+#        l33 = l13
         
         l1p = .5*(1 + np.sign(l1))
         l2p = .5*(1 + np.sign(l2))
@@ -337,39 +366,67 @@ class EulerEquationGRAV(Equation):
         Hs  = ( np.sqrt(rhol)*Hsl + np.sqrt(rhor)*Hsr )/(np.sqrt(rhol) + np.sqrt(rhor))
         k   = 0.5*u*u
         
-        p = (self.g-1.)*( Hs - 0.5*u*u )/self.g
+        p = (self.g-1.)*rho*( Hs - 0.5*u*u )/self.g
         a = np.sqrt(self.g*p/rho)
+        E = p/(self.g-1) +0.5*rho*u*u
         
         
         l1 = u - a
         l2 = u
         l3 = u + a
+        if(np.abs(l2)<1.e-4): 
+            l2 = 1.e-4
         
-        r11 = 1.
-        r21 = u - a
-        r31 = Hs - u*a
-        
+        r11 = rho/a #1.
+        r21 = rho*( -1. + u/a )#u - a
+        r31 = rho*( E/rho + p/rho )/a - rho*u #E/rho + p/rho - u*a
+
         r12 = 1.
         r22 = u
         r32 = u*u*0.5
-        
-        r13 = 1.
-        r23 = u + a
-        r33 = Hs + u*a
-        
-        
-        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
-        l12 = -0.5*( (self.g-1.)*u/a + 1. )/a
-        l13 = 0.5*(self.g-1.)/( a*a )
-        
-        l21 = 1. - 0.5*(self.g-1.)*u*u/(a*a)
-        l22 = 0.5*(self.g-1.)*u/(a*a)
-        l23 = -0.5*(self.g-1.)/(a*a)
-        
-        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
-        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
+
+        r13 = rho/a #1.
+        r23 = rho*( 1. + u/a )#u + a
+        r33 = rho*( E/rho + p/rho )/a + rho*u #E/rho + p/rho + u*a
+
+        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/rho #0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
+        l12 = -(self.g-1.)*0.5*u/( rho*a ) - 0.5/rho ;#-0.5*( (self.g-1.)*u/a + 1. )/a
+        l13 = 0.5*(self.g-1.)/( a*rho ) #0.5*(self.g-1.)/( a*a )
+
+        l21 = 1. - (self.g-1.)*0.5*u*u/(a*a)
+        l22 = (self.g-1.)*u/(a*a)
+        l23 = -(self.g-1.)/(a*a)
+
+        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/rho#0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
+        l32 = -(self.g-1.)*0.5*u/( rho*a ) + 0.5/rho
         l33 = l13
-        
+
+
+#        r11 = 1.
+#        r21 = u - a
+#        r31 = Hs - u*a
+#        
+#        r12 = 1.
+#        r22 = u
+#        r32 = u*u*0.5
+#        
+#        r13 = 1.
+#        r23 = u + a
+#        r33 = Hs + u*a
+#        
+#        
+#        l11 = 0.5*( 0.5*(self.g-1.)*u/a + 1. )*u/a
+#        l12 = -0.5*( (self.g-1.)*u/a + 1. )/a
+#        l13 = 0.5*(self.g-1.)/( a*a )
+#        
+#        l21 = 1. - 0.5*(self.g-1.)*u*u/(a*a)
+#        l22 = (self.g-1.)*u/(a*a)
+#        l23 = -(self.g-1.)/(a*a)
+#        
+#        l31 = 0.5*( 0.5*(self.g-1.)*u/a - 1. )*u/a
+#        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
+#        l33 = l13
+#        
         l1m = .5*(1 - np.sign(l1))
         l2m = .5*(1 - np.sign(l2))
         l3m = .5*(1 - np.sign(l3))
