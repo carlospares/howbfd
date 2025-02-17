@@ -190,9 +190,14 @@ class InitCond:
             U0 = self.eqn.dicrete_steady(x)
         elif self.initCond==InitCond.Eulergrav:
             gamma = 1.4 
-            U0[0] = 1.0*(x<=0.5) + 0.125*(x>0.5)
+#            U0[0] = 1.0*(x<=0.5) + 0.125*(x>0.5)
+#            U0[1] = 0.0
+#            U0[2] = (1*(x<=0.5) + 0.1*(x>0.5))/(gamma -1) +0.5*U0[0]*U0[1]*U0[1]
+            s = 1.0/(1+ np.exp(-(x-0.5)/0.01))
+            U0[0] = (1.0-s)*1.0+s*0.125
             U0[1] = 0.0
             U0[2] = (1*(x<=0.5) + 0.1*(x>0.5))/(gamma -1) +0.5*U0[0]*U0[1]*U0[1]
+            U0[2] = (1.0-s)*1.0/(gamma-1)+s*0.1/(gamma-1) +0.5*U0[0]*U0[1]*U0[1]
             
         if self.eqn.dim() == 2 and self.source == 'hydrostatic_reconstruction':
             U0[0] = U0[0]-H #eta
