@@ -177,7 +177,7 @@ class UpwindGF(NumericalMethod):
         if nvars == 2 and compute_source =='hydrostatic_reconstruction':
             phi = eqn.F_hr(u, bstar, H) - fstar
         else:
-            phi = eqn.F(u) #- fstar
+            phi = eqn.F(u) - fstar
   
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-

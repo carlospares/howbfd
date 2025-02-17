@@ -116,7 +116,9 @@ class FunH:
             Ax = -3.0/5.0*(1-(x+5.0)/5)*(x>-5)*(x<=0) +  -1.0/5.0*(1-(x+5.0)/5)*(x>0)*(x<=5)
             H = Ax
         elif self.funH==self.EUL_GRAV:
-            H = 0.0*np.ones_like(x)
+            H = np.ones_like(x)
+            #H = 0.5*( x - 0.5 )*( x - 0.5 ) # From Berthon et al
+            H = x # From Chertock et al
         elif self.funH==self.FRICTSOL:
             coeffa=1.5
             coeffb=0.5
@@ -176,7 +178,8 @@ class FunH:
         elif self.funH==self.EUL_SEC:
             Hx = 3.0/25.0*(x>-5)*(x<=0) +  1.0/25.0*(x>0)*(x<=5)
         elif self.funH==self.EUL_GRAV:
-            Hx = 0.0*np.ones_like(x)
+            Hx = np.ones_like(x) # From Chertock et al
+            # Hx =  ( x - 0.5 ) # From Berthon et al
         elif self.funH==self.FRICTSOL:
             coeffa=1.5
             coeffb=0.5

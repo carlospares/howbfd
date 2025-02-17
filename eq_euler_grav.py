@@ -261,8 +261,7 @@ class EulerEquationGRAV(Equation):
         l1 = u - a
         l2 = u
         l3 = u + a
-        if(np.abs(l2)<1.e-4): 
-            l2 = 1.e-4
+        
         
 
         r11 = rho/a #1.
@@ -315,9 +314,9 @@ class EulerEquationGRAV(Equation):
 #        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
 #        l33 = l13
         
-        l1p = .5*(1 + np.sign(l1))
-        l2p = .5*(1 + np.sign(l2))
-        l3p = .5*(1 + np.sign(l3))
+        l1p = .5*(l1 + np.abs(l1))/( 1.e-4 + np.abs(l1) )
+        l2p = .5*(l2 + np.abs(l2))/( 1.e-4 + np.abs(l2) )
+        l3p = .5*(l3 + np.abs(l3))/( 1.e-4 + np.abs(l3) )
         
         l11p = l1p*l11
         l12p = l1p*l12
@@ -374,8 +373,6 @@ class EulerEquationGRAV(Equation):
         l1 = u - a
         l2 = u
         l3 = u + a
-        if(np.abs(l2)<1.e-4): 
-            l2 = 1.e-4
         
         r11 = rho/a #1.
         r21 = rho*( -1. + u/a )#u - a
@@ -427,9 +424,9 @@ class EulerEquationGRAV(Equation):
 #        l32 = -0.5*( (self.g-1.)*u/a - 1. )/a
 #        l33 = l13
 #        
-        l1m = .5*(1 - np.sign(l1))
-        l2m = .5*(1 - np.sign(l2))
-        l3m = .5*(1 - np.sign(l3))
+        l1m = -.5*(l1 - np.abs(l1))/( 1.e-4 + np.abs(l1) )
+        l2m = -.5*(l2 - np.abs(l2))/( 1.e-4 + np.abs(l2) )
+        l3m = -.5*(l3 - np.abs(l3))/( 1.e-4 + np.abs(l3) )
         
         l11m = l1m*l11
         l12m = l1m*l12
@@ -674,7 +671,7 @@ class EulerEquationGRAV(Equation):
         #plt.plot(x, u[1], label='rho u')
         plt.legend()
         plt.subplot(313)
-        plt.plot(x, u[2], label='E')
+        plt.plot(x, 0.4*( u[2]  - 0.5*u[1]*u[1]/u[0]), label='p')
         plt.legend()
 
     def exact(self, x, t, H, params):
