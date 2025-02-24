@@ -25,7 +25,8 @@ class InitCond:
     Eulersec = 512
     Frictsol = 513
     DISCRETE_AB = 514
-    Eulergrav = 515
+    Eulertube = 515
+    Eulerisothermal = 516
 
 
     # Identifiers for perturbation (if relevant)
@@ -188,15 +189,20 @@ class InitCond:
 
         elif self.initCond==InitCond.DISCRETE_AB:
             U0 = self.eqn.dicrete_steady(x)
-        elif self.initCond==InitCond.Eulergrav:
+        elif self.initCond==InitCond.Eulertube:
             gamma = 1.4 
 #            U0[0] = 1.0*(x<=0.5) + 0.125*(x>0.5)
 #            U0[1] = 0.0
 #            U0[2] = (1*(x<=0.5) + 0.1*(x>0.5))/(gamma -1) +0.5*U0[0]*U0[1]*U0[1]
-            s = 1.0/(1+ np.exp(-(x-0.5)/(x[2]-x[1])))
+            s = 1.0/(1+ np.exp(-(x-0.5)/(x[1]-x[0])))
             U0[0] = (1.0-s)*1.0+s*0.125
             U0[1] = 0.0
             U0[2] = (1.0-s)*1.0/(gamma-1)+s*0.1/(gamma-1) +0.5*U0[0]*U0[1]*U0[1]
+        elif self.initCond==InitCond.Eulerisothermal:
+            gamma = 1.4 
+            U0[0] = np.exp(-x)
+            U0[1] = 0.0
+            U0[2] = U0[0]/(gamma-1)+0.5*U0[0]*U0[1]*U0[1]
             
         if self.eqn.dim() == 2 and self.source == 'hydrostatic_reconstruction':
             U0[0] = U0[0]-H #eta

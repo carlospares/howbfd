@@ -80,14 +80,14 @@ class UpwindGF(NumericalMethod):
                 xloc[i] = x[0]-k*dx
                 k +=1
 
-            for j in range(nsteps-gw):
-                uloc[:,j] = uloc[:,nsteps-gw] - (nsteps-gw-j)*(uloc[:,nsteps-gw+1]-uloc[:,nsteps-gw]) #extrapolation
+#            for j in range(nsteps-gw):
+#                uloc[:,j] = uloc[:,nsteps-gw] - (nsteps-gw-j)*(uloc[:,nsteps-gw+1]-uloc[:,nsteps-gw]) #extrapolation
                 
-#            uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
-            #return    
+            uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
             uloc[:,nsteps:]=u[:,gw:]    
             xloc[nsteps:]=x[gw:]    
             #print (uloc)
+            #return    
         elif gw == nsteps:
             uloc = np.zeros((nvars,N+2*gw))
             xloc = np.zeros((N+2*gw))
@@ -110,7 +110,7 @@ class UpwindGF(NumericalMethod):
 #            uloc[:,nsteps:]=u[:,gw:]
 #---------------------------------------------------------
         #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
-        fstar[:,0:gw] =  0#eqn.F(u[:,0:gw]) ### initatilization of the multistep method
+        fstar[:,0:gw] =  0.0#eqn.F(u[:,0:gw]) ### initatilization of the multistep method
 
         if nvars == 2:
 

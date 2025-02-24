@@ -44,11 +44,14 @@ class BoundaryCond:
             uNew[:,-gw:] = uOld[:,:gw]
         elif self.bc==BoundaryCond.IN_OUT:
             #-----IN_OUT
-          #  uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw], tloc))
+#            uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw], tloc))
 ##            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-            #uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+#            uNew[:,-gw:] = initCond.u0(xGhost[-gw:], funH.H(xGhost[-gw:], tloc)) #impose initial state
             uNew[:,0:gw] = initCond.u0(xGhost[0:gw], funH.H(xGhost[0:gw], tloc)) #impose initial state
             uNew[:,N+gw:] = initCond.u0(xGhost[N+gw:], funH.H(xGhost[N+gw:], tloc)) #impose initial state
+            uNew[0,:gw] =  uOld[0,gw:0:-1]
+            uNew[0,-gw:] = uOld[0,-1:-1-gw:-1] # naively try to make derivative zero
+
         elif self.bc==BoundaryCond.SUBCR:
             #---transcritical
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
@@ -115,12 +118,27 @@ class BoundaryCond:
                
         elif self.bc==BoundaryCond.WALL:
 #            print eqn
-            uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]
-            uNew[0,:gw] = uOld[0, gw:0:-1]
-            uNew[1,-gw:] = -uOld[1,-1:-1-gw:-1]
-            uNew[1,:gw] = -uOld[1, gw:0:-1]
-            uNew[2,-gw:] = uOld[2,-1:-1-gw:-1]
-            uNew[2,:gw] = uOld[2, gw:0:-1]
+            #uNew[0,-gw:] = uOld[0,-1:-1-gw:-1]
+            #uNew[0,:gw] = uOld[0, gw:0:-1]
+            #uNew[1,-gw:] = -uOld[1,-1:-1-gw:-1] #right boundary
+            #uNew[1,:gw] = -uOld[1, gw:0:-1] #left boundary
+
+            uNew[0,-gw:] = uOld[0,-1-gw:-1-2*gw:-1]
+            uNew[0,:gw] = uOld[0, 2*gw-1:gw-1:-1]
+            #for j in range(gw):
+            #    uNew[0,N+gw+j] = uOld[0,-1] + (j+1)*(uOld[0,-1]-uOld[0,-2])
+            
+            uNew[1,-gw:] = -uOld[1,-1-gw:-1-2*gw:-1] #right boundary
+            #for j in range(gw):
+            #    uNew[1,N+gw+j] = uOld[1,-1] + (j+1)*(uOld[1,-1]-uOld[1,-2])
+            uNew[1,:gw] = -uOld[1, 2*gw-1:gw-1:-1] #left boundary
+            
+            #print(xGhost[-gw:],xGhost[-1-gw:-1-2*gw:-1])
+            if(nvars==3):
+                uNew[2,-gw:] = uOld[2,-1-gw:-1-2*gw:-1]
+                uNew[2,:gw] = uOld[2, 2*gw-1:gw-1:-1]
+                #for j in range(gw):
+                #    uNew[2,N+gw+j] = uOld[2,-1] + (j+1)*(uOld[2,-1]-uOld[2,-2])
         elif self.bc==BoundaryCond.INIT:
             uNew[:,:gw] = initCond.u0(xGhost[:gw], funH.H(xGhost[:gw],tloc))
             uNew[:,-gw:] = initCond.u0(xGhost[-gw:], funH.H(xGhost[-gw:],tloc))

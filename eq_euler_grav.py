@@ -662,7 +662,7 @@ class EulerEquationGRAV(Equation):
             as required """
         plt.subplot(311)
         plt.title(t)
-        plt.plot(x, -H, 'b', label='-H')
+        #plt.plot(x, -H, 'b', label='-H')
         plt.plot(x, u[0], 'g', label='$rho$')
 #        plt.plot(x, u[0], 'r', label='h')
         plt.legend()
