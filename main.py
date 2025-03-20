@@ -74,7 +74,7 @@ for level in range(0, config.refinements+1):
         
         print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, np.sum(np.abs(uin[2,:] - u[2,:]))*dx,t)
 
-#        print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
+#        print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
 #        print ("Time ",t," Error at N={} is {}".format(N, errors[level]))
 
@@ -90,7 +90,7 @@ for level in range(0, config.refinements+1):
 
 #    #errors[level] = np.sum(np.abs(exact - u))*dx
     
-    print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx)
+    print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx)
    # print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx )
 
     errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
