@@ -58,8 +58,8 @@ class FunH:
         return d_index  # Return -1 if no discontinuity is found
         
     def get_disc_points(self, x):
-        Y=[0]
-        #Y=[14.0] # last from Maria
+        #Y=[0]
+        Y=[14.0] # last from Maria
         #Y=[10.0] # test for sonic point
         #Y=np.zeros_like([1,2])
         #Y= [0, 0.505]

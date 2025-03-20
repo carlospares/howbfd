@@ -92,6 +92,8 @@ def adamsbashforth(eqn, Hx, H, u, x, i, t):
         for k in range(-nsteps,0):
             sumSHx[nvars-1] += ab_coeff[k+nsteps]*( eqn.S(u[:,i+k])*Hx(x[i+k],t) - eqn.sigma(u[:,i+k]) )
 
+    return sumSHx
+
 #------------------------------------------------------------------------------------------------------------------------------------
 
 def adamsbashforthSW(eqn, B, Hx, H, u, x, i, t):

@@ -69,10 +69,11 @@ for level in range(0, config.refinements+1):
 #        dt = min(dx**(5/3.),io_manager.get_next_plot_time() - t)
         u = timest.update(x, u, nm, bdry, funH, initCond, eqn, gw, dx, dt, config, t)
         t += dt
-#        io_manager.io_if_appropriate(x, u, H, t, config)
-        io_manager.io_if_appropriate(x, u-uin, H, t, config)
+        io_manager.io_if_appropriate(x, u, H, t, config)
+#        io_manager.io_if_appropriate(x, u-uin, H, t, config)
         
-        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, np.sum(np.abs(uin[2,:] - u[2,:]))*dx,t)
+#        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, np.sum(np.abs(uin[2,:] - u[2,:]))*dx,t)
+#        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx)
 
 #        print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
