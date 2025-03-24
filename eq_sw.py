@@ -281,17 +281,17 @@ class SWEquation(Equation):
 #-----------------------------------------------------        
 #BUMPS
         #----supercritical
-        HConst = 0.
-        qConst = 24.
-        hConst = 2.
+#        HConst = 0.
+#        qConst = 24.
+#        hConst = 2.
         #----subcritical
 #        HConst = 0.
 #        qConst = 4.42
 #        hConst = 2.
         #----transcritical without shock 
-#        HConst = 0.
-#        qConst = 1.53
-#        hConst = 1.014446798301019#1.0#0.66
+        HConst = 0.
+        qConst = 1.53
+        hConst = 1.014446798301019#1.0#0.66
 #-----------------------------------------------------        
 
         # if no friction
@@ -368,9 +368,9 @@ class SWEquation(Equation):
 
 #BUMPS
         #----supercritical
-        HConst = 0.
-        qConst = -24.
-        hConst = 2.
+#        HConst = 0.
+#        qConst = -24.
+#        hConst = 2.
 
         #----subcritical
 #        HConst = 0.
@@ -384,10 +384,10 @@ class SWEquation(Equation):
 #        hConst = 0.33
 
         #----transcritical without shock 
-#        HConst = 0.
-#        qConst = 1.53
-#        hConst = 0.4057809453450358#0.66
-        #hConst = 1.014446798301019#0.40573292721431
+        HConst = 0.
+        qConst = 1.53
+        #hConst = 0.4057809453450358#0.66
+        hConst = 1.014446798301019#0.40573292721431
         
 #BUMPD  
 #        HConst = -.5
@@ -436,6 +436,10 @@ class SWEquation(Equation):
             bstar = np.zeros(len(x0)) #------be careful
             sumSHx = 0.
             tmp= 0.
+            if config.ode != 'AB' :
+                print('You need the AB ode integrator for the discete transcritical')
+                exit()
+
             tmp = odi.odeint(eqn, bstar, funH.Hx, funH.H, U0, x0, i, tloc) # it has to be AB allways
             sumSHx = tmp[1]
 
@@ -658,7 +662,7 @@ class SWEquation(Equation):
         plt.subplot(211)
         plt.title(t)
         plt.plot(x, -H, 'k', label='$b$') # MARIO
-        plt.plot(x, u[0]-H, 'b', label='$\eta$') #MARIO
+        plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
         #plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()

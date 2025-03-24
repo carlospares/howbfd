@@ -91,7 +91,11 @@ class EulerEquationSEC(Equation):
             E = U[2,:]
             p = ( gm - 1.0 )*( E - 0.5*q*q/rho )
         
-            DF[i] = np.array([[0,1,0],[  0.5*( gm - 3.0 )*q*q/(rho*rho), ( gm - 3.0 )*q/rho, gm - 1.0] [ ( gm - 1.0 )*q*q*q/(rho*rho*rho) - gm*q*E/(rho*rho), gm*E/rho - 1.5( gm - 1.)*q*q/(rho*rho),   gm*q/rho ] ])
+            DF[i] = np.array([
+                [0,1,0],
+                [  0.5*( gm - 3.0 )*q*q/(rho*rho), ( gm - 3.0 )*q/rho, gm - 1.0], 
+                [ ( gm - 1.0 )*q*q*q/(rho*rho*rho) - gm*q*E/(rho*rho), gm*E/rho - 1.5*( gm - 1.)*q*q/(rho*rho),   gm*q/rho ] 
+                ])
         return DF
 
     def eig_of_dF(self, U):
@@ -399,7 +403,7 @@ class EulerEquationSEC(Equation):
         plt.subplot(211)
         plt.title(t)
         plt.plot(x, H, 'b', label='a')
-        plt.plot(x, u[0], 'g', label='$\eta$')
+        plt.plot(x, u[0], 'g', label='$ eta$')
 #        plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)
