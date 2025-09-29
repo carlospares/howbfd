@@ -285,13 +285,13 @@ class SWEquation(Equation):
 #        qConst = 24.
 #        hConst = 2.
         #----subcritical
-#        HConst = 0.
-#        qConst = 4.42
-#        hConst = 2.
-        #----transcritical without shock 
         HConst = 0.
-        qConst = 1.53
-        hConst = 1.014446798301019#1.0#0.66
+        qConst = 4.42
+        hConst = 2.
+        #----transcritical without shock 
+#        HConst = 0.
+#        qConst = 1.53
+#        hConst = 1.014446798301019#1.0#0.66
 #-----------------------------------------------------        
 
         # if no friction
@@ -373,9 +373,9 @@ class SWEquation(Equation):
 #        hConst = 2.
 
         #----subcritical
-#        HConst = 0.
-#        qConst = 4.42
-#        hConst = 2.
+        HConst = 0.
+        qConst = 4.42
+        hConst = 2.
 
 #BUMPT
         #----transcritical with shock 
@@ -384,10 +384,10 @@ class SWEquation(Equation):
 #        hConst = 0.33
 
         #----transcritical without shock 
-        HConst = 0.
-        qConst = 1.53
-        #hConst = 0.4057809453450358#0.66
-        hConst = 1.014446798301019#0.40573292721431
+#        HConst = 0.
+#        qConst = 1.53
+#        #hConst = 0.4057809453450358#0.66
+#        hConst = 1.014446798301019#0.40573292721431
         
 #BUMPD  
 #        HConst = -.5
@@ -495,6 +495,7 @@ class SWEquation(Equation):
                        
             if(abs(r2-r3)<=0.0000001): U0[0,i] =r2           
             
+            U0[0,i] = r3
             #print('root retained ', U0[0,i] , uConstr[1]/np.sqrt( self.g*U0[0,i]*U0[0,i]*U0[0,i] ) )
             
             #U0[0,i] = r2 #supercritical
@@ -662,8 +663,8 @@ class SWEquation(Equation):
         plt.subplot(211)
         plt.title(t)
         plt.plot(x, -H, 'k', label='$b$') # MARIO
-        plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
-        #plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        #plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
+        plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)

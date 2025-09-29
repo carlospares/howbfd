@@ -47,7 +47,7 @@ class UpwindWB(NumericalMethod):
         Grp = np.zeros(nvars)
         Glm = np.zeros(nvars)
         Glp = np.zeros(nvars)
-        i = (u.shape[1]-1)/2
+        i = int((u.shape[1]-1)/2)
         noSteady = 0
         try: 
             ustar = eqn.steady_constraint(H[i], u[:,i], H,x,u)

@@ -54,17 +54,17 @@ class BoundaryCond:
 
         elif self.bc==BoundaryCond.SUBCR:
             #---transcritical
-            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
-            uNew[0,:gw] =  uOld[0,gw:0:-1]
-##
-#            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
-            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
-            # ---subcritical
 #            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
 #            uNew[0,:gw] =  uOld[0,gw:0:-1]
-#
-#            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
-#            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
+###
+##            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+#            uNew[:,-gw:] = uOld[:,-1:-1-gw:-1] # naively try to make derivative zero
+            # ---subcritical
+            uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
+            uNew[0,:gw] =  uOld[0,gw:0:-1]
+
+            uNew[:,-gw:] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[-gw:])
+            uNew[1,-gw:] = uOld[1,-1:-1-gw:-1] # naively try to make derivative zero
         elif self.bc==BoundaryCond.SUPER:
             uNew[:,:gw] =  eqn.steady(funH.H(xGhost[:gw], tloc), xGhost[:gw])
             #uNew[0,:gw] =  uOld[0,gw:0:-1]
@@ -91,8 +91,8 @@ class BoundaryCond:
                 uNew[:,j] = uOld[:,0] - (gw-j)*(uOld[:,1]-uOld[:,0])
                 uNew[:,N+gw+j] = uOld[:,-1] + (j+1)*(uOld[:,-1]-uOld[:,-2])
         elif self.bc==BoundaryCond.FORCE_STEADY:
-            uNew[:,:gw] = eqn.steady_constraint(funH.H(xGhost[gw],tloc), uOld[:,0], funH.H(xGhost[:gw,tloc]), xGhost[:gw],np.zeros((nvars,gw)))
-            uNew[:,-gw:] = eqn.steady_constraint(funH.H(xGhost[-gw-1,tloc]), uOld[:,-1], funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
+            uNew[:,:gw] = eqn.steady_constraint(funH.H(xGhost[gw],tloc), uOld[:,0], funH.H(xGhost[:gw],tloc), xGhost[:gw],np.zeros((nvars,gw)))
+            uNew[:,-gw:] = eqn.steady_constraint(funH.H(xGhost[-gw-1],tloc), uOld[:,-1], funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.FORCE_STEADY_ARBITRARY:
             uNew[:,:gw] = eqn.steady(funH.H(xGhost[:gw],tloc), xGhost[:gw])
             uNew[:,-gw:] = eqn.steady(funH.H(xGhost[-gw:],tloc), xGhost[-gw:])
