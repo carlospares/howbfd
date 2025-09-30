@@ -17,6 +17,7 @@ class NumericalMethod:
     UPWINDWBCONS = 110 # well-balanced upwind conservative (only conservative for supercritical problems)
     UPWINDWB1 = 112 # upwind well-balanced for only one solution
     UPWINDGF = 113 # upwind well-balanced global flux
+    UPWINDNCGF = 114 # upwind well-balanced global flux for nonconservative systems
     RUSANOVG = 102 # standard Rusanov with alpha computed globally
     RUSANOVGWB = 103 # Rusanov WB for everty stationary solution with global alpha (no conservative)# 
     RUSANOV = 104  # standard Rusanov with alpha computed locally

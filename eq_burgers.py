@@ -31,19 +31,20 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        return U*U # std burger's case
-        #return U # std burger's case
+        #return U*U # std burger's case
+        return U # std burger's case
         #return (U - 1.0)# MMSburg case
         
     def sigma(self, U):
         """ Return sigma(U) """
         return 0.
         
-    def discH_jumpF(self, ui, uip1, i, dH, x, t):
+    def discH_jumpF(self, u, ui, var):
         # depends on S
-        delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. )
+        #delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. )
+        delta = 0.5*(u[var,:]+ui) # for p=1
         return delta
-
+    
     def Piplus(self,ui, uip1):
         uip12 = .5*(ui + uip1)
         return 1.*(uip12 > 0 )
@@ -87,7 +88,7 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
-        Ustar[0] = uConstr*np.exp(H-HConstr)
+        Ustar[0] = x#uConstr*np.exp(H-HConstr)
         return Ustar
 
     def prepare_plot(self,x,u,H,t):

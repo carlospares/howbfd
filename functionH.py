@@ -74,8 +74,8 @@ class FunH:
     def H(self, x, t):
         """ Initial condition """
         if self.funH==self.FLAT:
-            #H = 0.1*np.ones_like(x)
-            H = 0.0*np.ones_like(x)
+            H = 0.1*np.ones_like(x)
+            #H = 0.0*np.ones_like(x)
         elif self.funH==self.IDENT:
             H = np.copy(x)
         elif self.funH==self.DISC:

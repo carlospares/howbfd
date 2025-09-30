@@ -8,25 +8,6 @@ How to run:
 * git ff conflict :   git config pull.rebase false 
 
 DONE
-* Grid convergence  with   MMS 
-* Grid convergence on steady state:
-   ** initialise with steady exact
-   **  run finite time and compute error
-   ** do this with WENOk-AMp -- error == p+1=?
-* Perturbations for fun
-* add option to chose AB/AM outside and the steps outside
-* add option to chose AB/AM or ABSW/AMSW outside
-
-* discontinuous H: first order ok, missing AMK and AB
-* discontinuous H: first order ok, missing extrapolation
-* discontinuous H: Carlo's stuff
-
-* Then we will focus on trans critical with Carlos
-* add friction? 
-* reversed flow case
-
-* Latex the above
-
 
 To do 
 
