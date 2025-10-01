@@ -99,13 +99,10 @@ class BoundaryCond:
         elif self.bc==BoundaryCond.FORCE_STEADY_INIT:
             HConstr = funH.H(xGhost[gw],tloc)
             uConstr = initCond.u0(np.array([xGhost[gw]]), np.array([HConstr]))
-#            import matplotlib.pyplot as plt
-#            print (eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost)))
-#            plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[0], '-*')
-#            plt.plot(eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost))[1], '-*')
-#            plt.title("steady constraint")
-#            plt.show()
             uNew[:,:gw] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[:gw],tloc),xGhost[:gw], np.zeros((nvars,gw)))
+
+            HConstr = funH.H(xGhost[-gw-1],tloc)
+            uConstr = initCond.u0(np.array([xGhost[-gw-1]]), np.array([HConstr]))
             uNew[:,-gw:] = eqn.steady_constraint(HConstr, uConstr, funH.H(xGhost[-gw:],tloc), xGhost[-gw:], np.zeros((nvars,gw)))
         elif self.bc==BoundaryCond.FORCE_DISCRETE_STEADY_INIT:
 #            HConstr = funH.H(xGhost[gw],tloc)

@@ -31,10 +31,11 @@ class UpwindNCGF(NumericalMethod):
         N = len(x)
         xGhost = np.zeros(N+2*gw)
         bdry.x_expand_with_bcs(xGhost, x, gw)
+        #print('In tend ', xGhost)
         uGhost = np.zeros((nvars, N+2*gw)) 
         bdry.expand_with_bcs(uGhost, u, gw, eqn, initCond,funH, xGhost, tloc)  # apply BC to u
         tend = np.zeros((nvars,N))
-        fstar, bstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, initCond,funH, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
+#        fstar, bstar = self.gf(uGhost, xGhost, funH.Hx, funH.H, eqn, initCond,funH, gw, dx, tloc) #it returns the integral of the source term in the extended mesh
 
         #return
 
@@ -44,11 +45,12 @@ class UpwindNCGF(NumericalMethod):
             iOff = i+gw # i with offset for {u,x}Ghost
             iOff2 = i+nsteps
             u_st = uGhost[:,iOff-gw:iOff+gw+1] # u at the stencil for ui, size 2gw+1
-            fstar_st = fstar[:,iOff-gw:iOff+gw+1]
-            bstar_st = bstar[iOff2-gw:iOff2+gw+1]
+#            fstar_st = fstar[:,iOff-gw:iOff+gw+1]
+#            bstar_st = bstar[iOff2-gw:iOff2+gw+1]
             x_st = xGhost[  iOff-gw:iOff+gw+1] # x at the stencil for ui
 
-            (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, bstar_st, eqn)
+#            (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), fstar_st, bstar_st, eqn)
+            (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), eqn)
             #fails += fail
             tend[:,i] = -(Gr - Gl)/dx
            #print ('fails at ', tend[:,i])
@@ -140,7 +142,7 @@ class UpwindNCGF(NumericalMethod):
 
     
 
-    def flux(self, u, x, H, fstar, bstar, eqn):
+    def flux(self, u, x, H, eqn):
         nvars = eqn.dim()
         Glm = np.zeros(nvars)
         Grp = np.zeros(nvars)

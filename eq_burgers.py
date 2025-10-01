@@ -31,8 +31,8 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        #return U*U # std burger's case
-        return U # std burger's case
+        return U*U # std burger's case
+        #return U # std burger's case
         #return (U - 1.0)# MMSburg case
         
     def sigma(self, U):
@@ -42,7 +42,10 @@ class BurgersEquation(Equation):
     def discH_jumpF(self, u, ui, var):
         # depends on S
         #delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. )
-        delta = 0.5*(u[var,:]+ui) # for p=1
+        #delta = 0.5*(u[var,:]+ui) # for p=1
+        delta = 0.5*(u[var,:]+ui)*(u[var,:]-ui )/np.log(u[var,:]/ui) # for p=2
+        delta = np.nan_to_num(delta, nan=0.0, posinf=0.0, neginf=0.0)   
+        #print(delta,u,ui)
         return delta
     
     def Piplus(self,ui, uip1):
@@ -88,7 +91,8 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
-        Ustar[0] = x#uConstr*np.exp(H-HConstr)
+        Ustar[0] = uConstr*np.exp(H-HConstr) #x
+        #print('inside steady constraint',H,HConstr,Ustar)
         return Ustar
 
     def prepare_plot(self,x,u,H,t):
