@@ -58,10 +58,10 @@ class UpwindNCGF(NumericalMethod):
             if fail==1:
                 print ('fails at ', x[i])
                 tend[:,i] += eqn.S(u[:,i])*funH.Hx(x[i], tloc)
+        #exit()
         if fails>0:
             print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend
-    
     def gf(self, u, x, Hx, H, eqn, initCond, funH, gw, dx, tloc):
         nvars = eqn.dim()
         N = len(x)-2*gw
@@ -151,7 +151,7 @@ class UpwindNCGF(NumericalMethod):
 
         Gl = np.zeros(nvars)
         Gr = np.zeros(nvars)
-        phi = np.zeros((nvars, u.size))
+        phi = np.zeros((nvars, u.shape[-1]))
         t=0.0
 
         i = (u.shape[1]-1)/2
@@ -159,10 +159,13 @@ class UpwindNCGF(NumericalMethod):
         
 
 
-        for var in range(nvars):
-            dH = H[:]-H[i]
-            S=eqn.discH_jumpF(u, u[var,i], var)
-            phi[var,:] = eqn.F(u[var, :]) - eqn.F(u[var, i]) -S*dH
+#        for var in range(nvars):
+        dH = H[:]-H[i]
+
+        S=np.zeros(u.shape)
+       
+        S[nvars-1,:]=eqn.discH_jumpF(u, u[:,i],dH)
+        phi[:,:] = eqn.F(u[:, :]) - eqn.F(u[:, [i]]) -S#*dH
 
 
 #        if nvars == 2 and compute_source =='hydrostatic_reconstruction':
@@ -173,8 +176,8 @@ class UpwindNCGF(NumericalMethod):
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-
             Grp[var] = wr.wenorec(self.order, phi[var,-1:1:-1]) # at i+1/2^+
-            Glm[var] = wr.wenorec(self.order, -phi[var,0:-2]) # at i-1/2^-
-            Glp[var] = wr.wenorec(self.order, -phi[var,-2:0:-1]) # at i-1/2^+
+            Glm[var] = wr.wenorec(self.order, phi[var,0:-2]) # at i-1/2^-
+            Glp[var] = wr.wenorec(self.order, phi[var,-2:0:-1]) # at i-1/2^+
 
         Gr = np.dot(eqn.Piplus(u[:,i], u[:,i+1]),Grm) + np.dot(eqn.Piminus(u[:,i], u[:,i+1]),Grp)
         Gl = np.dot(eqn.Piplus(u[:,i-1], u[:,i]),Glm) + np.dot(eqn.Piminus(u[:,i-1], u[:,i]),Glp)

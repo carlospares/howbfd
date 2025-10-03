@@ -40,19 +40,28 @@ errors = np.zeros(config.refinements+1)
 
 tini = datetime.now()
 tini = time.perf_counter()
+grids=[]
+
 for level in range(0, config.refinements+1):
     N = config.N * (2**level)
+    dx=(config.b-config.a)/N
 #    N = config.N
     print ("Starting simulation with N={}...".format(N))
     interfaces = np.linspace(config.a,config.b,N+1) # we won't really use them
-    x = 0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
-    xGhost = np.zeros(N+2*gw) # storage for x with ghost cells
+    x = interfaces #0.5*(interfaces[1:] + interfaces[:-1]) # midpoints (so periodic BCs are OK)
+    grids.append((N, dx, x))
+    #xGhost = np.zeros(N+2*gw) # storage for x with ghost cells (for midpoints)
+    xGhost = np.zeros(N+2*gw+1) # storage for x with ghost cells
     bdry.x_expand_with_bcs(xGhost, x, gw) # add BCs to x
     funH = FunH(xGhost, config)
     t = 0.0
     H = funH.H(x, t)
     u = initCond.u0(x, H) # value of u0 at midpoint of cells
     
+    exact=initCond.steady_form_file(x)
+#    print(x)
+#    print(exact)
+#    exit()
 
     dx = x[1]-x[0]
 #    print '[', 0,',', np.sum(u[0])*dx, '],'
@@ -73,8 +82,8 @@ for level in range(0, config.refinements+1):
 #        io_manager.io_if_appropriate(x, u-uin, H, t, config)
         
 #        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, np.sum(np.abs(uin[2,:] - u[2,:]))*dx,t)
-#        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, t)
-        print ('Error is ',np.sum((u[0,:]-uin[0,:])*dx),' at time ', t)
+        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, t)
+#        print ('Error is ',np.sum((u[0,:]-uin[0,:])*dx),' at time ', t)
 
 #        print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
@@ -86,7 +95,7 @@ for level in range(0, config.refinements+1):
     #io_manager.statistics(x, u, funH.H(x), eqn)
 #----exact solution and errors
 #    exact = eqn.exact(x, t, H, config)
-    exact = uin
+#    exact = uin
 #
 #    errors[level] = np.sum(np.abs( (exact[:,N/4:3*N/4] - u[:,N/4:3*N/4]) ))*dx
 
@@ -95,7 +104,7 @@ for level in range(0, config.refinements+1):
 #    print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx)
    # print ('d\eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx )
 
-    errors[level] = np.sum(np.abs(exact[0,:]-u[0,:]))*dx
+    errors[level] = np.sum(np.abs(exact[0,:-1]-u[0,:-1]))*dx
     #print exact[0,:],u[0,:]
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
     print ("Error at N={} is {}".format(N, errors[level]))
@@ -113,7 +122,7 @@ print ('CPU Time: ' + str(tfin-tini))
 
 
 #for i in range(N):
- #   print (x[i],uin[0,i],u[0,i],H[i])
+#    print (x[i],uin[0,i],u[0,i],H[i],exact[0,i])
  #   print x[i],uin[0,i],u[0,i],H[i]
  #  print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
  #   print x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i]

@@ -217,9 +217,9 @@ class InitCond:
         elif self.pert == InitCond.PERT_PATCH:
             pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
-            pert[0] = 0.3*np.exp(-200*(x+0.5)*(x+0.5))
+            #pert[0] = 0.3*np.exp(-400*(x-1.2)*(x-1.2))
             #pert[0] = 0.005*np.exp(-200*(x+0.5)*(x+0.5))
-            #pert[0] = 0.001*np.exp(-200*(x-9.5)*(x-9.5))
+            pert[0] = 0.001*np.exp(-100*(x-9.5)*(x-9.5))
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         elif self.pert ==InitCond.PERT_WB:
@@ -238,7 +238,9 @@ class InitCond:
     def steady_form_file(self,x):
         xx = []
         N=len(x)
+        Nf = 12800
         U0 = np.zeros((self.eqn.dim(), len(x)))
+        Uf = np.zeros((self.eqn.dim(), 12800))
 #        if N == 25:
 #            file_in = open('initial_data/analytical_sw/subcritical/ex_sub_25.dat', 'r')
 #        elif N== 50:
@@ -267,7 +269,8 @@ class InitCond:
         #with open('Results/Manning/subcritical/weno5_upwind_N100_steady.txt', 'r') as file:
         #with open('Results/Manning/supercritical/weno5_upwind_N100_steady.txt', 'r') as file:
         #with open('Results/Manning/subcritical/reference_w7_am8_N800_steady.txt', 'r') as file:
-        with open('Results/super_sw/perturb_discB/reference_w7_am8_st_N1000.txt', 'r') as file:
+        #with open('Results/super_sw/perturb_discB/reference_w7_am8_st_N1000.txt', 'r') as file:
+        with open('out12800', 'r') as file:
 
              # Initialize empty lists for each column
             column1 = []
@@ -275,7 +278,7 @@ class InitCond:
             column3 = []
             column4 = []
             column5 = []
-            column6 = []
+#            column6 = []
 
             # Iterate over each line in the file
             for line in file:
@@ -288,18 +291,32 @@ class InitCond:
                 column3.append(float(elements[2]))
                 column4.append(float(elements[3]))
                 column5.append(float(elements[4]))
-                column6.append(float(elements[5]))
+#                column6.append(float(elements[5]))
         # Convert lists to numpy arrays
         column1 = np.array(column1)
         column2 = np.array(column2)
         column3 = np.array(column3)
         column4 = np.array(column4)
         column5 = np.array(column5)
-        column6 = np.array(column6)
+#        column6 = np.array(column6)
 
-        U0[0]=column4
-        U0[1]=column5
+#        U0[0]=column4
+#        U0[1]=column5
+        Uf[0]=column3
+        step=int(12800/(N-1))
 
+        indices = np.linspace(0, Uf.shape[1]-1, N, dtype=int)
+        U0 = Uf[:, indices]
+
+        U0=Uf[:, ::step] 
+
+        if U0.shape[1] < N:
+            U0 = np.hstack([U0, Uf[:, [-1]]])
+
+#        print(U0.size)
+#        for val in U0.flatten():
+#            print(val)
+#
         return U0
 
 #    def trans(self,x, H):

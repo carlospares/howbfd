@@ -117,15 +117,14 @@ class SWEquation(Equation):
 #        print "[ERROR] Upwind only implemented for scalar equations!"
 #        raise NotImplementedError
 
-    def discH_jumpF(self, ui, uip1, i, dH, x, t):
+    def discH_jumpF(self, u, ui, dH):
         # depends on S
-        hbar   = 0.5*( ui[0] + uip1[0] )
-        hubar  = 0.5*( ui[1] + uip1[1] )
-        ratio  = hubar*hubar/( self.g*(ui[0]*uip1[0])*(ui[0]*uip1[0]))
-        num    = ratio*( hbar*hbar - ui[0]*uip1[0] )
+        hbar   = 0.5*( u[0,:] + ui[0] )
+        hubar  = 0.5*( u[1,:] + ui[1] )
+        ratio  = hubar*hubar/( self.g*(u[0,:]*ui[0])*(u[0,:]*ui[0]))
+        num    = ratio*( hbar*hbar - u[0,:]*ui[0] )
         den    = 1.0 - ratio*hbar
         htilde = hbar + num/den
-        
         
         delta = self.g*htilde*dH
         return delta
@@ -281,13 +280,13 @@ class SWEquation(Equation):
 #-----------------------------------------------------        
 #BUMPS
         #----supercritical
-#        HConst = 0.
-#        qConst = 24.
-#        hConst = 2.
-        #----subcritical
         HConst = 0.
-        qConst = 4.42
+        qConst = 24.
         hConst = 2.
+        #----subcritical
+#        HConst = 0.
+#        qConst = 4.42
+#        hConst = 2.
         #----transcritical without shock 
 #        HConst = 0.
 #        qConst = 1.53
@@ -368,14 +367,14 @@ class SWEquation(Equation):
 
 #BUMPS
         #----supercritical
-#        HConst = 0.
-#        qConst = -24.
-#        hConst = 2.
+        HConst = 0.
+        qConst = -24.
+        hConst = 2.
 
         #----subcritical
-        HConst = 0.
-        qConst = 4.42
-        hConst = 2.
+#        HConst = 0.
+#        qConst = 4.42
+#        hConst = 2.
 
 #BUMPT
         #----transcritical with shock 
@@ -662,9 +661,9 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        plt.plot(x, -H, 'k', label='$b$') # MARIO
-        #plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
-        plt.plot(x, u[0], 'r', label='$h$') #MARIO
+        #plt.plot(x, -H, 'k', label='$b$') # MARIO
+        plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
+        #plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
         plt.legend()
         plt.subplot(212)

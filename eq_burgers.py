@@ -39,13 +39,14 @@ class BurgersEquation(Equation):
         """ Return sigma(U) """
         return 0.
         
-    def discH_jumpF(self, u, ui, var):
+    def discH_jumpF(self, u, ui, dH):
         # depends on S
-        #delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. )
-        #delta = 0.5*(u[var,:]+ui) # for p=1
-        delta = 0.5*(u[var,:]+ui)*(u[var,:]-ui )/np.log(u[var,:]/ui) # for p=2
-        delta = np.nan_to_num(delta, nan=0.0, posinf=0.0, neginf=0.0)   
-        #print(delta,u,ui)
+        #delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. ) # for p=2
+        delta = 0.5*u[:,:]*u[:,:]*( np.exp( 2.0*dH ) - 1. ) # for p=2
+        #delta = 0.5*(u[:,:]+ui)*dH # for p=1
+
+        #delta = dH*0.5*(u[:,:]+ui)*(ui-u[:,:] )/np.log(ui/u[:,:]) # for p=2
+        #delta = np.nan_to_num(delta, nan=0.0, posinf=0.0, neginf=0.0)   
         return delta
     
     def Piplus(self,ui, uip1):
