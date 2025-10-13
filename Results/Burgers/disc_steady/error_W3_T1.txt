@@ -1,0 +1,10 @@
+Error at N=100 is 4.3520742565306175e-16
+Starting simulation with N=200...
+Error at N=200 is 2.631228568361623e-16
+Order: 0.7259665952169495
+Starting simulation with N=400...
+Error at N=400 is 5.74540415243519e-16
+Order: -1.1266718034884302
+Starting simulation with N=800...
+Error at N=800 is 6.272760089132001e-16
+Order: -0.12669200491582622

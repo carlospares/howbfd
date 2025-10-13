@@ -1,0 +1,14 @@
+Error at N=100 is 8.326672684688681e-17
+Starting simulation with N=200...
+Error at N=200 is 9.325873406851323e-17
+Order: -0.1634987322828795
+Starting simulation with N=400...
+Error at N=400 is 1.0186296250935821e-16
+Order: -0.1273188300644493
+Starting simulation with N=800...
+Error at N=800 is 1.2601031329495258e-16
+Order: -0.30691223444767396
+Starting simulation with N=1600...
+Error at N=1600 is 1.249694792093665e-16
+Order: 0.01196602138463593
+CPU Time: 133.74953751800012
