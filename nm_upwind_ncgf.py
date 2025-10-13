@@ -53,6 +53,7 @@ class UpwindNCGF(NumericalMethod):
             (Gl, Gr) = self.flux(u_st, x_st, funH.H(x_st, tloc), eqn)
             #fails += fail
             tend[:,i] = -(Gr - Gl)/dx
+            #tend[:,i] = -(Gr + Gl)/dx #written like the non conservative systems
            #print ('fails at ', tend[:,i])
             
             if fail==1:
@@ -62,84 +63,6 @@ class UpwindNCGF(NumericalMethod):
         if fails>0:
             print ("{}/{} stencils failed to find a steady state solution this timestep".format(fails, N))
         return tend
-    def gf(self, u, x, Hx, H, eqn, initCond, funH, gw, dx, tloc):
-        nvars = eqn.dim()
-        N = len(x)-2*gw
-
-        #fstar = np.zeros((nvars,max(N+2*gw,N+nsteps)))
-        fstar = np.zeros((nvars, N+2*gw)) 
-
-        if nsteps > gw :
-            uloc = np.zeros((nvars,nsteps+N+gw))
-            xloc = np.zeros((nsteps+N+gw))
-            bstar = np.zeros((nsteps+N+gw))
-            uloc[:,nsteps-gw:nsteps] =  u[:,0:gw] ### local extended u for the ode
-            xloc[nsteps-gw:nsteps] =  x[0:gw] ### local extended u for the ode
-            k=1
-            for i in reversed(range(nsteps-gw)):
-                #uloc[:,i] = np.exp(x[0]-k*dx)**2  #Ugly hack for convergence in steady case
-                #uloc[:,i] = np.exp(x[0]-k*dx +0.1*np.sin(100*(x[0]-k*dx)))  #Ugly hack for convergence in stationary solution with oscillatory smooth H
-                #uloc[:,i] = u[:,0]
-                xloc[i] = x[0]-k*dx
-                k +=1
-
-#            for j in range(nsteps-gw):
-#                uloc[:,j] = uloc[:,nsteps-gw] - (nsteps-gw-j)*(uloc[:,nsteps-gw+1]-uloc[:,nsteps-gw]) #extrapolation
-                
-            uloc[:,:] = initCond.u0(xloc, funH.H(xloc, tloc))
-            uloc[:,nsteps:]=u[:,gw:]    
-            xloc[nsteps:]=x[gw:]    
-            #print (uloc)
-            #return    
-        elif gw == nsteps:
-            uloc = np.zeros((nvars,N+2*gw))
-            xloc = np.zeros((N+2*gw))
-            bstar = np.zeros((N+2*gw))
-            uloc[:,:] =  u[:,:] ### initatilization of the multistep method
-            xloc[:] =  x[:] ### initatilization of the multistep method
-        else:
-            uloc = np.zeros((nvars,N+nsteps+gw))
-            xloc = np.zeros(N+nsteps+gw)
-            bstar = np.zeros(N+nsteps+gw)
-            iOff=gw-nsteps
-            uloc[:,0:nsteps] =  u[:,gw-nsteps:nsteps+iOff] ### initatilization of the multistep method
-            xloc[0:nsteps] =  x[gw-nsteps:nsteps+iOff] ### initatilization of the multistep method
-            uloc[:,nsteps:] = u[:,gw:]
-            xloc[nsteps:] = x[gw:]
-
-#--------------------------ugly---only for discrete_ab 
-#        if(nsteps >gw):
-#            uloc = initCond.u0(xloc, funH.H(xloc, tloc))
-#            uloc[:,nsteps:]=u[:,gw:]
-#---------------------------------------------------------
-        #fstar[:,0:nsteps] =  eqn.F(u[:,0]) ### initatilization of the multistep method
-        fstar[:,0:gw] =  0.0#eqn.F(u[:,0:gw]) ### initatilization of the multistep method
-
-        if nvars == 2:
-
-            bstar[0:nsteps] =  funH.H(xloc[0:nsteps],tloc) ### initatilization of the multistep method
-
-
-            for i in range(N+gw):   #-------------------this part is just for SW
-                iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-                sumSBx=odi.B_odeint(eqn, Hx, H, xloc, iOff, tloc)
-
-                bstar[i+nsteps] = bstar[i+nsteps-1] + dx*sumSBx
-
- 
-        for i in range(N+gw):
-            iOff = nsteps + i #+max(gw,nsteps) # i with offset for {fstar}Ghost
-            sumSHx=odi.odeint(eqn, bstar, Hx, H, uloc, xloc, iOff, tloc)
-
-            fstar[:,i+gw] = fstar[:,i+gw-1] + dx*sumSHx
-
-        #if nsteps< 2*gw :
-        #    fstar[:,N+nsteps:N+nsteps+(2*gw-nsteps)] = fstar[:,N+nsteps-1]
-
-
-
-        return fstar, bstar
-
     
 
     def flux(self, u, x, H, eqn):
@@ -157,27 +80,28 @@ class UpwindNCGF(NumericalMethod):
         i = (u.shape[1]-1)/2
         i = int(i)
         
-
-
 #        for var in range(nvars):
         dH = H[:]-H[i]
-
         S=np.zeros(u.shape)
-       
-        S[nvars-1,:]=eqn.discH_jumpF(u, u[:,i],dH)
-        phi[:,:] = eqn.F(u[:, :]) - eqn.F(u[:, [i]]) -S#*dH
 
+        v=0
+        S[nvars-1,:]=eqn.discH_jumpF(u, u[:,i],dH,v)
+        phi[:,:] = eqn.F(u[:, :]) - eqn.F(u[:, [i]]) - S
 
-#        if nvars == 2 and compute_source =='hydrostatic_reconstruction':
-#            phi = eqn.F_hr(u, bstar, H) - fstar
-#        else:
-#            phi = eqn.F(u) 
-  
         for var in range(nvars):
             Grm[var] = wr.wenorec(self.order, phi[var,1:-1]) # at i+1/2^-
             Grp[var] = wr.wenorec(self.order, phi[var,-1:1:-1]) # at i+1/2^+
+
+        v=1
+        S[nvars-1,:]=eqn.discH_jumpF(u, u[:,i],dH,v)
+        phi[:,:] = eqn.F(u[:, :]) - eqn.F(u[:, [i]]) - S
+
+        for var in range(nvars):
             Glm[var] = wr.wenorec(self.order, phi[var,0:-2]) # at i-1/2^-
             Glp[var] = wr.wenorec(self.order, phi[var,-2:0:-1]) # at i-1/2^+
+#            Glm[var] = wr.wenorec(self.order, -phi[var,0:-2]) # at i-1/2^-
+#            Glp[var] = wr.wenorec(self.order, -phi[var,-2:0:-1]) # at i-1/2^+
+
 
         Gr = np.dot(eqn.Piplus(u[:,i], u[:,i+1]),Grm) + np.dot(eqn.Piminus(u[:,i], u[:,i+1]),Grp)
         Gl = np.dot(eqn.Piplus(u[:,i-1], u[:,i]),Glm) + np.dot(eqn.Piminus(u[:,i-1], u[:,i]),Glp)

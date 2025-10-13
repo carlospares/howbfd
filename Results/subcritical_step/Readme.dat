@@ -1,7 +1,0 @@
-all the files *.txt contain 6 columns
-x h_{initial}, q_{initial}, h, q, H
-
-*_per_*.txt is the case with a perturbation 10^{-6} in a subcritical flow over a bed with step
-*_per_nc*.txt is the same case but WITHOUT the topograpgy reconstruction
-
-ATTENTION eta_{initial} has the pertrubation on top of the steady state. 

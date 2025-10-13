@@ -78,6 +78,7 @@ class FunH:
             #H = 0.0*np.ones_like(x)
         elif self.funH==self.IDENT:
             H = np.copy(x)
+            #H = np.exp(-x*x)
         elif self.funH==self.DISC:
             ##H = .1*x*(x <= 0) + (.9 +x)*(x > 0)
             H = .1*x*(x <= 0) + (.9 +x)*(x > 0.5) +(.5+x)*((x>0)*(x<=0.5))

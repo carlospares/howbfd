@@ -217,9 +217,9 @@ class InitCond:
         elif self.pert == InitCond.PERT_PATCH:
             pert[0] = 1*(x>=-0.5)*(x<=-0.3)
         elif self.pert == InitCond.PERT_GAUSS:
-            #pert[0] = 0.3*np.exp(-400*(x-1.2)*(x-1.2))
+            pert[0] = 0.3*np.exp(-400*(x+0.75)*(x+0.75))
             #pert[0] = 0.005*np.exp(-200*(x+0.5)*(x+0.5))
-            pert[0] = 0.001*np.exp(-100*(x-9.5)*(x-9.5))
+            #pert[0] = 0.001*np.exp(-100*(x-9.5)*(x-9.5))
         elif self.pert == InitCond.PERT_MGAUSS:
             pert[0] = -0.3*np.exp(-200*x*x)
         elif self.pert ==InitCond.PERT_WB:
@@ -290,14 +290,14 @@ class InitCond:
                 column2.append(float(elements[1]))
                 column3.append(float(elements[2]))
                 column4.append(float(elements[3]))
-                column5.append(float(elements[4]))
+#                column5.append(float(elements[4]))
 #                column6.append(float(elements[5]))
         # Convert lists to numpy arrays
         column1 = np.array(column1)
         column2 = np.array(column2)
         column3 = np.array(column3)
         column4 = np.array(column4)
-        column5 = np.array(column5)
+#        column5 = np.array(column5)
 #        column6 = np.array(column6)
 
 #        U0[0]=column4

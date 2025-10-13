@@ -31,22 +31,29 @@ class BurgersEquation(Equation):
 
     def S(self, U):
         """ Return S(U) """
-        return U*U # std burger's case
+        #return U*U # std burger's case
         #return U # std burger's case
-        #return (U - 1.0)# MMSburg case
+        return (U - 1.0)# MMSburg case
         
     def sigma(self, U):
         """ Return sigma(U) """
         return 0.
         
-    def discH_jumpF(self, u, ui, dH):
+    def discH_jumpF(self, u, ui, dH, v):
         # depends on S
-        #delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. ) # for p=2
-        delta = 0.5*u[:,:]*u[:,:]*( np.exp( 2.0*dH ) - 1. ) # for p=2
-        #delta = 0.5*(u[:,:]+ui)*dH # for p=1
+        delta=np.zeros(u.shape)
 
-        #delta = dH*0.5*(u[:,:]+ui)*(ui-u[:,:] )/np.log(ui/u[:,:]) # for p=2
-        #delta = np.nan_to_num(delta, nan=0.0, posinf=0.0, neginf=0.0)   
+        #delta = (0.5*(u[:,:]+ui))*dH # for p=1
+
+        delta = (0.5*(u[:,:]+ui)-1.0)*dH # for MMS
+
+#        if v==0:
+#            delta = 0.5*ui*ui*( np.exp( 2.0*dH ) - 1. ) # for p=2
+#        else:
+#            delta = 0.5*u[:,:]*u[:,:]*( np.exp( 2.0*dH ) - 1. ) # for p=2
+
+#        delta = dH*0.5*(u[:,:]+ui)*(ui-u[:,:] )/np.log(ui/u[:,:]) # for p=2
+#        delta = np.nan_to_num(delta, nan=0.0, posinf=0.0, neginf=0.0)   
         return delta
     
     def Piplus(self,ui, uip1):
@@ -92,7 +99,8 @@ class BurgersEquation(Equation):
                 If nvars = 1, this must still be a (1,len(x)) matrix;
                 a len(x) array will not work! """
         Ustar = np.zeros((self.dim(), len(H)))
-        Ustar[0] = uConstr*np.exp(H-HConstr) #x
+        #Ustar[0] = np.exp(-x*x)#x#uConstr*np.exp(H-HConstr)
+        Ustar[0] = uConstr*np.exp(H-HConstr)
         #print('inside steady constraint',H,HConstr,Ustar)
         return Ustar
 

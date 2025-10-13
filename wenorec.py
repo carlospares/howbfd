@@ -41,11 +41,11 @@ def weno3_rec(phim1, phi0, phip1):
     beta0 = (phi0 - phim1)*(phi0 - phim1)
     beta1 = (phip1 - phi0)*(phip1 - phi0)
      
-    alpha0 = (1.0/3.0) / (eps + beta0)/ (eps + beta0)
-    alpha1 = (2.0/3.0) / (eps + beta1) / (eps + beta1)
+#    alpha0 = (1.0/3.0) / (eps + beta0)/ (eps + beta0)
+#    alpha1 = (2.0/3.0) / (eps + beta1) / (eps + beta1)
 
-#    alpha0 = 1./3.
-#    alpha1 = 2./3.
+    alpha0 = 1./3.
+    alpha1 = 2./3.
 #
     alpha_sum = alpha0 + alpha1
      
@@ -106,6 +106,11 @@ def weno7_rec(phim3, phim2, phim1, phi, phip1, phip2, phip3):
     alpha1 = (12.0/35.0)/(beta1 + eps)/(beta1 + eps);
     alpha2 = (18.0/35.0)/(beta2 + eps)/(beta2 + eps);
     alpha3 = (4.0/35.0)/(beta3 + eps)/(beta3 + eps);
+
+#    alpha0 = (1.0/35.0);
+#    alpha1 = (12.0/35.0);
+#    alpha2 = (18.0/35.0);
+#    alpha3 = (4.0/35.0);
 
     alpha_sum = alpha0 + alpha1 + alpha2 + alpha3;
 

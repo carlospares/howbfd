@@ -117,7 +117,7 @@ class SWEquation(Equation):
 #        print "[ERROR] Upwind only implemented for scalar equations!"
 #        raise NotImplementedError
 
-    def discH_jumpF(self, u, ui, dH):
+    def discH_jumpF(self, u, ui, dH, v):
         # depends on S
         hbar   = 0.5*( u[0,:] + ui[0] )
         hubar  = 0.5*( u[1,:] + ui[1] )
