@@ -229,8 +229,8 @@ class InitCond:
             pert[0] = .5*(x<7.)*(x > 5.)
         elif self.pert == InitCond.PERT_DISC:
             #pert[0] = 0.1*(x <=-0.5 )*(x > -0.7)
-            #pert[0] = 0.1*(x <=13.5 )*(x >= 11.5)
-            pert[0] = 0.001*(x <=9.5 )*(x >= 7.5)
+            pert[0] = 0.00001*(x <=17.5 )*(x >= 15.5)
+            #pert[0] = 0.001*(x <=9.5 )*(x >= 7.5)
         elif self.pert == InitCond.PERT_RIEMANN:
             pert[0] = 1.0*(x<=12.0)
         return pert

@@ -10,18 +10,18 @@ from timest import TimeStepping
 
 equation = Equation.BURGERS
 init = InitCond.STEADY
-funh = FunH.IDENT#DISC#PAR#DISC#IDENT
+funh = FunH.DISC#PAR#DISC#IDENT
 H_noise_factor = 0.0
-perturb_init = InitCond.PERT_GAUSS#NONE
+perturb_init = InitCond.PERT_GAUSS#PERT_NONE#GAUSS#NONE
 boundary = BoundaryCond.FORCE_STEADY_INIT
 nummeth = NumericalMethod.UPWINDNCGF#WB#GF
 timest = TimeStepping.TVDRK3
-order = 7 
+order = 9 
 N = 20
 a = -1
 b = 1
 cfl = 0.4
-T = 0.01#0.0037157669102204603
+T = 0.8#0.0037157669102204603
 steps = 4
 ode = 'AM'
 system = 'No'

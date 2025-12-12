@@ -80,7 +80,7 @@ for level in range(0, config.refinements+1):
         
 #        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, np.sum(np.abs(uin[2,:] - u[2,:]))*dx,t)
 #        print ('Error is',np.sum(np.abs(uin[0,:] - u[0,:]))*dx, np.sum(np.abs(uin[1,:] - u[1,:]))*dx, t)
-#        print ('Error is ',np.sum((u[0,:]-uin[0,:])*dx),' at time ', t)
+        print ('Error is ',np.sum((u[0,:]-uin[0,:])*dx),' at time ', t)
 
 #        print ('d eta/dt', np.sum(np.abs(u[0,:]-up[0,:]))*dx,'dq/dt', np.sum(np.abs(u[1,:]-up[1,:]))*dx, t )
 #        errors[level] = np.sum(np.abs(u[0,:]-up[0,:]))*dx
@@ -104,7 +104,7 @@ for level in range(0, config.refinements+1):
     errors[level] = np.sum(np.abs(exact[0,:-1]-u[0,:-1]))*dx
     #print exact[0,:],u[0,:]
     # ^ ugly hack! Compute error only in center of domain to avoid BCs
-    print ("Error at N={} is {}".format(N, errors[level]))
+#    print ("Error at N={} is {}".format(N, errors[level]))
     if level > 0:
         order = (np.log(errors[level-1]) -np.log(errors[level]))/np.log(2.)
         print ("Order: "+str(order))
@@ -118,9 +118,9 @@ tfin = time.perf_counter()
 print ('CPU Time: ' + str(tfin-tini))
 
 
-#for i in range(N):
+for i in range(N):
 #    print (x[i],uin[0,i],u[0,i],H[i],exact[0,i])
-#    print(x[i],uin[0,i],u[0,i],H[i])
+    print(x[i],uin[0,i],u[0,i],H[i])
 #    print (x[i],uin[0,i],uin[1,i],u[0,i],u[1,i],H[i])
 
 

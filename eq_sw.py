@@ -661,7 +661,7 @@ class SWEquation(Equation):
             as required """
         plt.subplot(211)
         plt.title(t)
-        #plt.plot(x, -H, 'k', label='$b$') # MARIO
+        plt.plot(x, -H, 'k', label='$b$') # MARIO
         plt.plot(x, u[0]-H, 'b', label='$ eta$') #MARIO
         #plt.plot(x, u[0], 'r', label='$h$') #MARIO
         #plt.plot(x, u[0], 'r', label='h')
